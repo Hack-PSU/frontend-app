@@ -1,14 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Appbar } from "react-native-paper";
+import Scaffold from "../components/Scaffold";
 
 const HomeRoute: React.FC = () => {
   return (
-    <Appbar.Header>
-      <Appbar.Content title="HackPSU: Home" />
-      <Appbar.Action icon="person" />
-    </Appbar.Header>
+    <Scaffold title="Home">
+      <View />
+    </Scaffold>
   );
-}
+};
 
-export default HomeRoute
+export default HomeRoute;

@@ -1,14 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Appbar } from "react-native-paper";
+import Scaffold from "../components/Scaffold";
 
 const EventsRoute: React.FC = () => {
   return (
-    <Appbar.Header>
-      <Appbar.Content title="HackPSU: Events" />
-      <Appbar.Action icon="person" />
-    </Appbar.Header>
+    <Scaffold title="Events">
+      <View />
+    </Scaffold>
   );
-}
+};
 
-export default EventsRoute
+export default EventsRoute;

@@ -1,14 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Appbar } from "react-native-paper";
+import Scaffold from "../components/Scaffold";
 
 const WorkshopsRoute: React.FC = () => {
   return (
-    <Appbar.Header>
-      <Appbar.Content title="HackPSU: Workshops" />
-      <Appbar.Action icon="person" />
-    </Appbar.Header>
+    <Scaffold title="Workshops">
+      <View />
+    </Scaffold>
   );
-}
+};
 
-export default WorkshopsRoute
+export default WorkshopsRoute;

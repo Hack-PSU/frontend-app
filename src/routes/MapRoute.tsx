@@ -1,14 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Appbar } from "react-native-paper";
+import Scaffold from "../components/Scaffold";
 
 const MapRoute: React.FC = () => {
   return (
-    <Appbar.Header>
-      <Appbar.Content title="HackPSU: Map" />
-      <Appbar.Action icon="person" />
-    </Appbar.Header>
+    <Scaffold title="Map">
+      <View />
+    </Scaffold>
   );
-}
+};
 
-export default MapRoute
+export default MapRoute;
