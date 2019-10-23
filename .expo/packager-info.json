@@ -2,8 +2,8 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 5850,
-  "expoServerNgrokUrl": "https://di-8dk.anonymous.app.exp.direct",
-  "packagerNgrokUrl": "https://packager.di-8dk.anonymous.app.exp.direct",
-  "ngrokPid": 6525
+  "packagerPid": 17628,
+  "expoServerNgrokUrl": "https://di-8dk.anonymous.frontend-app.exp.direct",
+  "packagerNgrokUrl": "https://packager.di-8dk.anonymous.frontend-app.exp.direct",
+  "ngrokPid": 18317
 }
