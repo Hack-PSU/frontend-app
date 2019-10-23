@@ -11,13 +11,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingLeft: 48
   },
-  pageTitle: {
-    fontFamily: "Cornerstone",
-    paddingTop: 24,
-    paddingLeft: 16,
-    fontSize: 48,
-    color: "white"
-  }
 });
 
 interface Props {
@@ -36,7 +29,6 @@ const Scaffold: React.FC<Props> = ({ title, children, onPressProfile }: Props) =
         <Appbar.Content title="HackPSU" titleStyle={styles.title} />
         <Appbar.Action icon="account-circle" onPress={onPressProfile} />
       </Appbar.Header>
-      <Text style={styles.pageTitle}>{title}</Text>
       {children}
     </View>
   );
