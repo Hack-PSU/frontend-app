@@ -11,7 +11,7 @@ const FAKE_DATA: EventModel[] = [
   EventModel.parseJSON({
     uid: "abc123",
     event_title: "Yoga & LinkedIn",
-    event_type: "education",
+    event_type: "Entertainment",
     event_description: "Google wants you to do things with it's products because it's a company and that's what it does.",
     event_start_time: "2019-11-02T12:30:00-0500",
     event_end_time: "2019-11-02T14:30:00-0500",

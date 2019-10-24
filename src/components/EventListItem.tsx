@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Card, Avatar } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Card, Avatar, Chip } from "react-native-paper";
 
 import { parseISO, format } from "date-fns";
 
@@ -37,6 +37,20 @@ const styles = StyleSheet.create({
     color: PRIMARY,
     letterSpacing: 0.2,
   },
+  row: {
+    width: "100%",
+    flexDirection: "row",
+    marginLeft: 16,
+    marginRight: 16,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  margin: {
+    width: 8,
+  },
+  expanded: {
+    flex: 1
+  }
 })
 
 interface Props {
@@ -49,7 +63,7 @@ const EventListItem: React.FC<Props> = ({ model }) => {
 
   const subtitle = format(startDate, `${WEEKDAY}, ${TIME}`) + " — " + format(endDate, TIME);
 
-  
+
   const avatarLabel = format(startDate, HR24);
 
   const avatar = <Avatar.Text size={42} label={avatarLabel} color={TEXT_LIGHT} />;
@@ -63,6 +77,13 @@ const EventListItem: React.FC<Props> = ({ model }) => {
         subtitleStyle={styles.subtitle}
         left={() => avatar}
       />
+
+      <View style={styles.row}>
+        <Chip icon="location-on">{model.location_name}</Chip>
+        <View style={styles.margin} />
+        <Chip>{model.event_type}</Chip>
+        <View style={styles.expanded} />
+      </View>
     </Card>
   );
 }
