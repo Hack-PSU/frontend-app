@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   title: string;
-  children: React.ReactChild;
+  children: React.ReactNode;
   onPressProfile?: any;
 }
 

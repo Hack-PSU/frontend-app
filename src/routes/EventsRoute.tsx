@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, View, StyleSheet } from "react-native";
+import { FAB } from "react-native-paper";
 
 import Scaffold from "../components/Scaffold";
 import Subtitle from "../components/Subtitle";
@@ -22,6 +23,14 @@ const FAKE_DATA: EventModel[] = [
   })
 ];
 
+const styles = StyleSheet.create({
+  fab: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
+  }
+})
+
 const EventsRoute: React.FC = () => {
   const [filter, setFilter] = useState<Values>("All");
 
@@ -42,6 +51,11 @@ const EventsRoute: React.FC = () => {
         renderItem={({ item }) => <EventListItem key={item.uid} model={item} />}
         keyExtractor={item => item.uid}
         ListHeaderComponent={listHeader}
+      />
+      <FAB
+        style={styles.fab}
+        icon="star"
+        color="white"
       />
     </Scaffold>
   );
