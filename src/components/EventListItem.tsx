@@ -17,6 +17,9 @@ const TIME = "h:mmaaaaa";
 const WEEKDAY = "EEEE";
 
 const styles = StyleSheet.create({
+  avatar: {
+    borderRadius: 16,
+  },
   card: {
     marginLeft: 8,
     marginRight: 8,
@@ -45,6 +48,18 @@ const styles = StyleSheet.create({
   }
 });
 
+const EVENT_TYPE_COLORS = {
+  Entertainment: ACCENT,
+  Event: "yellow",
+  Food: "red"
+};
+
+const EVENT_TYPE_ICONS = {
+  Entertainment: "event-seat",
+  Event: "star",
+  Food: "restaurant-menu"
+};
+
 interface Props {
   model: EventModel;
 }
@@ -59,9 +74,9 @@ const EventListItem: React.FC<Props> = ({ model }) => {
   const avatar = (
     <Avatar.Icon
       size={42}
-      icon="event-seat"
-      color={TEXT_LIGHT}
-      theme={{ colors: { primary: ACCENT } }}
+      icon={EVENT_TYPE_ICONS[model.event_type]}
+      theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
+      style={styles.avatar}
     />
   );
 

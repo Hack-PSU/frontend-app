@@ -8,8 +8,8 @@ import { BACKGROUND, TEXT_LIGHT } from "../theme";
 const styles = StyleSheet.create({
   tabsContainerStyle: {
     height: 40,
-    marginLeft: 16,
-    marginRight: 16,
+    marginLeft: 32,
+    marginRight: 32,
   },
   tabStyle: {
     backgroundColor: BACKGROUND,
@@ -20,9 +20,11 @@ const styles = StyleSheet.create({
   },
   firstTabStyle: {
     borderLeftWidth: 2,
+    borderRightWidth: 0,
   },
   lastTabStyle: {
     borderRightWidth: 2,
+    borderLeftWidth: 0,
   },
   activeTabStyle: {
     backgroundColor: BACKGROUND,
@@ -35,8 +37,8 @@ const styles = StyleSheet.create({
   }
 })
 
-export type Values = "All" | "Saturday" | "Sunday";
-const VALUES: Values[] = ["All", "Saturday", "Sunday"];
+export type Values = "Saturday" | "Sunday";
+const VALUES: Values[] = ["Saturday", "Sunday"];
 
 interface Props {
   value: Values;
