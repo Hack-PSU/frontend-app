@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "date-fns": "^2.6.0",
     "expo": "^35.0.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",

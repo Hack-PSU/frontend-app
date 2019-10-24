@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { AppLoading } from "expo";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -17,6 +17,8 @@ import HomeRoute from "../routes/HomeRoute";
 import EventsRoute from "../routes/EventsRoute";
 import WorkshopsRoute from "../routes/WorkshopsRoute";
 import MapRoute from "../routes/MapRoute";
+
+import { PRIMARY, ACCENT, TEXT_LIGHT, BACKGROUND } from "../theme";
 
 /**
  * TO ADD A ROUTE OR MODAL:
@@ -84,10 +86,10 @@ const theme = {
   roundness: 16,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#6A85B9",
-    accent: "#F3613D",
-    background: "#113654",
-    text: "#FFFFFF"
+    primary: PRIMARY,
+    accent: ACCENT,
+    background: BACKGROUND,
+    text: TEXT_LIGHT
   }
 };
 
