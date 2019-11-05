@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, StatusBar } from "react-native";
 
 import { AppLoading } from "expo";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -135,6 +135,8 @@ const App: React.FC = () => {
 
   return (
     <PaperProvider theme={theme}>
+      {/* This is for iOS, for Android see app.json in root of project. */}
+      <StatusBar barStyle="dark-content" />
       <StackNavigator />
     </PaperProvider>
   );

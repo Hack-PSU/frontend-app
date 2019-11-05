@@ -1,15 +1,28 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 
+import SegmentedControlIOS from "@react-native-community/segmented-control";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 
 import { BACKGROUND, TEXT_LIGHT } from "../theme";
 
 const styles = StyleSheet.create({
+  // iOS only
+  iosContainerStyle: {
+    marginLeft: 32,
+    marginRight: 32,
+    fontSize: 14,
+  },
+  iosSubContainerStyle: {
+    borderRadius: 8,
+    backgroundColor: "white"
+  },
+  // Android only
   tabsContainerStyle: {
     height: 40,
     marginLeft: 32,
     marginRight: 32,
+    fontSize: 14,
   },
   tabStyle: {
     backgroundColor: BACKGROUND,
@@ -46,6 +59,21 @@ interface Props {
 }
 
 const ScheduleControl: React.FC<Props> = ({ value, onChange }) => {
+  // Use native segmented control.
+  if (Platform.OS === "ios") {
+    return (
+      <View style={styles.iosContainerStyle}>
+        <View style={styles.iosSubContainerStyle}>
+          <SegmentedControlIOS
+            values={VALUES}
+            selectedIndex={VALUES.indexOf(value)}
+            onChange={event => onChange(VALUES[event.nativeEvent.selectedSegmentIndex])}
+          />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <SegmentedControlTab
       values={VALUES}
