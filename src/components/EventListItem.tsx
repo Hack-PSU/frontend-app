@@ -6,7 +6,17 @@ import { parseISO, format } from "date-fns";
 
 import { EventModel } from "../models/event-model";
 
-import { TEXT, PRIMARY, DARK_TEXT_THEME, TEXT_LIGHT, ACCENT } from "../theme";
+import {
+  TEXT,
+  PRIMARY,
+  DARK_TEXT_THEME,
+  ACCENT,
+  ACCENT_LIGHT,
+  RED,
+  RED_LIGHT,
+  YELLOW,
+  YELLOW_LIGHT
+} from "../theme";
 
 // Date formats.
 // See options here: https://date-fns.org/v2.6.0/docs/format
@@ -18,7 +28,7 @@ const WEEKDAY = "EEEE";
 
 const styles = StyleSheet.create({
   avatar: {
-    borderRadius: 16,
+    borderRadius: 16
   },
   card: {
     marginLeft: 8,
@@ -50,9 +60,15 @@ const styles = StyleSheet.create({
 
 const EVENT_TYPE_COLORS = {
   Entertainment: ACCENT,
-  Event: "yellow",
-  Food: "red"
+  Event: YELLOW,
+  Food: RED
 };
+
+const EVENT_TYPE_TEXT_COLORS = {
+  Entertainment: "rgba(255,255,255,0.89)",
+  Event: "rgba(255,255,255,0.89)",
+  Food: "rgba(255,255,255,0.89)",
+}
 
 const EVENT_TYPE_ICONS = {
   Entertainment: "event-seat",
@@ -75,6 +91,7 @@ const EventListItem: React.FC<Props> = ({ model }) => {
     <Avatar.Icon
       size={42}
       icon={EVENT_TYPE_ICONS[model.event_type]}
+      color={EVENT_TYPE_TEXT_COLORS[model.event_type]}
       theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
       style={styles.avatar}
     />
@@ -94,7 +111,9 @@ const EventListItem: React.FC<Props> = ({ model }) => {
       />
 
       <View style={styles.row}>
-        <Chip icon="location-on" mode="outlined">{model.location_name}</Chip>
+        <Chip icon="location-on" mode="outlined">
+          {model.location_name}
+        </Chip>
       </View>
     </Card>
   );

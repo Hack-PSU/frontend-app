@@ -2,9 +2,15 @@
 // Colors.
 export const PRIMARY = "#6A85B9";
 export const ACCENT = "#F3613D";
+export const ACCENT_LIGHT = "#F99432";
 export const TEXT = "#0a0a0a";
 export const TEXT_LIGHT = "#FFFFFF";
 export const BACKGROUND = "#113654";
+
+export const RED = "#F24418";
+export const RED_LIGHT = "#F9810C";
+export const YELLOW = "#B6C767";
+export const YELLOW_LIGHT = "#9FDE68";
 
 /**
  * To use:
