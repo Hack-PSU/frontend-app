@@ -11,6 +11,12 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 
 import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 
+import * as Firebase from "firebase";
+
+import AuthService from "../services/AuthService";
+
+import LoginGuard from "./LoginGuard";
+
 import ProfileModal from "../modals/ProfileModal";
 
 import HomeRoute from "../routes/HomeRoute";
@@ -19,6 +25,13 @@ import WorkshopsRoute from "../routes/WorkshopsRoute";
 import MapRoute from "../routes/MapRoute";
 
 import { PRIMARY, ACCENT, TEXT_LIGHT, BACKGROUND } from "../theme";
+import { getFirebaseEnv } from "../getEnv";
+
+// Setup Firebase and check if we're running in production.
+Firebase.initializeApp(getFirebaseEnv());
+
+// Init all services.
+AuthService.init();
 
 /**
  * TO ADD A ROUTE OR MODAL:
@@ -137,7 +150,9 @@ const App: React.FC = () => {
     <PaperProvider theme={theme}>
       {/* This is for iOS, for Android see app.json in root of project. */}
       <StatusBar barStyle="dark-content" />
-      <StackNavigator />
+      <LoginGuard>
+        <StackNavigator />
+      </LoginGuard>
     </PaperProvider>
   );
 };

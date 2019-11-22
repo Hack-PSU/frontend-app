@@ -1,9 +1,12 @@
 import React from "react";
-import { View, StyleSheet, Text, SafeAreaView, Platform } from "react-native";
-
+import { View, StyleSheet, Platform } from "react-native";
 import { Appbar } from "react-native-paper";
 
+import AuthService from "../services/AuthService";
+
 import { ACCENT } from "../theme";
+
+const isAndroid = Platform.OS !== "ios";
 
 const styles = StyleSheet.create({
   scaffold: {
@@ -11,7 +14,7 @@ const styles = StyleSheet.create({
   },
   title: {
     alignSelf: "center",
-    paddingLeft: Platform.OS === 'android' ? 48 : 0
+    paddingLeft: isAndroid ? 48 : 0
   },
 });
 
@@ -26,14 +29,18 @@ interface Props {
  */
 const Scaffold: React.FC<Props> = ({ title, children, onPressProfile }: Props) => {
   // If undefined just use system value.
-  const barHeight = Platform.OS === 'android' ? 0 : undefined;
+  const barHeight = isAndroid ? 0 : undefined;
+
+  const appBar = (
+    <Appbar.Header style={{ backgroundColor: "white" }} statusBarHeight={barHeight}>
+      <Appbar.Content title="HackPSU" titleStyle={styles.title} />
+      <Appbar.Action icon="account-circle" onPress={() => AuthService.signOut()} color={ACCENT} />
+    </Appbar.Header>
+  )
 
   return (
     <View style={styles.scaffold}>
-      <Appbar.Header style={{ backgroundColor: "white" }} statusBarHeight={barHeight}>
-        <Appbar.Content title="HackPSU" titleStyle={styles.title} />
-        <Appbar.Action icon="account-circle" onPress={onPressProfile} color={ACCENT} />
-      </Appbar.Header>
+      {appBar}
       {children}
     </View>
   );
