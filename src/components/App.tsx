@@ -13,9 +13,10 @@ import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 
 import * as Firebase from "firebase";
 
-import AuthService from "../services/AuthService";
-
 import LoginGuard from "./LoginGuard";
+import useAsyncEffect from "./useAsyncEffect";
+
+import AuthService from "../services/AuthService";
 
 import ProfileModal from "../modals/ProfileModal";
 
@@ -132,15 +133,11 @@ const App: React.FC = () => {
    * 4) After that, we *then* set the loaded fonts to true, making the component re-render
    * (since we've changed the state) and our loading screen to disappear.
    */
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  useEffect(() => {
-    Font.loadAsync({
-      "Plex-Mono": require("../../assets/fonts/IBMPlexMono-Medium.otf"),
-      Cornerstone: require("../../assets/fonts/Cornerstone.ttf")
-    }).then(() => {
-      setFontsLoaded(true);
-    });
+  const [fontsLoaded, loading, error] = useAsyncEffect(async () => {
+    return true;
   });
+
+  console.log(fontsLoaded, loading, error);
 
   if (!fontsLoaded) {
     return <AppLoading />;

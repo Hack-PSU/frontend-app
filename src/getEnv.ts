@@ -4,6 +4,13 @@ function getEnv(name) {
   const env = Constants.manifest.releaseChannel;
   const extra = Constants.manifest.extra;
 
+  // Note from Michael:
+  // This is a shortcut for me, don't remove please.
+  const FORCE_PROD = true;
+  if (FORCE_PROD) {
+    return extra[`${name}.prod`];
+  }
+
   // What is __DEV__ ?
   // This variable is set to true when react-native is running in Dev mode.
   // __DEV__ is true when run locally, but false when published.

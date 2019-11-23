@@ -4,6 +4,8 @@ import { Appbar, TextInput, Button, Provider as PaperProvider } from "react-nati
 
 import { validate as validateEmail } from "email-validator";
 
+import useAsyncEffect from "./useAsyncEffect";
+
 import AuthService from "../services/AuthService";
 
 const IS_ANDROID = Platform.OS !== "ios";
@@ -24,6 +26,7 @@ const styles = StyleSheet.create({
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [incorrect, setIncorrect] = useState(false);
 

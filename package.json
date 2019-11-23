@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@react-native-community/segmented-control": "^1.0.2",
+    "@zeit/fetch-retry": "^4.0.1",
     "date-fns": "^2.6.0",
     "email-validator": "^2.0.4",
     "expo": "^35.0.0",

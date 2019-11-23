@@ -33,7 +33,11 @@
         "projectId": "hackpsu18",
         "storageBucket": "hackpsu18.appspot.com",
         "messagingSenderId": "1002677206617"
-      }
+      },
+      "apiBaseUrl.staging": "https://staging-dot-hackpsu18.appspot.com/v1/",
+      "apiBaseUrl.prod": "https://api.hackpsu.org/v1/",
+      "apiBaseUrlV2.staging": "http://staging.hackpsu18.appspot.com/v2/",
+      "apiBaseUrlV2.prod": "https://api.hackpsu.org/v2/"
     }
   }
 }
