@@ -4,7 +4,6 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  Platform,
   ActivityIndicator
 } from "react-native";
 import {
@@ -15,11 +14,13 @@ import {
 } from "react-native-paper";
 import { useAsync } from "react-async";
 
-import { validate as validateEmail } from "email-validator";
+import SegmentedControl from "../components/SegmentedControl";
 
 import AuthService from "../services/AuthService";
 
 import { BAR_HEIGHT } from "../theme";
+
+import { validate as validateEmail } from "email-validator";
 
 const styles = StyleSheet.create({
   scroll: {
@@ -31,14 +32,26 @@ const styles = StyleSheet.create({
   }
 });
 
-async function login([email, password]) {
+const SIGN_IN = "Sign In";
+const SIGN_UP = "Sign Up";
+
+async function signInOrSignUp([email, password, operation]) {
   if (!validateEmail(email)) {
     return;
   }
 
-  const user = await AuthService.signIn(email, password);
-  if (!user) {
-    throw new Error("user was null");
+  if (operation == SIGN_IN) {
+    const user = await AuthService.signIn(email, password);
+    if (!user) {
+      throw new Error("user was null");
+    }
+  }
+
+  if (operation == SIGN_UP) {
+    const user = await AuthService.createUser(email, password);
+    if (!user) {
+      throw new Error("user was null after creation");
+    }
   }
 
   return true;
@@ -48,7 +61,11 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { isPending, error, run } = useAsync({ deferFn: login });
+  const { isPending, error, run } = useAsync({ deferFn: signInOrSignUp });
+
+  // "Sign In" and "Sign Up" are valid values.
+  const [operation, setOperation] = useState(SIGN_IN); 
+
   const isValidEmail = validateEmail(email);
 
   return (
@@ -60,6 +77,11 @@ const Login: React.FC = () => {
         <ScrollView style={styles.scroll}>
           <Text>Rahul making this look nice is all you buddy!</Text>
           {/* This resets default theme for inputs. */}
+          <SegmentedControl
+            values={[SIGN_IN, SIGN_UP]}
+            value={operation}
+            onChange={newValue => setOperation(newValue)}
+          />
           <PaperProvider>
             <TextInput
               label="Email"
@@ -86,10 +108,10 @@ const Login: React.FC = () => {
           <Button
             icon="send"
             mode="contained"
-            onPress={() => run(email, password)}
+            onPress={() => run(email, password, operation)}
             disabled={!email || !isValidEmail || !password}
           >
-            Checks out (login).
+            {operation}
           </Button>
           <ActivityIndicator animating={isPending} />
           {error && <Text>Incorrect username and pass.</Text>}

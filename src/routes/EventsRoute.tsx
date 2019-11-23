@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 
 import Scaffold from "../components/Scaffold";
 import Subtitle from "../components/Subtitle";
-import ScheduleControl, { Values } from "../components/ScheduleControl";
+import SegmentedControl from "../components/SegmentedControl";
 import EventListItem from "../components/EventListItem";
 
 import DataService from "../services/DataService";
@@ -33,12 +33,13 @@ const EventsRoute: React.FC = observer(() => {
     promiseFn: DataService.getEvents
   });
 
-  const [filter, setFilter] = useState<Values>("Saturday");
+  const [filter, setFilter] = useState<string>("Saturday");
 
   const listHeader = <Subtitle>Events</Subtitle>;
   const sectionHeader = (
     <View style={styles.section}>
-      <ScheduleControl
+      <SegmentedControl
+        values={["Saturday", "Sunday"]}
         value={filter}
         onChange={newValue => setFilter(newValue)}
       />

@@ -50,24 +50,22 @@ const styles = StyleSheet.create({
   }
 })
 
-export type Values = "Saturday" | "Sunday";
-const VALUES: Values[] = ["Saturday", "Sunday"];
-
 interface Props {
-  value: Values;
-  onChange: (newValue: Values) => any;
+  values: string[];
+  value: string;
+  onChange: (newValue: string) => any;
 }
 
-const ScheduleControl: React.FC<Props> = ({ value, onChange }) => {
+const SegmentedControl: React.FC<Props> = ({ values, value, onChange }) => {
   // Use native segmented control.
   if (Platform.OS === "ios") {
     return (
       <View style={styles.iosContainerStyle}>
         <View style={styles.iosSubContainerStyle}>
           <SegmentedControlIOS
-            values={VALUES}
-            selectedIndex={VALUES.indexOf(value)}
-            onChange={event => onChange(VALUES[event.nativeEvent.selectedSegmentIndex])}
+            values={values}
+            selectedIndex={values.indexOf(value)}
+            onChange={event => onChange(values[event.nativeEvent.selectedSegmentIndex])}
           />
         </View>
       </View>
@@ -76,9 +74,9 @@ const ScheduleControl: React.FC<Props> = ({ value, onChange }) => {
 
   return (
     <SegmentedControlTab
-      values={VALUES}
-      selectedIndex={VALUES.indexOf(value)}
-      onTabPress={index => onChange(VALUES[index])}
+      values={values}
+      selectedIndex={values.indexOf(value)}
+      onTabPress={index => onChange(values[index])}
       borderRadius={20}
       tabsContainerStyle={styles.tabsContainerStyle}
       tabStyle={styles.tabStyle}
@@ -90,4 +88,4 @@ const ScheduleControl: React.FC<Props> = ({ value, onChange }) => {
   );
 };
 
-export default ScheduleControl;
+export default SegmentedControl;
