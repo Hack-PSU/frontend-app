@@ -1,6 +1,9 @@
-import { RegistrationApiResponse } from "../models/registration";
+import { observable } from "mobx";
 
-import { fetchWithAuth } from "../fetch";
+import { RegistrationApiResponse } from "../models/registration";
+import { EventModel, EventModelJSON } from "../models/event-model";
+
+import { fetch, fetchWithAuth } from "../fetch";
 
 export class DataService {
   // TODO: Frontend doesn't use a cache for this... but should it?
@@ -12,6 +15,18 @@ export class DataService {
     }
 
     return RegistrationApiResponse.parseJSON(registrations[0]);
+  }
+
+  @observable
+  events: EventModel[];
+
+  async getEvents(): Promise<EventModel[]> {
+    if (!this.events) {
+      const eventsRaw = await fetch<EventModelJSON[]>("live/events");
+      this.events = EventModel.parseFromJSONArray(eventsRaw);
+    }
+
+    return this.events;
   }
 }
 

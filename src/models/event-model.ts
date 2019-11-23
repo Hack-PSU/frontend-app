@@ -1,4 +1,4 @@
-interface EventModelJSON {
+export interface EventModelJSON {
   uid: string;
   event_title: string;
   event_type: string;

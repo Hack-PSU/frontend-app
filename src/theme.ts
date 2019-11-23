@@ -1,3 +1,9 @@
+import { Platform } from "react-native";
+
+export const IS_ANDROID = Platform.OS !== "ios";
+
+// If undefined just use system value.
+export const BAR_HEIGHT = IS_ANDROID ? 0 : undefined;
 
 // Colors.
 export const PRIMARY = "#6A85B9";

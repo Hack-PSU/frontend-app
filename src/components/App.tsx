@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { StyleSheet, StatusBar } from "react-native";
+import { useAsync } from "react-async";
 
 import { AppLoading } from "expo";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -14,7 +15,6 @@ import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import * as Firebase from "firebase";
 
 import LoginGuard from "./LoginGuard";
-import useAsyncEffect from "./useAsyncEffect";
 
 import AuthService from "../services/AuthService";
 
@@ -107,6 +107,15 @@ const theme = {
   }
 };
 
+async function loadFonts() {
+  await Font.loadAsync({	
+    "Plex-Mono": require("../../assets/fonts/IBMPlexMono-Medium.otf"),	
+    Cornerstone: require("../../assets/fonts/Cornerstone.ttf")	
+  });
+
+  return true;
+}
+
 /**
  * `App` sets up the Material theme, fonts, system borders,
  * and acts as the primary navigation for the app.
@@ -116,30 +125,9 @@ const theme = {
  * 3) Pane switching within bottom nav bar.
  */
 const App: React.FC = () => {
-  /**
-   * Hi Rahul! ---> What this does:
-   * 
-   * 1) React has a thing called state where a component can hold certain data values.
-   * Here, we're making a state variable that represents if the fonts are loaded.
-   * The first variable is the actual value of the state, and the second variable
-   * is the function to set it.
-   *
-   * 2) useEffect is called when the component renders for the first time.
-   *
-   * 3) When this happens, we load our custom fonts, and the function returns a Promise.
-   * https://developers.google.com/web/fundamentals/primers/promises
-   * This means that the operation will take some time and not complete instantly.
-   *
-   * 4) After that, we *then* set the loaded fonts to true, making the component re-render
-   * (since we've changed the state) and our loading screen to disappear.
-   */
-  const [fontsLoaded, loading, error] = useAsyncEffect(async () => {
-    return true;
-  });
+  const { data: fontsLoaded, error, isPending } = useAsync({ promiseFn: loadFonts });
 
-  console.log(fontsLoaded, loading, error);
-
-  if (!fontsLoaded) {
+  if (!fontsLoaded || isPending) {
     return <AppLoading />;
   }
 

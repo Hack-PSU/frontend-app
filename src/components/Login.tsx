@@ -1,57 +1,54 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ScrollView, Platform, ActivityIndicator } from "react-native";
-import { Appbar, TextInput, Button, Provider as PaperProvider } from "react-native-paper";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Platform,
+  ActivityIndicator
+} from "react-native";
+import {
+  Appbar,
+  TextInput,
+  Button,
+  Provider as PaperProvider
+} from "react-native-paper";
+import { useAsync } from "react-async";
 
 import { validate as validateEmail } from "email-validator";
 
-import useAsyncEffect from "./useAsyncEffect";
-
 import AuthService from "../services/AuthService";
 
-const IS_ANDROID = Platform.OS !== "ios";
-
-// If undefined just use system value.
-const BAR_HEIGHT = IS_ANDROID ? 0 : undefined;
+import { BAR_HEIGHT } from "../theme";
 
 const styles = StyleSheet.create({
   scroll: {
     width: "100%",
-    height: "100%",
+    height: "100%"
   },
   input: {
     color: "#0d0d0d"
   }
 });
 
+async function login([email, password]) {
+  if (!validateEmail(email)) {
+    return;
+  }
+
+  const user = await AuthService.signIn(email, password);
+  if (!user) {
+    throw new Error("user was null");
+  }
+
+  return true;
+}
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [incorrect, setIncorrect] = useState(false);
-
-  async function login() {
-    if (loading) {
-      return;
-    }
-
-    setLoading(true);
-    setIncorrect(false);
-    let errored = false;
-    try {
-      const user = await AuthService.signIn(email, password);
-      errored = !user;
-    } catch(e) {
-      console.error(e);
-      errored = true;
-    }
-
-    if (errored) {
-      setIncorrect(true);
-      setLoading(false);
-    }
-  }
-
+  const { isPending, error, run } = useAsync({ deferFn: login });
   const isValidEmail = validateEmail(email);
 
   return (
@@ -86,9 +83,16 @@ const Login: React.FC = () => {
               onChangeText={setPassword}
             />
           </PaperProvider>
-          <Button icon="send" mode="contained" onPress={login} disabled={!email || !isValidEmail || !password}>Checks out (login).</Button>
-          <ActivityIndicator animating={loading} />
-          {incorrect && (<Text>Incorrect username and pass.</Text>)}
+          <Button
+            icon="send"
+            mode="contained"
+            onPress={() => run(email, password)}
+            disabled={!email || !isValidEmail || !password}
+          >
+            Checks out (login).
+          </Button>
+          <ActivityIndicator animating={isPending} />
+          {error && <Text>Incorrect username and pass.</Text>}
         </ScrollView>
       </SafeAreaView>
     </>

@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Card, Avatar, Chip, IconButton } from "react-native-paper";
 
-import { parseISO, format } from "date-fns";
+import { format } from "date-fns";
 
 import { EventModel } from "../models/event-model";
 
@@ -10,12 +10,8 @@ import {
   TEXT,
   PRIMARY,
   DARK_TEXT_THEME,
-  ACCENT,
-  ACCENT_LIGHT,
   RED,
-  RED_LIGHT,
-  YELLOW,
-  YELLOW_LIGHT
+  YELLOW
 } from "../theme";
 
 // Date formats.
@@ -59,21 +55,18 @@ const styles = StyleSheet.create({
 });
 
 const EVENT_TYPE_COLORS = {
-  Entertainment: ACCENT,
-  Event: YELLOW,
-  Food: RED
+  activity: YELLOW,
+  food: RED
 };
 
 const EVENT_TYPE_TEXT_COLORS = {
-  Entertainment: "rgba(255,255,255,0.89)",
-  Event: "rgba(255,255,255,0.89)",
-  Food: "rgba(255,255,255,0.89)",
+  activity: "rgba(255,255,255,0.89)",
+  food: "rgba(255,255,255,0.89)",
 }
 
 const EVENT_TYPE_ICONS = {
-  Entertainment: "event-seat",
-  Event: "star",
-  Food: "restaurant-menu"
+  activity: "star",
+  food: "restaurant-menu"
 };
 
 interface Props {
@@ -81,8 +74,8 @@ interface Props {
 }
 
 const EventListItem: React.FC<Props> = ({ model }) => {
-  const startDate = parseISO(model.event_start_time);
-  const endDate = parseISO(model.event_end_time);
+  const startDate = new Date(parseFloat(model.event_start_time));
+  const endDate = new Date(parseFloat(model.event_end_time));
 
   const subtitle =
     format(startDate, `${WEEKDAY}, ${TIME}`) + " — " + format(endDate, TIME);
