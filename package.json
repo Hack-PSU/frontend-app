@@ -15,7 +15,7 @@
     "expo": "^35.0.0",
     "expo-blur": "^7.0.0",
     "expo-constants": "^7.0.1",
-    "firebase": "^7.4.0",
+    "firebase": "^7.5.0",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "16.8.3",

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, StyleSheet, SectionList } from "react-native";
-import { FAB } from "react-native-paper";
 
 import { useAsync } from "react-async";
 import { observer } from "mobx-react";
@@ -20,26 +19,23 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     backgroundColor: BACKGROUND
   },
-  fab: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
-    borderRadius: 16
-  }
 });
+
+const ALL = "All";
+const STARRED = "Starred";
 
 const EventsRoute: React.FC = observer(() => {
   const { data, isPending } = useAsync({
     promiseFn: DataService.getEvents
   });
 
-  const [filter, setFilter] = useState<string>("Saturday");
+  const [filter, setFilter] = useState(ALL);
 
   const listHeader = <Subtitle>Events</Subtitle>;
   const sectionHeader = (
     <View style={styles.section}>
       <SegmentedControl
-        values={["Saturday", "Sunday"]}
+        values={[ALL, STARRED]}
         value={filter}
         onChange={newValue => setFilter(newValue)}
       />
@@ -62,7 +58,6 @@ const EventsRoute: React.FC = observer(() => {
         renderSectionHeader={() => sectionHeader}
         stickySectionHeadersEnabled={true}
       />
-      <FAB style={styles.fab} icon="star" color="white" />
     </Scaffold>
   );
 });

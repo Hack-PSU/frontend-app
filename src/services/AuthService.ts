@@ -18,7 +18,9 @@ export class AuthService {
   }
 
   init() {
+    console.log('auth init');
     Firebase.auth().onAuthStateChanged(user => {
+      console.log('auth state changed');
       this.currentUser = user;
     })
 

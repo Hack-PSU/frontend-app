@@ -8,50 +8,64 @@ import getEnvironment from "./getEnvironment";
 const API_BASE_URL = getEnvironment("apiBaseUrl");
 const API_BASE_URL_V2 = getEnvironment("apiBaseUrlV2");
 
-function handleV1(json) {
-  console.log(json);
-  return json;
+export interface ApiResponse<T> {
+  api_response: string;
+  status: number;
+  body: { data: T; result: string };
 }
 
-function handleV2(json) {
-  if (json.api_response === "Success") {
-    return json.body.data;
-  }
-
-  // TODO: Error handling.
-  return null;
+export interface ApiError {
+  error: any;
+  message: string;
 }
 
 // Wrap "browser" (React Native) fetch in our fetch retry.
 const browserFetch = window.fetch;
-const fetchRetry: (typeof browserFetch) = createFetchRetry(browserFetch);
+const fetchRetry: typeof browserFetch = createFetchRetry(browserFetch);
 
-export async function httpGet<T>(url: string, v2: boolean = false): Promise<T> {
-  const fullUrl = v2 ? API_BASE_URL_V2.concat(url) : API_BASE_URL.concat(url)
+export async function httpGet<T>(
+  url: string,
+  v2: boolean = true,
+  headers?: Headers
+): Promise<T> {
+  const fullUrl = v2 ? API_BASE_URL_V2.concat(url) : API_BASE_URL.concat(url);
 
-  const res = await fetchRetry(fullUrl);
-  const json = await res.json();
+  const res = await fetchRetry(fullUrl, { headers });
 
   if (v2) {
-    return handleV2(json);
-  }
+    const json: ApiResponse<ApiError | T> = await res.json();
+    const data = json.body.data;
 
-  return handleV1(json);
+    if (!res.ok) {
+      console.error((data as ApiError).message);
+      throw data;
+    }
+
+    return data as T;
+  } else {
+    const json: T = await res.json();
+
+    if (!res.ok) {
+      console.error(res.statusText);
+
+      throw {
+        error: res.status,
+        message: res.statusText
+      } as ApiError;
+    }
+
+    return json as T;
+  }
 }
 
-export async function httpGetWithAuth<T>(url: string, user: Firebase.User, v2: boolean = false): Promise<T> {
+export async function httpGetWithAuth<T>(
+  url: string,
+  user: Firebase.User,
+  v2: boolean = true
+): Promise<T> {
   const headers = new Headers({
     idtoken: await user.getIdToken()
   });
 
-  const fullUrl = v2 ? API_BASE_URL_V2.concat(url) : API_BASE_URL.concat(url)
-
-  const res = await fetchRetry(fullUrl, { headers });
-  const json = await res.json();
-
-  if (v2) {
-    return handleV2(json);
-  }
-
-  return handleV1(json);
+  return httpGet<T>(url, v2, headers);
 }
