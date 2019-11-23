@@ -74,8 +74,8 @@ interface Props {
 }
 
 const EventListItem: React.FC<Props> = ({ model }) => {
-  const startDate = new Date(parseFloat(model.event_start_time));
-  const endDate = new Date(parseFloat(model.event_end_time));
+  const startDate = model.event_start_time;
+  const endDate = model.event_end_time;
 
   const subtitle =
     format(startDate, `${WEEKDAY}, ${TIME}`) + " — " + format(endDate, TIME);
