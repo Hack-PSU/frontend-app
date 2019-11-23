@@ -14,13 +14,13 @@ import {
 } from "react-native-paper";
 import { useAsync } from "react-async";
 
+import { validate as validateEmail } from "email-validator";
+
 import SegmentedControl from "../components/SegmentedControl";
 
 import AuthService from "../services/AuthService";
 
-import { BAR_HEIGHT } from "../theme";
-
-import { validate as validateEmail } from "email-validator";
+import { BAR_HEIGHT, TEXT } from "../theme";
 
 const styles = StyleSheet.create({
   scroll: {
@@ -28,14 +28,20 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   input: {
-    color: "#0d0d0d"
+    color: TEXT
   }
 });
 
 const SIGN_IN = "Sign In";
-const SIGN_UP = "Sign Up";
+const REGISTER = "Register";
 
-async function signInOrSignUp([email, password, operation]) {
+/**
+ * Due to how react-async works, [email, password, operation] are
+ * passed from running:
+ * 
+ * run(email, password, operation)
+ */
+async function signInOrSignUp([email, password, operation]: [string, string, string]) {
   if (!validateEmail(email)) {
     return;
   }
@@ -47,7 +53,7 @@ async function signInOrSignUp([email, password, operation]) {
     }
   }
 
-  if (operation == SIGN_UP) {
+  if (operation == REGISTER) {
     const user = await AuthService.createUser(email, password);
     if (!user) {
       throw new Error("user was null after creation");
@@ -60,11 +66,10 @@ async function signInOrSignUp([email, password, operation]) {
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // "Sign In" and "Register" are valid values.
+  const [operation, setOperation] = useState(SIGN_IN); 
 
   const { isPending, error, run } = useAsync({ deferFn: signInOrSignUp });
-
-  // "Sign In" and "Sign Up" are valid values.
-  const [operation, setOperation] = useState(SIGN_IN); 
 
   const isValidEmail = validateEmail(email);
 
@@ -78,7 +83,7 @@ const Login: React.FC = () => {
           <Text>Rahul making this look nice is all you buddy!</Text>
           {/* This resets default theme for inputs. */}
           <SegmentedControl
-            values={[SIGN_IN, SIGN_UP]}
+            values={[SIGN_IN, REGISTER]}
             value={operation}
             onChange={newValue => setOperation(newValue)}
           />

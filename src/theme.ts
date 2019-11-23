@@ -1,8 +1,11 @@
 import { Platform } from "react-native";
+import { DefaultTheme } from "react-native-paper";
 
-export const IS_ANDROID = Platform.OS !== "ios";
+export const IS_ANDROID = Platform.OS === "android";
 
-// If undefined just use system value.
+// Bar height to be passed to any instance of Appbar from
+// react-native-paper.
+// https://callstack.github.io/react-native-paper/appbar.html
 export const BAR_HEIGHT = IS_ANDROID ? 0 : undefined;
 
 // Colors.
@@ -14,9 +17,20 @@ export const TEXT_LIGHT = "#FFFFFF";
 export const BACKGROUND = "#113654";
 
 export const RED = "#F24418";
-export const RED_LIGHT = "#F9810C";
 export const YELLOW = "#B6C767";
-export const YELLOW_LIGHT = "#9FDE68";
+
+// Our customized theme for react-native-paper.
+export const THEME = {
+  ...DefaultTheme,
+  roundness: 16,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: PRIMARY,
+    accent: ACCENT,
+    background: BACKGROUND,
+    text: TEXT_LIGHT
+  }
+};
 
 /**
  * To use:

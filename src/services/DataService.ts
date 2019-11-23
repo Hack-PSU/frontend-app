@@ -3,12 +3,15 @@ import { observable } from "mobx";
 import { RegistrationApiResponse } from "../models/registration";
 import { EventModel, EventModelJSON } from "../models/event-model";
 
-import { fetch, fetchWithAuth } from "../fetch";
+import { httpGet, httpGetWithAuth } from "../httpGet";
 
 export class DataService {
+  @observable
+  events: EventModel[];
+
   // TODO: Frontend doesn't use a cache for this... but should it?
   async getRegistrationStatus(currentUser: firebase.User): Promise<RegistrationApiResponse> {
-    const registrations = await fetchWithAuth<RegistrationApiResponse[]>("users/register", currentUser, true);
+    const registrations = await httpGetWithAuth<RegistrationApiResponse[]>("users/register", currentUser, true);
 
     if (!registrations || !registrations.length) {
       return null;
@@ -17,12 +20,9 @@ export class DataService {
     return RegistrationApiResponse.parseJSON(registrations[0]);
   }
 
-  @observable
-  events: EventModel[];
-
   async getEvents(): Promise<EventModel[]> {
     if (!this.events) {
-      const eventsRaw = await fetch<EventModelJSON[]>("live/events");
+      const eventsRaw = await httpGet<EventModelJSON[]>("live/events");
       this.events = EventModel.parseFromJSONArray(eventsRaw);
     }
 

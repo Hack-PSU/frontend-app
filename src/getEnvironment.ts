@@ -1,6 +1,23 @@
 import Constants from "expo-constants";
 
-function getEnv(name) {
+/**
+ * getEnvironment will try to get environment
+ * variables specified in the "extra" section of "app.json"
+ * (root directory of project).
+ *
+ * It will also determine automatically if we're running in dev,
+ * staging, or prod mode (this is handled by Expo).
+ *
+ * IF DEV, try to return the following keys:
+ * - name
+ * - name.dev
+ * - name.staging
+ * IF STAGING, try to return the following keys:
+ * - name.staging
+ * IF PROD, try to return the following keys:
+ * - name.prod
+ */
+function getEnvironment<T = any>(name: string): T | null {
   const env = Constants.manifest.releaseChannel;
   const extra = Constants.manifest.extra;
 
@@ -32,10 +49,4 @@ function getEnv(name) {
   }
 }
 
-export default getEnv;
-
-// Gets params for firebase.initializeApp
-// https://docs.expo.io/versions/latest/guides/using-firebase/#user-authentication
-export function getFirebaseEnv() {
-  return getEnv("firebase");  
-}
+export default getEnvironment;

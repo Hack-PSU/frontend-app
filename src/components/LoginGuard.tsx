@@ -1,5 +1,5 @@
 import React from "react";
-import { useObserver } from "mobx-react";
+import { observer } from "mobx-react";
 
 import Login from "./Login";
 
@@ -18,18 +18,12 @@ interface Props {
  * Technical notes:
  * observer() is what allows our component to re-render every time the user changes.
  */
-const LoginGuard: React.FC<Props> = ({ children }: Props) => {
-  return useObserver(() => {
-    if (!AuthService.isLoggedIn) {
-      return <Login />;
-    }
-  
-    return (
-      <>
-        {children}
-      </>
-    );
-  });
-};
+const LoginGuard: React.FC<Props> = observer(({ children }: Props) => {
+  if (!AuthService.isLoggedIn) {
+    return <Login />;
+  }
+
+  return <>{children}</>;
+});
 
 export default LoginGuard;

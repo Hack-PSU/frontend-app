@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import { useAsync } from "react-async";
 
 import { AppLoading } from "expo";
@@ -10,29 +10,31 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
-import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
-
-import * as Firebase from "firebase";
+import { Provider as PaperProvider } from "react-native-paper";
 
 import LoginGuard from "./LoginGuard";
-
-import AuthService from "../services/AuthService";
-
-import ProfileModal from "../modals/ProfileModal";
 
 import HomeRoute from "../routes/HomeRoute";
 import EventsRoute from "../routes/EventsRoute";
 import WorkshopsRoute from "../routes/WorkshopsRoute";
 import MapRoute from "../routes/MapRoute";
 
-import { PRIMARY, ACCENT, TEXT_LIGHT, BACKGROUND } from "../theme";
-import { getFirebaseEnv } from "../getEnv";
+import ProfileModal from "../routes/modals/ProfileModal";
 
-// Setup Firebase and check if we're running in production.
-Firebase.initializeApp(getFirebaseEnv());
+import { THEME } from "../theme";
+import initServices from "../initServices";
 
 // Init all services.
-AuthService.init();
+initServices();
+
+async function loadFonts() {
+  await Font.loadAsync({	
+    "Plex-Mono": require("../../assets/fonts/IBMPlexMono-Medium.otf"),	
+    Cornerstone: require("../../assets/fonts/Cornerstone.ttf")	
+  });
+
+  return true;
+}
 
 /**
  * TO ADD A ROUTE OR MODAL:
@@ -72,13 +74,6 @@ const BottomTabsNavigator = createAppContainer(
   })
 );
 
-const styles = StyleSheet.create({
-  homeModal: {
-    flex: 1,
-    backgroundColor: "white"
-  }
-});
-
 const modals = {
   Home: {
     screen: BottomTabsNavigator,
@@ -95,27 +90,6 @@ const modals = {
 
 const StackNavigator = createAppContainer(createStackNavigator(modals, {}));
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 16,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: PRIMARY,
-    accent: ACCENT,
-    background: BACKGROUND,
-    text: TEXT_LIGHT
-  }
-};
-
-async function loadFonts() {
-  await Font.loadAsync({	
-    "Plex-Mono": require("../../assets/fonts/IBMPlexMono-Medium.otf"),	
-    Cornerstone: require("../../assets/fonts/Cornerstone.ttf")	
-  });
-
-  return true;
-}
-
 /**
  * `App` sets up the Material theme, fonts, system borders,
  * and acts as the primary navigation for the app.
@@ -125,14 +99,14 @@ async function loadFonts() {
  * 3) Pane switching within bottom nav bar.
  */
 const App: React.FC = () => {
-  const { data: fontsLoaded, error, isPending } = useAsync({ promiseFn: loadFonts });
+  const { data: fontsLoaded, isPending } = useAsync({ promiseFn: loadFonts });
 
   if (!fontsLoaded || isPending) {
     return <AppLoading />;
   }
 
   return (
-    <PaperProvider theme={theme}>
+    <PaperProvider theme={THEME}>
       {/* This is for iOS, for Android see app.json in root of project. */}
       <StatusBar barStyle="dark-content" />
       <LoginGuard>
