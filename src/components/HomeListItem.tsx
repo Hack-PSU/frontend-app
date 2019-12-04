@@ -14,7 +14,7 @@ const HomeListItem: React.FC<Props> = props => {
     <Card theme={DARK_TEXT_THEME} style={styles.card}>
       <Card.Content>
         <Paragraph style={styles.description}>{props.description}</Paragraph>
-        <Headline>{props.info}</Headline>
+        <Headline style={styles.info}>{props.info}</Headline>
       </Card.Content>
     </Card>
   );
@@ -33,8 +33,7 @@ const styles = StyleSheet.create({
   },
 
   info: {
-    color: TEXT,
-    fontSize: 35
+    color: TEXT
   }
 });
 
