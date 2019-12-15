@@ -1,9 +1,10 @@
 import React from "react";
-import { Text, ActivityIndicator, StyleSheet } from "react-native";
-import { Title } from "react-native-paper";
+import { ActivityIndicator, StyleSheet, View, Linking } from "react-native";
+import { Text, Title } from "react-native-paper";
 import { useAsync } from "react-async";
 import { observer } from "mobx-react";
 import HomeListItem from "../components/HomeListItem";
+import HomeListItemHorizontal from "../components/HomeListItemHorizontal";
 import { TEXT_LIGHT } from "../theme";
 
 import Scaffold from "../components/Scaffold";
@@ -39,6 +40,17 @@ const HomeRoute: React.FC = observer(() => {
 
       <HomeListItem description="Time Left" info="2 hours, 5 minutes" />
       <HomeListItem description="My PIN Number" info="12345" />
+      
+      <View style={styles.horizontalCardView}>
+        <HomeListItemHorizontal description="Wi-Fi">
+          <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
+          <Text style={styles.horizontalCardText}>Password: plz</Text>
+        </HomeListItemHorizontal>
+        {/* Will change URL later */}
+        <HomeListItemHorizontal description="Slack" onPress={() => Linking.openURL("https://github.com/Hack-PSU")}>
+          <Text style={styles.horizontalCardText}>Request an invite by clicking here!</Text>
+        </HomeListItemHorizontal>
+      </View>
     </Scaffold>
   );
 });
@@ -55,6 +67,10 @@ const styles = StyleSheet.create({
 
   horizontalCardView: {
     flexDirection: "row"
+  },
+
+  horizontalCardText: {
+    color: "gray"
   }
 });
 
