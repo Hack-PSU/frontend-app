@@ -62,7 +62,7 @@ const MapRoute: React.FC = () => {
         </TouchableOpacity>
 
         <Button icon="map" onPress={openMaps}>
-          Open Maps
+          Directions
         </Button>
       </View>
     </Scaffold>
