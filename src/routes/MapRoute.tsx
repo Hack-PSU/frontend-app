@@ -1,9 +1,15 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, Platform, Linking } from "react-native";
+import { Button } from "react-native-paper";
 
 import Scaffold from "../components/Scaffold";
 
 const MapRoute: React.FC = () => {
+  const openMaps = () => {
+    let scheme = Platform.OS === "ios" ? "maps:" : "geo:";
+    Linking.openURL(scheme + "40.803983,-77.865197?q=Business Building");
+  };
+
   return (
     <Scaffold title="Map">
       <View style={styles.root}>
@@ -11,6 +17,9 @@ const MapRoute: React.FC = () => {
           style={styles.image}
           source={require("../../assets/images/BuildingMap.png")}
         />
+        <Button icon="map" onPress={openMaps}>
+          Open Maps
+        </Button>
       </View>
     </Scaffold>
   );
