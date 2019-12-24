@@ -20,15 +20,15 @@ const styles = StyleSheet.create({
   root: {
     height: "100%",
     width: "100%",
-    marginTop: 20,
-    marginBottom: 50,
-    justifyContent: "center",
-    flexDirection: "row"
+    paddingTop: 10,
+    paddingBottom: 80,
+    paddingHorizontal: 10,
+    alignContent: "center"
   },
 
   image: {
     flex: 1,
-    height: "80%",
+    width: "100%",
     resizeMode: "contain"
   }
 });
