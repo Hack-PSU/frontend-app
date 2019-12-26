@@ -73,9 +73,10 @@ const Login: React.FC = () => {
   };
 
   return (
+    // Reset theme to follow something easier to work with for this screen
     <PaperProvider theme={loginTheme}>
       <StatusBar backgroundColor="#10253B" barStyle="light-content" />
-      <Appbar.Header statusBarHeight={BAR_HEIGHT} style={{ shadowRadius: 10 }}>
+      <Appbar.Header statusBarHeight={BAR_HEIGHT}>
         <Image
           style={styles.image}
           resizeMode="contain"
@@ -84,6 +85,7 @@ const Login: React.FC = () => {
         <Appbar.Content title="Login" />
       </Appbar.Header>
 
+      {/* This dialog shows up after the user clicks the login/register button */}
       <Portal>
         <Dialog visible={isDialogVisible}>
           <Dialog.Content>
@@ -120,6 +122,7 @@ const Login: React.FC = () => {
             value={password}
             onChangeText={setPassword}
           />
+
           <Button
             mode="contained"
             icon="send"
