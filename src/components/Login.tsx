@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   SafeAreaView,
   View,
   ActivityIndicator,
@@ -12,6 +11,9 @@ import {
   Appbar,
   TextInput,
   Button,
+  Portal,
+  Dialog,
+  Paragraph,
   DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
@@ -60,10 +62,15 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   // "Sign In" and "Register" are valid values.
   const [operation, setOperation] = useState(SIGN_IN);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const { isPending, error, run } = useAsync({ deferFn: signInOrSignUp });
-
   const isValidEmail = validateEmail(email);
+
+  const onButtonPress = () => {
+    run(email, password, operation);
+    setIsDialogVisible(true);
+  };
 
   return (
     <PaperProvider theme={loginTheme}>
@@ -76,6 +83,20 @@ const Login: React.FC = () => {
         />
         <Appbar.Content title="Login" />
       </Appbar.Header>
+
+      <Portal>
+        <Dialog visible={isDialogVisible}>
+          <Dialog.Content>
+            {isPending && <ActivityIndicator size="large" />}
+            {!isPending && error && (
+              <Paragraph>Username or password is incorrect</Paragraph>
+            )}
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setIsDialogVisible(false)}>Dismiss</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
       <SafeAreaView>
         <View style={styles.root}>
@@ -103,7 +124,7 @@ const Login: React.FC = () => {
             mode="contained"
             icon="send"
             style={styles.loginButton}
-            onPress={() => run(email, password, operation)}
+            onPress={onButtonPress}
             disabled={!email || !isValidEmail || !password}
           >
             {operation}
@@ -125,8 +146,6 @@ const Login: React.FC = () => {
                 : "Log in with existing account"}
             </Button>
           </View>
-          <ActivityIndicator animating={isPending} />
-          {error && <Text>Incorrect username and pass.</Text>}
         </View>
       </SafeAreaView>
     </PaperProvider>
