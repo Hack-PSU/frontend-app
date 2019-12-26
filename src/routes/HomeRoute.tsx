@@ -30,25 +30,27 @@ const HomeRoute: React.FC = observer(() => {
 
   return (
     <Scaffold title="Home">
-      {/* <ActivityIndicator animating={isPending} />
-      {!isPending && (
-        <Text style={{ color: "white", fontSize: 36 }}>
-          My pin is... {registration.pin}
-        </Text>
-      )} */}
       <Title style={styles.title}>HOME</Title>
 
       <HomeListItem description="Time Left" info="2 hours, 5 minutes" />
-      <HomeListItem description="My PIN Number" info="12345" />
-      
+      <HomeListItem
+        description="My PIN Number"
+        info={isPending ? "..." : registration.pin.toString()}
+      />
+
       <View style={styles.horizontalCardView}>
         <HomeListItemHorizontal description="Wi-Fi">
           <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
           <Text style={styles.horizontalCardText}>Password: plz</Text>
         </HomeListItemHorizontal>
         {/* Will change URL later */}
-        <HomeListItemHorizontal description="Slack" onPress={() => Linking.openURL("https://github.com/Hack-PSU")}>
-          <Text style={styles.horizontalCardText}>Request an invite by clicking here!</Text>
+        <HomeListItemHorizontal
+          description="Slack"
+          onPress={() => Linking.openURL("https://github.com/Hack-PSU")}
+        >
+          <Text style={styles.horizontalCardText}>
+            Request an invite by clicking here!
+          </Text>
         </HomeListItemHorizontal>
       </View>
     </Scaffold>
