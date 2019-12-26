@@ -3,13 +3,15 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  ScrollView,
-  ActivityIndicator
+  View,
+  ActivityIndicator,
+  StatusBar
 } from "react-native";
 import {
   Appbar,
   TextInput,
   Button,
+  DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
 import { useAsync } from "react-async";
@@ -68,65 +70,100 @@ const Login: React.FC = () => {
   const isValidEmail = validateEmail(email);
 
   return (
-    <>
+    <PaperProvider theme={loginTheme}>
+      <StatusBar backgroundColor="#10253B" barStyle="light-content" />
       <Appbar.Header statusBarHeight={BAR_HEIGHT}>
         <Appbar.Content title="Login" />
       </Appbar.Header>
 
       <SafeAreaView>
-        <TextInput
-          label="Email"
-          mode="outlined"
-          style={styles.input}
-          selectionColor="#0d0d0d"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          value={email}
-          error={!isValidEmail}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          label="Password"
-          mode="outlined"
-          style={styles.input}
-          autoCompleteType="password"
-          textContentType="password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-        <Button
-          icon="send"
-          mode="contained"
-          onPress={() => run(email, password, operation)}
-          disabled={!email || !isValidEmail || !password}
-        >
-          {operation}
-        </Button>
-        <Button
-          onPress={() =>
-            setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
-          }
-        >
-          {operation === SIGN_IN
-            ? "Create an account"
-            : "Login using existing account"}
-        </Button>
-        <ActivityIndicator animating={isPending} />
-        {error && <Text>Incorrect username and pass.</Text>}
+        <View style={styles.root}>
+          <TextInput
+            label="Email"
+            mode="flat"
+            style={styles.textInput}
+            autoCompleteType="email"
+            textContentType="emailAddress"
+            value={email}
+            error={email !== "" && !isValidEmail}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            label="Password"
+            mode="flat"
+            style={styles.textInput}
+            autoCompleteType="password"
+            textContentType="password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <Button
+            mode="contained"
+            style={styles.loginButton}
+            onPress={() => run(email, password, operation)}
+            disabled={!email || !isValidEmail || !password}
+          >
+            {operation}
+          </Button>
+
+          <View style={styles.bottomButtonsContainer}>
+            <Button compact={true} uppercase={false}>
+              Forgot password?
+            </Button>
+            <Button
+              onPress={() =>
+                setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
+              }
+              compact={true}
+              uppercase={false}
+            >
+              {operation === SIGN_IN
+                ? "Create account"
+                : "Log in with existing account"}
+            </Button>
+          </View>
+          <ActivityIndicator animating={isPending} />
+          {error && <Text>Incorrect username and pass.</Text>}
+        </View>
       </SafeAreaView>
-    </>
+    </PaperProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  scroll: {
-    width: "100%",
-    height: "100%"
+  root: {
+    marginTop: 16,
+    marginHorizontal: 16
   },
-  input: {
-    color: TEXT
+
+  textInput: {
+    marginTop: 10
+  },
+
+  loginButton: {
+    marginTop: 16,
+    paddingVertical: 5
+  },
+
+  bottomButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5
+  },
+
+  bottomButtons: {
+    fontSize: 5
   }
 });
+
+const loginTheme = {
+  ...DefaultTheme,
+
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#113654"
+  }
+};
 
 export default Login;
