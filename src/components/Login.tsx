@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   View,
   ActivityIndicator,
-  StatusBar
+  StatusBar,
+  Image
 } from "react-native";
 import {
   Appbar,
@@ -15,13 +16,8 @@ import {
   Provider as PaperProvider
 } from "react-native-paper";
 import { useAsync } from "react-async";
-
 import { validate as validateEmail } from "email-validator";
-
-import SegmentedControl from "../components/SegmentedControl";
-
 import AuthService from "../services/AuthService";
-
 import { BAR_HEIGHT, TEXT } from "../theme";
 
 const SIGN_IN = "Login";
@@ -72,7 +68,12 @@ const Login: React.FC = () => {
   return (
     <PaperProvider theme={loginTheme}>
       <StatusBar backgroundColor="#10253B" barStyle="light-content" />
-      <Appbar.Header statusBarHeight={BAR_HEIGHT}>
+      <Appbar.Header statusBarHeight={BAR_HEIGHT} style={{ shadowRadius: 10 }}>
+        <Image
+          style={styles.image}
+          resizeMode="contain"
+          source={require("../../assets/images/Hacky.png")}
+        />
         <Appbar.Content title="Login" />
       </Appbar.Header>
 
@@ -100,6 +101,7 @@ const Login: React.FC = () => {
           />
           <Button
             mode="contained"
+            icon="send"
             style={styles.loginButton}
             onPress={() => run(email, password, operation)}
             disabled={!email || !isValidEmail || !password}
@@ -135,6 +137,13 @@ const styles = StyleSheet.create({
   root: {
     marginTop: 16,
     marginHorizontal: 16
+  },
+
+  image: {
+    height: "80%",
+    width: "10%",
+    alignContent: "center",
+    marginLeft: 10
   },
 
   textInput: {
