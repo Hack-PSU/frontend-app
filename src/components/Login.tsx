@@ -95,7 +95,9 @@ const Login: React.FC = () => {
             )}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setIsDialogVisible(false)}>Dismiss</Button>
+            {!isPending && (
+              <Button onPress={() => setIsDialogVisible(false)}>Dismiss</Button>
+            )}
           </Dialog.Actions>
         </Dialog>
       </Portal>
