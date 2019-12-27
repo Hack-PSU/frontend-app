@@ -20,7 +20,7 @@ import {
 import { useAsync } from "react-async";
 import { validate as validateEmail } from "email-validator";
 import AuthService from "../services/AuthService";
-import { BAR_HEIGHT, TEXT } from "../theme";
+import { BAR_HEIGHT } from "../theme";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
@@ -75,7 +75,10 @@ const Login: React.FC = () => {
   return (
     // Reset theme to follow something easier to work with for this screen
     <PaperProvider theme={loginTheme}>
-      <StatusBar backgroundColor="#10253B" barStyle="light-content" />
+      <StatusBar
+        backgroundColor={loginTheme.colors.statusBar}
+        barStyle="light-content"
+      />
       <Appbar.Header statusBarHeight={BAR_HEIGHT}>
         <Image
           style={styles.image}
@@ -195,7 +198,8 @@ const loginTheme = {
 
   colors: {
     ...DefaultTheme.colors,
-    primary: "#113654"
+    primary: "#113654",
+    statusBar: "#10253B"
   }
 };
 
