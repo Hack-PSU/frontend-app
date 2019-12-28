@@ -5,6 +5,7 @@ import { useAsync } from "react-async";
 import { observer } from "mobx-react";
 import HomeListItem from "../components/HomeListItem";
 import HomeListItemHorizontal from "../components/HomeListItemHorizontal";
+import DateCounter from "../components/DateCounter";
 import { TEXT_LIGHT } from "../theme";
 
 import Scaffold from "../components/Scaffold";
@@ -32,7 +33,7 @@ const HomeRoute: React.FC = observer(() => {
     <Scaffold title="Home">
       <Title style={styles.title}>HOME</Title>
 
-      <HomeListItem description="Time Left" info="2 hours, 5 minutes" />
+      <DateCounter />
       <HomeListItem
         description="My PIN Number"
         info={isPending ? "..." : registration.pin.toString()}
