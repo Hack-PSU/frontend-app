@@ -3,7 +3,7 @@ import {} from "react-native";
 import HomeListItem from "./HomeListItem";
 
 interface State {
-  timeLeft: string;
+  timeLeft: number; // in seconds
 }
 
 export default class DateCounter extends React.Component<{}, State> {
@@ -11,34 +11,46 @@ export default class DateCounter extends React.Component<{}, State> {
     super(props);
 
     this.state = {
-      timeLeft: "..."
+      timeLeft: 0
     };
   }
 
-  updateTime = () => {
+  updateTimeLeft = () => {
     const today = new Date();
     const hackathonDate = new Date("April 4, 2020 07:00:00"); // April 4, 2020, 7:00am
-    let milliDifference = hackathonDate.getTime() - today.getTime();
-
-    // Might need to change floor to ceil
-    const days = Math.floor(milliDifference / (1000 * 60 * 60 * 24));
-    milliDifference -= days * (1000 * 60 * 60 * 24);
-    const hours = Math.floor(milliDifference / (1000 * 60 * 60));
-    milliDifference -= hours * (1000 * 60 * 60);
-    const minutes = Math.floor(milliDifference / (1000 * 60));
-    milliDifference -= minutes * (1000 * 60);
-    const seconds = Math.floor(milliDifference / 1000);
 
     this.setState({
-      timeLeft: `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} s`
+      timeLeft: (hackathonDate.getTime() - today.getTime()) / 1000
     });
   };
 
+  parseTimeLeft = () => {
+    let secondsDifference = this.state.timeLeft;
+
+    const days = Math.floor(secondsDifference / (60 * 60 * 24));
+    secondsDifference -= days * (60 * 60 * 24);
+    const hours = Math.floor(secondsDifference / (60 * 60));
+    secondsDifference -= hours * (60 * 60);
+    const minutes = Math.floor(secondsDifference / 60);
+    secondsDifference -= minutes * 60;
+    const seconds = Math.floor(secondsDifference);
+
+    return `${days} d, ${hours} h, ${minutes} m, ${seconds} s`;
+  };
+
   componentDidMount() {
-    setInterval(this.updateTime, 1000);
+    // Don't waste processing power on calculation and state updates if time has passed
+    if (this.state.timeLeft >= 0) {
+      setInterval(this.updateTimeLeft, 1000); // Update time every second
+    }
   }
 
   render() {
-    return <HomeListItem description="Time Left" info={this.state.timeLeft} />;
+    if (this.state.timeLeft < 0) {
+      return null;
+    }
+
+    const parsedTimeLeft = this.parseTimeLeft();
+    return <HomeListItem description="Time Left" info={parsedTimeLeft} />;
   }
 }
