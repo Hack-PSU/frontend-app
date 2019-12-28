@@ -1,5 +1,4 @@
 import React from "react";
-import {} from "react-native";
 import HomeListItem from "./HomeListItem";
 
 interface State {
@@ -46,6 +45,7 @@ export default class DateCountDown extends React.Component<{}, State> {
   }
 
   render() {
+    // Don't have this component show up during the event
     if (this.state.timeLeft < 0) {
       return null;
     }
