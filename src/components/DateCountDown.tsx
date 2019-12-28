@@ -6,7 +6,7 @@ interface State {
   timeLeft: number; // in seconds
 }
 
-export default class DateCounter extends React.Component<{}, State> {
+export default class DateCountDown extends React.Component<{}, State> {
   constructor(props) {
     super(props);
 
