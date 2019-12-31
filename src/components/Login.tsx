@@ -5,7 +5,8 @@ import {
   View,
   ActivityIndicator,
   StatusBar,
-  Image
+  Image,
+  Alert
 } from "react-native";
 import {
   Appbar,
@@ -13,7 +14,6 @@ import {
   Button,
   Portal,
   Dialog,
-  Paragraph,
   DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
@@ -41,16 +41,25 @@ async function signInOrSignUp([email, password, operation]: [
   }
 
   if (operation == SIGN_IN) {
-    const user = await AuthService.signIn(email, password);
-    if (!user) {
-      throw new Error("user was null");
+    try {
+      const user = await AuthService.signIn(email, password);
+      if (!user) {
+        console.log("Test2");
+        Alert.alert("Error", "User does not exist");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Username or password is incorrect");
     }
   }
 
   if (operation == REGISTER) {
-    const user = await AuthService.createUser(email, password);
-    if (!user) {
-      throw new Error("user was null after creation");
+    try {
+      const user = await AuthService.createUser(email, password);
+      if (!user) {
+        Alert.alert("Error", "User does not exist");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Could not create user");
     }
   }
 
@@ -62,15 +71,9 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   // "Sign In" and "Register" are valid values.
   const [operation, setOperation] = useState(SIGN_IN);
-  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
-  const { isPending, error, run } = useAsync({ deferFn: signInOrSignUp });
+  const { isPending, run } = useAsync({ deferFn: signInOrSignUp });
   const isValidEmail = validateEmail(email);
-
-  const onButtonPress = () => {
-    run(email, password, operation);
-    setIsDialogVisible(true);
-  };
 
   return (
     // Reset theme to follow something easier to work with for this screen
@@ -90,18 +93,10 @@ const Login: React.FC = () => {
 
       {/* This dialog shows up after the user clicks the login/register button */}
       <Portal>
-        <Dialog visible={isDialogVisible}>
+        <Dialog visible={isPending}>
           <Dialog.Content>
-            {isPending && <ActivityIndicator size="large" />}
-            {!isPending && error && (
-              <Paragraph>Username or password is incorrect</Paragraph>
-            )}
+            <ActivityIndicator animating={isPending} size="large" />
           </Dialog.Content>
-          <Dialog.Actions>
-            {!isPending && (
-              <Button onPress={() => setIsDialogVisible(false)}>Dismiss</Button>
-            )}
-          </Dialog.Actions>
         </Dialog>
       </Portal>
 
@@ -132,7 +127,7 @@ const Login: React.FC = () => {
             mode="contained"
             icon="send"
             style={styles.loginButton}
-            onPress={onButtonPress}
+            onPress={() => run(email, password, operation)}
             disabled={!email || !isValidEmail || !password}
           >
             {operation}
