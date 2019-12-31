@@ -4,7 +4,7 @@ import { Text, Title } from "react-native-paper";
 import { useAsync } from "react-async";
 import { observer } from "mobx-react";
 import HomeListItem from "../components/HomeListItem";
-import HomeListItemHorizontal from "../components/HomeListItemHorizontal";
+import HomeListItemSecondary from "../components/HomeListItemSecondary";
 import DateCountDown from "../components/DateCountDown";
 import { TEXT_LIGHT } from "../theme";
 
@@ -43,19 +43,19 @@ const HomeRoute: React.FC = observer(() => {
       />
 
       <View style={styles.horizontalCardView}>
-        <HomeListItemHorizontal description="Wi-Fi">
+        <HomeListItemSecondary description="Wi-Fi">
           <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
           <Text style={styles.horizontalCardText}>Password: plz</Text>
-        </HomeListItemHorizontal>
+        </HomeListItemSecondary>
         {/* Will change URL later */}
-        <HomeListItemHorizontal
+        <HomeListItemSecondary
           description="Slack"
           onPress={() => Linking.openURL(slackInviteUrl)}
         >
           <Text style={styles.horizontalCardText}>
             Request an invite by clicking here!
           </Text>
-        </HomeListItemHorizontal>
+        </HomeListItemSecondary>
       </View>
     </Scaffold>
   );
