@@ -14,6 +14,7 @@ import { RegistrationApiResponse } from "../models/registration";
 
 import AuthService from "../services/AuthService";
 import DataService from "../services/DataService";
+import { ScrollView } from "react-native-gesture-handler";
 
 async function getRegistrationStatus({
   currentUser
@@ -34,29 +35,30 @@ const HomeRoute: React.FC = observer(() => {
 
   return (
     <Scaffold title="Home">
-      <Title style={styles.title}>HOME</Title>
+      <ScrollView>
+        <Title style={styles.title}>HOME</Title>
 
-      <DateCountDown />
-      <HomeListItem
-        description="My PIN Number"
-        info={isPending ? "..." : registration.pin.toString()}
-      />
+        <DateCountDown />
+        <HomeListItem
+          description="My PIN Number"
+          info={isPending ? "..." : registration.pin.toString()}
+        />
 
-      <View style={styles.horizontalCardView}>
-        <HomeListItemSecondary description="Wi-Fi">
-          <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
-          <Text style={styles.horizontalCardText}>Password: plz</Text>
-        </HomeListItemSecondary>
-        {/* Will change URL later */}
-        <HomeListItemSecondary
-          description="Slack"
-          onPress={() => Linking.openURL(slackInviteUrl)}
-        >
-          <Text style={styles.horizontalCardText}>
-            Request an invite by clicking here!
-          </Text>
-        </HomeListItemSecondary>
-      </View>
+        <View style={styles.horizontalCardView}>
+          <HomeListItemSecondary description="Wi-Fi">
+            <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
+            <Text style={styles.horizontalCardText}>Password: plz</Text>
+          </HomeListItemSecondary>
+          <HomeListItemSecondary
+            description="Slack"
+            onPress={() => Linking.openURL(slackInviteUrl)}
+          >
+            <Text style={styles.horizontalCardText}>
+              Request an invite by clicking here!
+            </Text>
+          </HomeListItemSecondary>
+        </View>
+      </ScrollView>
     </Scaffold>
   );
 });
