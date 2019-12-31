@@ -29,6 +29,9 @@ const HomeRoute: React.FC = observer(() => {
     currentUser: AuthService.currentUser
   });
 
+  const slackInviteUrl =
+    "https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU";
+
   return (
     <Scaffold title="Home">
       <Title style={styles.title}>HOME</Title>
@@ -47,7 +50,7 @@ const HomeRoute: React.FC = observer(() => {
         {/* Will change URL later */}
         <HomeListItemHorizontal
           description="Slack"
-          onPress={() => Linking.openURL("https://github.com/Hack-PSU")}
+          onPress={() => Linking.openURL(slackInviteUrl)}
         >
           <Text style={styles.horizontalCardText}>
             Request an invite by clicking here!
