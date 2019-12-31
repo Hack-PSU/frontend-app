@@ -149,9 +149,7 @@ const Login: React.FC = () => {
               compact={true}
               uppercase={false}
             >
-              {operation === SIGN_IN
-                ? "Create account"
-                : "Log in with existing account"}
+              {operation === SIGN_IN ? "Create account" : "I have an account"}
             </Button>
           </View>
         </View>
