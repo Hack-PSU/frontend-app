@@ -7,7 +7,8 @@ interface State {
 }
 
 export default class DateCountDown extends React.Component<{}, State> {
-  hackathonStart = new Date("April 4, 2020 14:00:00"); // April 4, 2020, 2:00 pm
+  readonly hackathonStart = new Date("April 4, 2020 14:00:00"); // April 4, 2020, 2:00 pm
+  readonly hackathonEnd = new Date("April 5, 2020 14:00:00"); // April 5, 2020, 2:00 pm
   timerID: NodeJS.Timeout;
 
   constructor(props) {
@@ -26,7 +27,7 @@ export default class DateCountDown extends React.Component<{}, State> {
 
   componentDidMount() {
     // Don't waste processing power on calculation and state updates if time has passed
-    if (this.hackathonStart.getTime() - this.state.today.getTime() >= 0) {
+    if (this.hackathonEnd.getTime() - this.state.today.getTime() >= 0) {
       this.timerID = setInterval(this.tick, 1000);
     }
   }
@@ -36,16 +37,25 @@ export default class DateCountDown extends React.Component<{}, State> {
   }
 
   render() {
-    // Don't have this component show up during the event
-    if (this.hackathonStart.getTime() - this.state.today.getTime() < 0) {
+    // Don't have this component show up after the event
+    if (this.hackathonEnd.getTime() - this.state.today.getTime() < 0) {
       return null;
     }
 
-    const parsedTimeLeft = formatDistanceStrict(
-      new Date(),
-      this.hackathonStart,
-      { roundingMethod: "floor" }
-    );
-    return <HomeListItem description="Time Left" info={parsedTimeLeft} />;
+    let descriptionText: string;
+    let dateToCalculate: Date;
+
+    if (this.hackathonStart.getTime() - this.state.today.getTime() > 0) {
+      // If it's before the hackathon, calculate the time left before it starts
+      descriptionText = "Time until Hackathon";
+      dateToCalculate = this.hackathonStart;
+    } else {
+      // If the hackathon started, calculate the time left before it ends
+      descriptionText = "Time left";
+      dateToCalculate = this.hackathonEnd;
+    }
+
+    const parsedTimeLeft = formatDistanceStrict(new Date(), dateToCalculate);
+    return <HomeListItem description={descriptionText} info={parsedTimeLeft} />;
   }
 }
