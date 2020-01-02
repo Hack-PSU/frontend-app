@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, View, Linking } from "react-native";
+import { StyleSheet, View, Linking } from "react-native";
 import { Text, Title } from "react-native-paper";
 import { useAsync } from "react-async";
 import { observer } from "mobx-react";
@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
     fontFamily: "Cornerstone",
     color: TEXT_LIGHT,
     fontSize: 48,
-    paddingTop: 55,
+    paddingTop: 43,
     paddingBottom: 15,
-    paddingLeft: 15
+    paddingLeft: 16
   },
 
   horizontalCardView: {
