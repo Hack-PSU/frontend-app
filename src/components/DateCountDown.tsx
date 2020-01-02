@@ -1,12 +1,15 @@
 import React from "react";
 import HomeListItem from "./HomeListItem";
+import { formatDistanceStrict } from "date-fns";
 
 interface State {
-  timeLeft: number; // in seconds
+  timeLeft: number;
   timerID: NodeJS.Timeout;
 }
 
 export default class DateCountDown extends React.Component<{}, State> {
+  hackathonStart = new Date("April 4, 2020 14:00:00"); // April 4, 2020, 2:00 pm
+
   constructor(props) {
     super(props);
 
@@ -18,25 +21,10 @@ export default class DateCountDown extends React.Component<{}, State> {
 
   updateTimeLeft = () => {
     const today = new Date();
-    const hackathonDate = new Date("April 4, 2020 07:00:00"); // April 4, 2020, 7:00am
 
     this.setState({
-      timeLeft: (hackathonDate.getTime() - today.getTime()) / 1000
+      timeLeft: this.hackathonStart.getTime() - today.getTime()
     });
-  };
-
-  parseTimeLeft = () => {
-    let secondsDifference = this.state.timeLeft;
-
-    const days = Math.floor(secondsDifference / (60 * 60 * 24));
-    secondsDifference -= days * (60 * 60 * 24);
-    const hours = Math.floor(secondsDifference / (60 * 60));
-    secondsDifference -= hours * (60 * 60);
-    const minutes = Math.floor(secondsDifference / 60);
-    secondsDifference -= minutes * 60;
-    const seconds = Math.floor(secondsDifference);
-
-    return `${days} d, ${hours} h, ${minutes} m, ${seconds} s`;
   };
 
   componentDidMount() {
@@ -59,7 +47,11 @@ export default class DateCountDown extends React.Component<{}, State> {
       return null;
     }
 
-    const parsedTimeLeft = this.parseTimeLeft();
+    const parsedTimeLeft = formatDistanceStrict(
+      new Date(),
+      this.hackathonStart,
+      { roundingMethod: "floor" }
+    );
     return <HomeListItem description="Time Left" info={parsedTimeLeft} />;
   }
 }
