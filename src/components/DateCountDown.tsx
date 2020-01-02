@@ -3,47 +3,41 @@ import HomeListItem from "./HomeListItem";
 import { formatDistanceStrict } from "date-fns";
 
 interface State {
-  timeLeft: number;
-  timerID: NodeJS.Timeout;
+  today: Date;
 }
 
 export default class DateCountDown extends React.Component<{}, State> {
   hackathonStart = new Date("April 4, 2020 14:00:00"); // April 4, 2020, 2:00 pm
+  timerID: NodeJS.Timeout;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      timeLeft: 0,
-      timerID: null
+      today: new Date()
     };
   }
 
-  updateTimeLeft = () => {
-    const today = new Date();
-
+  tick = () => {
     this.setState({
-      timeLeft: this.hackathonStart.getTime() - today.getTime()
+      today: new Date()
     });
   };
 
   componentDidMount() {
     // Don't waste processing power on calculation and state updates if time has passed
-    if (this.state.timeLeft >= 0) {
-      // Update time every second while passing the timerID to state
-      this.setState({
-        timerID: setInterval(this.updateTimeLeft, 1000)
-      });
+    if (this.hackathonStart.getTime() - this.state.today.getTime() >= 0) {
+      this.timerID = setInterval(this.tick, 1000);
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.timerID);
+    clearInterval(this.timerID);
   }
 
   render() {
     // Don't have this component show up during the event
-    if (this.state.timeLeft < 0) {
+    if (this.hackathonStart.getTime() - this.state.today.getTime() < 0) {
       return null;
     }
 
