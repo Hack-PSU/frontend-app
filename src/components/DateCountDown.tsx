@@ -3,6 +3,7 @@ import HomeListItem from "./HomeListItem";
 
 interface State {
   timeLeft: number; // in seconds
+  timerID: NodeJS.Timeout;
 }
 
 export default class DateCountDown extends React.Component<{}, State> {
@@ -10,7 +11,8 @@ export default class DateCountDown extends React.Component<{}, State> {
     super(props);
 
     this.state = {
-      timeLeft: 0
+      timeLeft: 0,
+      timerID: null
     };
   }
 
@@ -40,8 +42,15 @@ export default class DateCountDown extends React.Component<{}, State> {
   componentDidMount() {
     // Don't waste processing power on calculation and state updates if time has passed
     if (this.state.timeLeft >= 0) {
-      setInterval(this.updateTimeLeft, 1000); // Update time every second
+      // Update time every second while passing the timerID to state
+      this.setState({
+        timerID: setInterval(this.updateTimeLeft, 1000)
+      });
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.timerID);
   }
 
   render() {
