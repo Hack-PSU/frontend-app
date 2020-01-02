@@ -44,12 +44,10 @@ const HomeRoute: React.FC = observer(() => {
           info={isPending ? "..." : registration.pin.toString()}
         />
 
-        <View
-          style={{ ...styles.horizontalCardView, ...styles.horizontalCardText }}
-        >
+        <View style={styles.horizontalCardView}>
           <HomeListItemSecondary description="Wi-Fi">
-            <Text>Username: hackpsu</Text>
-            <Text>Password: plz</Text>
+            <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
+            <Text style={styles.horizontalCardText}>Password: plz</Text>
           </HomeListItemSecondary>
           <HomeListItemSecondary
             description="Slack"
