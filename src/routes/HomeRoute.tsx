@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     fontFamily: "Cornerstone",
     color: TEXT_LIGHT,
     fontSize: 48,
-    paddingTop: 43,
-    paddingBottom: 15,
+    paddingTop: 44,
+    paddingBottom: 16,
     paddingLeft: 16
   },
 
