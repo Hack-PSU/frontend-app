@@ -16,6 +16,7 @@ import {
   Portal,
   Dialog,
   Title,
+  FAB,
   DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
@@ -125,16 +126,6 @@ const Login: React.FC = () => {
             onChangeText={setPassword}
           />
 
-          <Button
-            mode="contained"
-            icon="send"
-            style={styles.loginButton}
-            onPress={() => run(email, password, operation)}
-            disabled={!email || !isValidEmail || !password}
-          >
-            {operation}
-          </Button>
-
           <View style={styles.bottomButtonsContainer}>
             <Button compact={true} uppercase={false}>
               Forgot password?
@@ -149,6 +140,16 @@ const Login: React.FC = () => {
               {operation === SIGN_IN ? "Create account" : "I have an account"}
             </Button>
           </View>
+          <View style={styles.loginButtonContainer}>
+            <FAB
+              icon="send"
+              onPress={() => run(email, password, operation)}
+              // disabled={!email || !isValidEmail || !password}
+              color={"white"}
+            >
+              {operation}
+            </FAB>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </PaperProvider>
@@ -161,7 +162,7 @@ const loginTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: "#113654",
-    secondary: "#F3613D",
+    accent: "#F3613D",
     statusBar: "#10253B"
   }
 };
@@ -183,9 +184,13 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
 
-  loginButton: {
-    marginTop: 16,
-    paddingVertical: 5
+  loginButtonContainer: {
+    height: 72,
+    width: 72,
+    alignSelf: "flex-end",
+    padding: 8,
+    marginTop: 5,
+    marginRight: 4
   },
 
   bottomButtonsContainer: {
