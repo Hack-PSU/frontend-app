@@ -14,6 +14,7 @@ import {
   Button,
   Portal,
   Dialog,
+  Title,
   DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
@@ -82,14 +83,6 @@ const Login: React.FC = () => {
         backgroundColor={loginTheme.colors.statusBar}
         barStyle="light-content"
       />
-      <Appbar.Header statusBarHeight={BAR_HEIGHT}>
-        <Image
-          style={styles.image}
-          resizeMode="contain"
-          source={require("../../assets/images/Hacky.png")}
-        />
-        <Appbar.Content title="Login" />
-      </Appbar.Header>
 
       {/* This dialog shows up after the user clicks the login/register button */}
       <Portal>
@@ -102,6 +95,13 @@ const Login: React.FC = () => {
 
       <SafeAreaView>
         <View style={styles.root}>
+          <Image
+            style={styles.image}
+            resizeMode="contain"
+            source={require("../../assets/images/logo.png")}
+          />
+          <Title style={styles.title}>{operation}</Title>
+
           <TextInput
             label="Email"
             mode="flat"
@@ -160,10 +160,15 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    height: "80%",
-    width: "10%",
-    alignContent: "center",
-    marginLeft: 10
+    height: "40%",
+    width: "100%",
+    alignContent: "center"
+  },
+
+  title: {
+    fontFamily: "Cornerstone",
+    fontSize: 48,
+    paddingTop: 26
   },
 
   textInput: {
@@ -192,6 +197,7 @@ const loginTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: "#113654",
+    secondary: "#F3613D",
     statusBar: "#10253B"
   }
 };
