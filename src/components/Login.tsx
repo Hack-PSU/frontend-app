@@ -22,6 +22,7 @@ import { useAsync } from "react-async";
 import { validate as validateEmail } from "email-validator";
 import AuthService from "../services/AuthService";
 import { BAR_HEIGHT } from "../theme";
+import { ThemeColors } from "react-navigation";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
@@ -153,6 +154,17 @@ const Login: React.FC = () => {
   );
 };
 
+const loginTheme = {
+  ...DefaultTheme,
+
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#113654",
+    secondary: "#F3613D",
+    statusBar: "#10253B"
+  }
+};
+
 const styles = StyleSheet.create({
   root: {
     marginTop: 16,
@@ -168,6 +180,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "Cornerstone",
     fontSize: 48,
+    color: loginTheme.colors.primary,
     paddingTop: 26
   },
 
@@ -190,16 +203,5 @@ const styles = StyleSheet.create({
     fontSize: 5
   }
 });
-
-const loginTheme = {
-  ...DefaultTheme,
-
-  colors: {
-    ...DefaultTheme.colors,
-    primary: "#113654",
-    secondary: "#F3613D",
-    statusBar: "#10253B"
-  }
-};
 
 export default Login;
