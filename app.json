@@ -38,6 +38,10 @@
       "apiBaseUrl.prod": "https://api.hackpsu.org/v1/",
       "apiBaseUrlV2.staging": "http://staging.hackpsu18.appspot.com/v2/",
       "apiBaseUrlV2.prod": "https://api.hackpsu.org/v2/"
+    },
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "jsx", "ts", "tsx", "svg"]
     }
   }
 }

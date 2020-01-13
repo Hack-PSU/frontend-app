@@ -6,7 +6,8 @@ import {
   ActivityIndicator,
   StatusBar,
   Image,
-  Alert
+  Alert,
+  Platform
 } from "react-native";
 import {
   Appbar,
@@ -19,10 +20,12 @@ import {
   Provider as PaperProvider
 } from "react-native-paper";
 import { useAsync } from "react-async";
+
 import { validate as validateEmail } from "email-validator";
+
+import BigLogo from "./BigLogo";
+
 import AuthService from "../services/AuthService";
-import { BAR_HEIGHT } from "../theme";
-import { ThemeColors } from "react-navigation";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
@@ -80,9 +83,10 @@ const Login: React.FC = () => {
   return (
     // Reset theme to follow something easier to work with for this screen
     <PaperProvider theme={loginTheme}>
+      {/* Background color is Android only. */}
       <StatusBar
         backgroundColor={loginTheme.colors.statusBar}
-        barStyle="light-content"
+        barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"}
       />
 
       {/* This dialog shows up after the user clicks the login/register button */}
@@ -96,11 +100,7 @@ const Login: React.FC = () => {
 
       <SafeAreaView>
         <View style={styles.root}>
-          <Image
-            style={styles.image}
-            resizeMode="contain"
-            source={require("../../assets/images/logo.png")}
-          />
+          <BigLogo />
           <Title style={styles.title}>{operation}</Title>
 
           <TextInput
@@ -172,8 +172,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    height: "40%",
-    width: "100%",
+    height: "116px",
+    width: "116px",
     alignContent: "center"
   },
 
