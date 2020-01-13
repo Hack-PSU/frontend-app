@@ -127,7 +127,11 @@ const Login: React.FC = () => {
           />
 
           <View style={styles.bottomButtonsContainer}>
-            <Button compact={true} uppercase={false}>
+            <Button
+              compact={true}
+              uppercase={false}
+              color={loginTheme.colors.textButton}
+            >
               Forgot password?
             </Button>
             <Button
@@ -136,6 +140,7 @@ const Login: React.FC = () => {
               }
               compact={true}
               uppercase={false}
+              color={loginTheme.colors.textButton}
             >
               {operation === SIGN_IN ? "Create account" : "I have an account"}
             </Button>
@@ -163,7 +168,8 @@ const loginTheme = {
     ...DefaultTheme.colors,
     primary: "#113654",
     accent: "#F3613D",
-    statusBar: "#10253B"
+    statusBar: "#10253B",
+    textButton: "#1ABCFE"
   }
 };
 
