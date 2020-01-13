@@ -26,6 +26,7 @@ import { validate as validateEmail } from "email-validator";
 import BigLogo from "./BigLogo";
 
 import AuthService from "../services/AuthService";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
@@ -99,7 +100,7 @@ const Login: React.FC = () => {
       </Portal>
 
       <SafeAreaView>
-        <View style={styles.root}>
+        <ScrollView style={styles.root}>
           <BigLogo />
           <Title style={styles.title}>{operation}</Title>
 
@@ -148,7 +149,7 @@ const Login: React.FC = () => {
               {operation === SIGN_IN ? "Create account" : "I have an account"}
             </Button>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </PaperProvider>
   );
@@ -169,12 +170,6 @@ const styles = StyleSheet.create({
   root: {
     marginTop: 16,
     marginHorizontal: 16
-  },
-
-  image: {
-    height: "116px",
-    width: "116px",
-    alignContent: "center"
   },
 
   title: {
