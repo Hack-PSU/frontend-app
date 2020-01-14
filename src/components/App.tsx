@@ -7,8 +7,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 
 import { createAppContainer } from "react-navigation";
-import { useScreens } from "react-native-screens";
-import { createStackNavigator } from "react-navigation-stack";
+import { enableScreens } from "react-native-screens";
+import createNativeStackNavigator from "react-native-screens/createNativeStackNavigator";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
 import { Provider as PaperProvider } from "react-native-paper";
@@ -27,7 +27,9 @@ import initServices from "../initServices";
 
 // Faster stacks, according to here:
 // https://reactnavigation.org/docs/en/react-native-screens.html
-useScreens();
+enableScreens();
+
+initServices();
 
 async function loadFonts() {
   await Font.loadAsync({	
@@ -90,7 +92,7 @@ const modals = {
   }
 };
 
-const StackNavigator = createAppContainer(createStackNavigator(modals, {}));
+const StackNavigator = createAppContainer(createNativeStackNavigator(modals, {}));
 
 /**
  * `App` sets up the Material theme, fonts, system borders,
@@ -101,11 +103,6 @@ const StackNavigator = createAppContainer(createStackNavigator(modals, {}));
  * 3) Pane switching within bottom nav bar.
  */
 const App: React.FC = () => {
-  useEffect(() => {
-    // Init all services.
-    initServices();
-  }, [])
-
   const { data: fontsLoaded, isPending } = useAsync({ promiseFn: loadFonts });
 
   if (!fontsLoaded || isPending) {
