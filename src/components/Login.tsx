@@ -1,62 +1,72 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   SafeAreaView,
-  ScrollView,
-  ActivityIndicator
+  View,
+  ActivityIndicator,
+  StatusBar,
+  Image,
+  Alert,
+  Platform
 } from "react-native";
 import {
   Appbar,
   TextInput,
   Button,
+  Portal,
+  Dialog,
+  Title,
+  FAB,
+  DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
 import { useAsync } from "react-async";
 
 import { validate as validateEmail } from "email-validator";
 
-import SegmentedControl from "../components/SegmentedControl";
+import BigLogo from "./BigLogo";
 
 import AuthService from "../services/AuthService";
+import { ScrollView } from "react-native-gesture-handler";
 
-import { BAR_HEIGHT, TEXT } from "../theme";
-
-const styles = StyleSheet.create({
-  scroll: {
-    width: "100%",
-    height: "100%"
-  },
-  input: {
-    color: TEXT
-  }
-});
-
-const SIGN_IN = "Sign In";
+const SIGN_IN = "Login";
 const REGISTER = "Register";
 
 /**
  * Due to how react-async works, [email, password, operation] are
  * passed from running:
- * 
+ *
  * run(email, password, operation)
  */
-async function signInOrSignUp([email, password, operation]: [string, string, string]) {
+async function signInOrSignUp([email, password, operation]: [
+  string,
+  string,
+  string
+]) {
   if (!validateEmail(email)) {
     return;
   }
 
   if (operation == SIGN_IN) {
-    const user = await AuthService.signIn(email, password);
-    if (!user) {
-      throw new Error("user was null");
+    try {
+      const user = await AuthService.signIn(email, password);
+      if (!user) {
+        console.log("Test2");
+        Alert.alert("Error", "User does not exist");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Username or password is incorrect");
     }
   }
 
   if (operation == REGISTER) {
-    const user = await AuthService.createUser(email, password);
-    if (!user) {
-      throw new Error("user was null after creation");
+    try {
+      const user = await AuthService.createUser(email, password);
+      if (!user) {
+        Alert.alert("Error", "User does not exist");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Could not create user");
     }
   }
 
@@ -67,63 +77,137 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // "Sign In" and "Register" are valid values.
-  const [operation, setOperation] = useState(SIGN_IN); 
+  const [operation, setOperation] = useState(SIGN_IN);
 
-  const { isPending, error, run } = useAsync({ deferFn: signInOrSignUp });
-
+  const { isPending, run } = useAsync({ deferFn: signInOrSignUp });
   const isValidEmail = validateEmail(email);
 
   return (
-    <>
-      <Appbar.Header statusBarHeight={BAR_HEIGHT}>
-        <Appbar.Content title="Login" />
-      </Appbar.Header>
+    // Reset theme to follow something easier to work with for this screen
+    <PaperProvider theme={loginTheme}>
+      {/* Background color is Android only. */}
+      <StatusBar
+        backgroundColor={loginTheme.colors.statusBar}
+        barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"}
+      />
+
+      {/* This dialog shows up after the user clicks the login/register button */}
+      <Portal>
+        <Dialog visible={isPending}>
+          <Dialog.Content>
+            <ActivityIndicator animating={isPending} size="large" />
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
+
       <SafeAreaView>
-        <ScrollView style={styles.scroll}>
-          <Text>Rahul making this look nice is all you buddy!</Text>
-          {/* This resets default theme for inputs. */}
-          <SegmentedControl
-            values={[SIGN_IN, REGISTER]}
-            value={operation}
-            onChange={newValue => setOperation(newValue)}
+        <ScrollView style={styles.root}>
+          <BigLogo />
+          <Title style={styles.title}>{operation}</Title>
+
+          <TextInput
+            label="Email"
+            mode="flat"
+            style={styles.textInput}
+            autoCompleteType="email"
+            textContentType="emailAddress"
+            value={email}
+            error={email !== "" && !isValidEmail}
+            onChangeText={setEmail}
           />
-          <PaperProvider>
-            <TextInput
-              label="Email"
-              mode="outlined"
-              style={styles.input}
-              selectionColor="#0d0d0d"
-              autoCompleteType="email"
-              textContentType="emailAddress"
-              value={email}
-              error={!isValidEmail}
-              onChangeText={setEmail}
-            />
-            <TextInput
-              label="Password"
-              mode="outlined"
-              style={styles.input}
-              autoCompleteType="password"
-              textContentType="password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-          </PaperProvider>
-          <Button
-            icon="send"
-            mode="contained"
-            onPress={() => run(email, password, operation)}
-            disabled={!email || !isValidEmail || !password}
-          >
-            {operation}
-          </Button>
-          <ActivityIndicator animating={isPending} />
-          {error && <Text>Incorrect username and pass.</Text>}
+          <TextInput
+            label="Password"
+            mode="flat"
+            style={styles.textInput}
+            autoCompleteType="password"
+            textContentType="password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+
+          <View style={styles.bottomButtonsContainer}>
+            <Button
+              compact={true}
+              uppercase={false}
+              color={loginTheme.colors.textButton}
+            >
+              Forgot password?
+            </Button>
+            <Button
+              onPress={() =>
+                setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
+              }
+              compact={true}
+              uppercase={false}
+              color={loginTheme.colors.textButton}
+            >
+              {operation === SIGN_IN ? "Create account" : "I have an account"}
+            </Button>
+          </View>
+          <View style={styles.loginButtonContainer}>
+            <FAB
+              icon="send"
+              onPress={() => run(email, password, operation)}
+              // disabled={!email || !isValidEmail || !password}
+              color={"white"}
+            >
+              {operation}
+            </FAB>
+          </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </PaperProvider>
   );
 };
+
+const loginTheme = {
+  ...DefaultTheme,
+
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#113654",
+    accent: "#F3613D",
+    statusBar: "#10253B",
+    textButton: "#1ABCFE"
+  }
+};
+
+const styles = StyleSheet.create({
+  root: {
+    marginTop: 16,
+    marginHorizontal: 16
+  },
+
+  title: {
+    fontFamily: "Cornerstone",
+    fontSize: 48,
+    color: loginTheme.colors.primary,
+    paddingTop: 26
+  },
+
+  textInput: {
+    marginTop: 10
+  },
+
+  loginButtonContainer: {
+    height: 72,
+    width: 72,
+    alignSelf: "flex-end",
+    padding: 8,
+    marginTop: 5,
+    marginRight: 4
+  },
+
+  bottomButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5
+  },
+
+  bottomButtons: {
+    fontSize: 5
+  }
+});
 
 export default Login;

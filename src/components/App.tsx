@@ -107,9 +107,9 @@ const App: React.FC = () => {
 
   return (
     <PaperProvider theme={THEME}>
-      {/* This is for iOS, for Android see app.json in root of project. */}
-      <StatusBar barStyle="dark-content" />
       <LoginGuard>
+        {/* This is for iOS, for Android see app.json in root of project. */}
+        <StatusBar barStyle="dark-content" />
         <StackNavigator />
       </LoginGuard>
     </PaperProvider>
