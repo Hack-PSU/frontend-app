@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StatusBar } from "react-native";
 import { useAsync } from "react-async";
 
@@ -23,9 +23,6 @@ import ProfileModal from "../routes/modals/ProfileModal";
 
 import { THEME } from "../theme";
 import initServices from "../initServices";
-
-// Init all services.
-initServices();
 
 async function loadFonts() {
   await Font.loadAsync({	
@@ -99,6 +96,11 @@ const StackNavigator = createAppContainer(createStackNavigator(modals, {}));
  * 3) Pane switching within bottom nav bar.
  */
 const App: React.FC = () => {
+  useEffect(() => {
+    // Init all services.
+    initServices();
+  }, [])
+
   const { data: fontsLoaded, isPending } = useAsync({ promiseFn: loadFonts });
 
   if (!fontsLoaded || isPending) {
