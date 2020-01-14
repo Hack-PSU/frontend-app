@@ -5,9 +5,10 @@ import {
   View,
   ActivityIndicator,
   StatusBar,
-  Image,
+  ScrollView,
   Alert,
-  Platform
+  Platform,
+  Dimensions
 } from "react-native";
 import {
   Appbar,
@@ -21,13 +22,15 @@ import {
   Provider as PaperProvider
 } from "react-native-paper";
 import { useAsync } from "react-async";
+import { useDimensions } from "react-native-hooks";
 
 import { validate as validateEmail } from "email-validator";
 
 import BigLogo from "./BigLogo";
 
 import AuthService from "../services/AuthService";
-import { ScrollView } from "react-native-gesture-handler";
+
+import Mountain from "../../assets/images/mountain.svg";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
@@ -73,7 +76,13 @@ async function signInOrSignUp([email, password, operation]: [
   return true;
 }
 
+const MOUNTAIN_WIDTH = 1920;
+const MOUNTAIN_HEIGHT = 810;
+const MOUNTAIN_ASPECT_RATIO = MOUNTAIN_HEIGHT / MOUNTAIN_WIDTH;
+
 const Login: React.FC = () => {
+  const { screen } = useDimensions();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // "Sign In" and "Register" are valid values.
@@ -100,8 +109,10 @@ const Login: React.FC = () => {
         </Dialog>
       </Portal>
 
-      <SafeAreaView>
-        <ScrollView style={styles.root}>
+      <View style={styles.mountain}><Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} /></View>
+      
+      <ScrollView style={styles.root}>
+        <SafeAreaView>
           <BigLogo />
           <Title style={styles.title}>{operation}</Title>
 
@@ -155,8 +166,8 @@ const Login: React.FC = () => {
               {operation}
             </FAB>
           </View>
+          </SafeAreaView>
         </ScrollView>
-      </SafeAreaView>
     </PaperProvider>
   );
 };
@@ -175,8 +186,10 @@ const loginTheme = {
 
 const styles = StyleSheet.create({
   root: {
-    marginTop: 16,
-    marginHorizontal: 16
+    width: "100%",
+    height: "100%",
+    paddingTop: 16,
+    paddingHorizontal: 16
   },
 
   title: {
@@ -207,6 +220,13 @@ const styles = StyleSheet.create({
 
   bottomButtons: {
     fontSize: 5
+  },
+
+  mountain: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0
   }
 });
 

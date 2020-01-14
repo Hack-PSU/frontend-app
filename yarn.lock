@@ -6953,6 +6953,11 @@ react-native-gesture-handler@~1.3.0:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-hooks@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-hooks/-/react-native-hooks-0.9.0.tgz#589fc2390296d9afe03327298dabcf0a1f350910"
+  integrity sha512-yqSAH0zxqjYHYPo6mPut3dEROoB5qMvsAbN3EK0MDQrWA5zdqmzgTEpS9/qwXaIyllk6hQbHxYnRTWq2uq4tJQ==
+
 react-native-paper@^2.16.0:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-2.16.0.tgz#5a9edd5615bb010ec0d29cbfd5524c2944b2505d"
@@ -6964,11 +6969,6 @@ react-native-paper@^2.16.0:
     hoist-non-react-statics "^3.1.0"
     react-lifecycles-compat "^3.0.4"
     react-native-safe-area-view "^0.12.0"
-
-react-native-reanimated@~1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.2.0.tgz#9219227a52a5dfa4d34c324596d6726ccd874293"
-  integrity sha512-vkWRHrPK5qfHP/ZawlRoo38oeYe9NZaaOH/lmFxRcsKzaSK6x3H5ZPXI8lK6MfTLveqwo1QhJje3zIKXO4nQQw==
 
 react-native-safe-area-view@^0.12.0:
   version "0.12.0"
@@ -6984,7 +6984,7 @@ react-native-safe-area-view@^0.14.1:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-screens@1.0.0-alpha.23, "react-native-screens@^1.0.0 || ^1.0.0-alpha":
+"react-native-screens@^1.0.0 || ^1.0.0-alpha", react-native-screens@^1.0.0-alpha.23:
   version "1.0.0-alpha.23"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.23.tgz#25d7ea4d11bda4fcde2d1da7ae50271c6aa636e0"
   integrity sha512-tOxHGQUN83MTmQB4ghoQkibqOdGiX4JQEmeyEv96MKWO/x8T2PJv84ECUos9hD3blPRQwVwSpAid1PPPhrVEaw==
