@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.6",
     "@react-native-community/segmented-control": "^1.0.2",
     "@zeit/fetch-retry": "^4.0.1",
     "date-fns": "^2.6.0",
@@ -25,12 +26,14 @@
     "react-native-gesture-handler": "~1.5.0",
     "react-native-hooks": "^0.9.0",
     "react-native-paper": "^2.16.0",
+    "react-native-safe-area-context": "^0.6.2",
     "react-native-screens": "^2.0.0-alpha.24",
     "react-native-segmented-control-tab": "^3.4.1",
     "react-native-svg": "9.13.3",
     "react-native-unimodules": "0.7.0",
     "react-navigation": "^4.0.10",
-    "react-navigation-material-bottom-tabs": "^2.1.2"
+    "react-navigation-material-bottom-tabs": "^2.1.2",
+    "react-navigation-stack": "^2.0.15"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
