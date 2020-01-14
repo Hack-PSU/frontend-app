@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 
 import { createAppContainer } from "react-navigation";
+import { useScreens } from "react-native-screens";
 import { createStackNavigator } from "react-navigation-stack";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
@@ -23,6 +24,10 @@ import ProfileModal from "../routes/modals/ProfileModal";
 
 import { THEME } from "../theme";
 import initServices from "../initServices";
+
+// Faster stacks, according to here:
+// https://reactnavigation.org/docs/en/react-native-screens.html
+useScreens();
 
 async function loadFonts() {
   await Font.loadAsync({	
