@@ -1,4 +1,5 @@
 import React from "react";
+import { StatusBar } from "react-native";
 import { observer } from "mobx-react";
 
 import Login from "./Login";
@@ -20,7 +21,9 @@ interface Props {
  */
 const LoginGuard: React.FC<Props> = observer(({ children }: Props) => {
   if (!AuthService.isLoggedIn) {
-    return <Login />;
+    return (
+      <Login />
+    );
   }
 
   return <>{children}</>;

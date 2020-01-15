@@ -1,129 +1,235 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   SafeAreaView,
+  View,
+  ActivityIndicator,
+  StatusBar,
   ScrollView,
-  ActivityIndicator
+  Alert,
+  Platform
 } from "react-native";
 import {
-  Appbar,
   TextInput,
   Button,
+  Portal,
+  Dialog,
+  Title,
+  FAB,
+  DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
-import { useAsync } from "react-async";
+import { useDimensions } from "react-native-hooks";
+import { observer } from "mobx-react";
 
 import { validate as validateEmail } from "email-validator";
 
-import SegmentedControl from "../components/SegmentedControl";
+import BigLogo from "./BigLogo";
 
 import AuthService from "../services/AuthService";
 
-import { BAR_HEIGHT, TEXT } from "../theme";
+import Mountain from "../../assets/images/mountain.svg";
+import { fetchAsyncData, useAsyncData } from "../AsyncData";
 
-const styles = StyleSheet.create({
-  scroll: {
-    width: "100%",
-    height: "100%"
-  },
-  input: {
-    color: TEXT
-  }
-});
-
-const SIGN_IN = "Sign In";
+const SIGN_IN = "Login";
 const REGISTER = "Register";
 
-/**
- * Due to how react-async works, [email, password, operation] are
- * passed from running:
- * 
- * run(email, password, operation)
- */
-async function signInOrSignUp([email, password, operation]: [string, string, string]) {
+async function signInOrSignUp(
+  email: string,
+  password: string,
+  operation: string
+) {
   if (!validateEmail(email)) {
     return;
   }
 
   if (operation == SIGN_IN) {
-    const user = await AuthService.signIn(email, password);
-    if (!user) {
-      throw new Error("user was null");
+    try {
+      const user = await AuthService.signIn(email, password);
+      if (!user) {
+        console.log("Test2");
+        Alert.alert("Error", "User does not exist");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Username or password is incorrect");
     }
   }
 
   if (operation == REGISTER) {
-    const user = await AuthService.createUser(email, password);
-    if (!user) {
-      throw new Error("user was null after creation");
+    try {
+      const user = await AuthService.createUser(email, password);
+      if (!user) {
+        Alert.alert("Error", "User does not exist");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Could not create user");
     }
   }
 
   return true;
 }
 
-const Login: React.FC = () => {
+const MOUNTAIN_WIDTH = 1920;
+const MOUNTAIN_HEIGHT = 810;
+const MOUNTAIN_ASPECT_RATIO = MOUNTAIN_HEIGHT / MOUNTAIN_WIDTH;
+
+const Login: React.FC = observer(() => {
+  const { screen } = useDimensions();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // "Sign In" and "Register" are valid values.
-  const [operation, setOperation] = useState(SIGN_IN); 
-
-  const { isPending, error, run } = useAsync({ deferFn: signInOrSignUp });
+  const [operation, setOperation] = useState(SIGN_IN);
 
   const isValidEmail = validateEmail(email);
 
+  const submitStatus = useAsyncData<boolean>();
+  const submit = () => {
+    fetchAsyncData(submitStatus, () => signInOrSignUp(email, password, operation));
+  };
+
   return (
-    <>
-      <Appbar.Header statusBarHeight={BAR_HEIGHT}>
-        <Appbar.Content title="Login" />
-      </Appbar.Header>
-      <SafeAreaView>
-        <ScrollView style={styles.scroll}>
-          <Text>Rahul making this look nice is all you buddy!</Text>
-          {/* This resets default theme for inputs. */}
-          <SegmentedControl
-            values={[SIGN_IN, REGISTER]}
-            value={operation}
-            onChange={newValue => setOperation(newValue)}
+    // Reset theme to follow something easier to work with for this screen
+    <PaperProvider theme={loginTheme}>
+      {/* Background color is Android only. */}
+      <StatusBar
+        backgroundColor={loginTheme.colors.statusBar}
+        barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"}
+      />
+
+      {/* This dialog shows up after the user clicks the login/register button */}
+      <Portal>
+        <Dialog visible={submitStatus.loading}>
+          <Dialog.Content>
+            <ActivityIndicator animating={submitStatus.loading} size="large" />
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
+
+      <View style={styles.mountain}>
+        <Mountain
+          width={screen.width}
+          height={screen.width * MOUNTAIN_ASPECT_RATIO}
+        />
+      </View>
+
+      <ScrollView style={styles.root}>
+        <SafeAreaView>
+          <BigLogo />
+          <Title style={styles.title}>{operation}</Title>
+
+          <TextInput
+            label="Email"
+            mode="flat"
+            style={styles.textInput}
+            autoCompleteType="email"
+            textContentType="emailAddress"
+            value={email}
+            error={email !== "" && !isValidEmail}
+            onChangeText={setEmail}
           />
-          <PaperProvider>
-            <TextInput
-              label="Email"
-              mode="outlined"
-              style={styles.input}
-              selectionColor="#0d0d0d"
-              autoCompleteType="email"
-              textContentType="emailAddress"
-              value={email}
-              error={!isValidEmail}
-              onChangeText={setEmail}
-            />
-            <TextInput
-              label="Password"
-              mode="outlined"
-              style={styles.input}
-              autoCompleteType="password"
-              textContentType="password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-          </PaperProvider>
-          <Button
-            icon="send"
-            mode="contained"
-            onPress={() => run(email, password, operation)}
-            disabled={!email || !isValidEmail || !password}
-          >
-            {operation}
-          </Button>
-          <ActivityIndicator animating={isPending} />
-          {error && <Text>Incorrect username and pass.</Text>}
-        </ScrollView>
-      </SafeAreaView>
-    </>
+          <TextInput
+            label="Password"
+            mode="flat"
+            style={styles.textInput}
+            autoCompleteType="password"
+            textContentType="password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+
+          <View style={styles.bottomButtonsContainer}>
+            <Button
+              compact={true}
+              uppercase={false}
+              color={loginTheme.colors.textButton}
+            >
+              Forgot password?
+            </Button>
+            <Button
+              onPress={() =>
+                setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
+              }
+              compact={true}
+              uppercase={false}
+              color={loginTheme.colors.textButton}
+            >
+              {operation === SIGN_IN ? "Create account" : "I have an account"}
+            </Button>
+          </View>
+          <View style={styles.loginButtonContainer}>
+            <FAB
+              icon="send"
+              onPress={submit}
+              // disabled={!email || !isValidEmail || !password}
+              color={"white"}
+            >
+              {operation}
+            </FAB>
+          </View>
+        </SafeAreaView>
+      </ScrollView>
+    </PaperProvider>
   );
+});
+
+const loginTheme = {
+  ...DefaultTheme,
+
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#113654",
+    accent: "#F3613D",
+    statusBar: "#10253B",
+    textButton: "#1ABCFE"
+  }
 };
+
+const styles = StyleSheet.create({
+  root: {
+    width: "100%",
+    height: "100%",
+    paddingTop: 16,
+    paddingHorizontal: 16
+  },
+
+  title: {
+    fontFamily: "Cornerstone",
+    fontSize: 48,
+    color: loginTheme.colors.primary,
+    paddingTop: 26
+  },
+
+  textInput: {
+    marginTop: 10
+  },
+
+  loginButtonContainer: {
+    height: 72,
+    width: 72,
+    alignSelf: "flex-end",
+    padding: 8,
+    marginTop: 5,
+    marginRight: 4
+  },
+
+  bottomButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5
+  },
+
+  bottomButtons: {
+    fontSize: 5
+  },
+
+  mountain: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0
+  }
+});
 
 export default Login;

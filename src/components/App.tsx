@@ -1,14 +1,16 @@
-import React from "react";
-import { StatusBar } from "react-native";
-import { useAsync } from "react-async";
+import React, { useEffect } from "react";
+import { YellowBox, StatusBar } from "react-native";
+
+import { observer } from "mobx-react";
 
 import { AppLoading } from "expo";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 
 import { createAppContainer } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
+import { enableScreens } from "react-native-screens";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+import createNativeStackNavigator from "react-native-screens/createNativeStackNavigator";
 
 import { Provider as PaperProvider } from "react-native-paper";
 
@@ -21,16 +23,26 @@ import MapRoute from "../routes/MapRoute";
 
 import ProfileModal from "../routes/modals/ProfileModal";
 
+import { fetchAsyncData, useAsyncData } from "../AsyncData";
 import { THEME } from "../theme";
 import initServices from "../initServices";
 
-// Init all services.
+// This is a fix for react-native-safe-view, which many libraries use
+// but has a warning with React 16.9 (since, in the future, it won't work with React 17).
+//
+// Basically disables the warning.
+YellowBox.ignoreWarnings(["Warning: componentWillReceiveProps"]);
+
+// Faster stacks, according to here:
+// https://reactnavigation.org/docs/en/react-native-screens.html
+enableScreens();
+
 initServices();
 
 async function loadFonts() {
-  await Font.loadAsync({	
-    "Plex-Mono": require("../../assets/fonts/IBMPlexMono-Medium.otf"),	
-    Cornerstone: require("../../assets/fonts/Cornerstone.ttf")	
+  await Font.loadAsync({
+    "Plex-Mono": require("../../assets/fonts/IBMPlexMono-Medium.otf"),
+    Cornerstone: require("../../assets/fonts/Cornerstone.ttf")
   });
 
   return true;
@@ -88,7 +100,9 @@ const modals = {
   }
 };
 
-const StackNavigator = createAppContainer(createStackNavigator(modals, {}));
+const StackNavigator = createAppContainer(
+  createNativeStackNavigator(modals, {})
+);
 
 /**
  * `App` sets up the Material theme, fonts, system borders,
@@ -98,22 +112,29 @@ const StackNavigator = createAppContainer(createStackNavigator(modals, {}));
  * 2) Bottom navigation bar
  * 3) Pane switching within bottom nav bar.
  */
-const App: React.FC = () => {
-  const { data: fontsLoaded, isPending } = useAsync({ promiseFn: loadFonts });
+const App: React.FC = observer(() => {
+  const fonts = useAsyncData<boolean>();
+  useEffect(() => {
+    fetchAsyncData(fonts, loadFonts);
+  }, []);
 
-  if (!fontsLoaded || isPending) {
+  if (fonts.error) {
+    console.warn(fonts.error);
+  }
+
+  if (fonts.loading || fonts.data !== true) {
     return <AppLoading />;
   }
 
   return (
     <PaperProvider theme={THEME}>
-      {/* This is for iOS, for Android see app.json in root of project. */}
-      <StatusBar barStyle="dark-content" />
       <LoginGuard>
+        {/* This is for iOS, for Android see app.json in root of project. */}
+        <StatusBar barStyle="dark-content" />
         <StackNavigator />
       </LoginGuard>
     </PaperProvider>
   );
-};
+});
 
 export default App;
