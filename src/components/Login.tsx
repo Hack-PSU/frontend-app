@@ -7,11 +7,9 @@ import {
   StatusBar,
   ScrollView,
   Alert,
-  Platform,
-  Dimensions
+  Platform
 } from "react-native";
 import {
-  Appbar,
   TextInput,
   Button,
   Portal,
@@ -21,8 +19,8 @@ import {
   DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
-import { useAsync } from "react-async";
 import { useDimensions } from "react-native-hooks";
+import { observer } from "mobx-react";
 
 import { validate as validateEmail } from "email-validator";
 
@@ -31,21 +29,16 @@ import BigLogo from "./BigLogo";
 import AuthService from "../services/AuthService";
 
 import Mountain from "../../assets/images/mountain.svg";
+import { fetchAsyncData, useAsyncData } from "../AsyncData";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
 
-/**
- * Due to how react-async works, [email, password, operation] are
- * passed from running:
- *
- * run(email, password, operation)
- */
-async function signInOrSignUp([email, password, operation]: [
-  string,
-  string,
-  string
-]) {
+async function signInOrSignUp(
+  email: string,
+  password: string,
+  operation: string
+) {
   if (!validateEmail(email)) {
     return;
   }
@@ -80,7 +73,7 @@ const MOUNTAIN_WIDTH = 1920;
 const MOUNTAIN_HEIGHT = 810;
 const MOUNTAIN_ASPECT_RATIO = MOUNTAIN_HEIGHT / MOUNTAIN_WIDTH;
 
-const Login: React.FC = () => {
+const Login: React.FC = observer(() => {
   const { screen } = useDimensions();
 
   const [email, setEmail] = useState("");
@@ -88,8 +81,12 @@ const Login: React.FC = () => {
   // "Sign In" and "Register" are valid values.
   const [operation, setOperation] = useState(SIGN_IN);
 
-  const { isPending, run } = useAsync({ deferFn: signInOrSignUp });
   const isValidEmail = validateEmail(email);
+
+  const submitStatus = useAsyncData<boolean>();
+  const submit = () => {
+    fetchAsyncData(submitStatus, () => signInOrSignUp(email, password, operation));
+  };
 
   return (
     // Reset theme to follow something easier to work with for this screen
@@ -102,15 +99,20 @@ const Login: React.FC = () => {
 
       {/* This dialog shows up after the user clicks the login/register button */}
       <Portal>
-        <Dialog visible={isPending}>
+        <Dialog visible={submitStatus.loading}>
           <Dialog.Content>
-            <ActivityIndicator animating={isPending} size="large" />
+            <ActivityIndicator animating={submitStatus.loading} size="large" />
           </Dialog.Content>
         </Dialog>
       </Portal>
 
-      <View style={styles.mountain}><Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} /></View>
-      
+      <View style={styles.mountain}>
+        <Mountain
+          width={screen.width}
+          height={screen.width * MOUNTAIN_ASPECT_RATIO}
+        />
+      </View>
+
       <ScrollView style={styles.root}>
         <SafeAreaView>
           <BigLogo />
@@ -159,18 +161,18 @@ const Login: React.FC = () => {
           <View style={styles.loginButtonContainer}>
             <FAB
               icon="send"
-              onPress={() => run(email, password, operation)}
+              onPress={submit}
               // disabled={!email || !isValidEmail || !password}
               color={"white"}
             >
               {operation}
             </FAB>
           </View>
-          </SafeAreaView>
-        </ScrollView>
+        </SafeAreaView>
+      </ScrollView>
     </PaperProvider>
   );
-};
+});
 
 const loginTheme = {
   ...DefaultTheme,

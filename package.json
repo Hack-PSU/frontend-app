@@ -20,7 +20,6 @@
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "16.9.0",
-    "react-async": "^10.0.0-alpha.0",
     "react-dom": "16.9.0",
     "react-native": "0.61.4",
     "react-native-gesture-handler": "~1.5.0",

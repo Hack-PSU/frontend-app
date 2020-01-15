@@ -4,6 +4,7 @@ import { RegistrationApiResponse } from "../models/registration";
 import { EventModel, EventModelJSON } from "../models/event-model";
 
 import { httpGet, httpGetWithAuth } from "../httpGet";
+import { AsyncData, createAsyncData, fetchAsyncData } from "../AsyncData";
 
 function compare(a: number, b: number): -1 | 0 | 1 {
   if (a < b) {
@@ -20,42 +21,45 @@ function compare(a: number, b: number): -1 | 0 | 1 {
 
 export class DataService {
   @observable
-  events: EventModel[];
+  registrationStatus: AsyncData<
+    RegistrationApiResponse | undefined
+  > = createAsyncData();
+
+  @observable
+  events: AsyncData<EventModel[]> = createAsyncData();
 
   // TODO: Frontend doesn't use a cache for this... but should it?
-  async getRegistrationStatus(
-    currentUser: firebase.User
-  ): Promise<RegistrationApiResponse> {
-    const registrations = await httpGetWithAuth<RegistrationApiResponse[]>(
-      "users/register",
-      currentUser,
-      true
-    );
+  fetchRegistrationStatus(currentUser: firebase.User): Promise<void> {
+    return fetchAsyncData(this.registrationStatus, async () => {
+      const registrations = await httpGetWithAuth<RegistrationApiResponse[]>(
+        "users/register",
+        currentUser,
+        true
+      );
 
-    if (!registrations || !registrations.length) {
-      return null;
-    }
+      if (!registrations || !registrations.length) {
+        return;
+      }
 
-    return RegistrationApiResponse.parseJSON(registrations[0]);
+      return RegistrationApiResponse.parseJSON(registrations[0]);
+    });
   }
 
-  async getEvents(): Promise<EventModel[]> {
-    if (!this.events) {
+  fetchEvents(): Promise<void> {
+    return fetchAsyncData(this.events, async () => {
       const eventsRaw = await httpGet<EventModelJSON[]>("live/events");
 
       if (!eventsRaw) {
-        return []
+        return;
       }
 
-      this.events = EventModel.parseFromJSONArray(eventsRaw).sort((a, b) => {
+      return EventModel.parseFromJSONArray(eventsRaw).sort((a, b) => {
         return compare(
           a.event_start_time.getTime(),
           b.event_start_time.getTime()
         );
       });
-    }
-
-    return this.events;
+    });
   }
 }
 
