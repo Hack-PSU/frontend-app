@@ -37,8 +37,7 @@ export async function httpGet<T>(
     const data = json.body.data;
 
     if (!res.ok) {
-      console.error((data as ApiError).message);
-      throw data;
+      throw (data as ApiError);
     }
 
     return data as T;
@@ -46,12 +45,10 @@ export async function httpGet<T>(
     const json: T = await res.json();
 
     if (!res.ok) {
-      console.error(res.statusText);
-
       throw {
         error: res.status,
         message: res.statusText
-      } as ApiError;
+      };
     }
 
     return json as T;

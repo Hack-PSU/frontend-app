@@ -5,12 +5,11 @@ import {
   View,
   ActivityIndicator,
   StatusBar,
-  Image,
+  ScrollView,
   Alert,
   Platform
 } from "react-native";
 import {
-  Appbar,
   TextInput,
   Button,
   Portal,
@@ -20,29 +19,26 @@ import {
   DefaultTheme,
   Provider as PaperProvider
 } from "react-native-paper";
-import { useAsync } from "react-async";
+import { useDimensions } from "react-native-hooks";
+import { observer } from "mobx-react";
 
 import { validate as validateEmail } from "email-validator";
 
 import BigLogo from "./BigLogo";
 
 import AuthService from "../services/AuthService";
-import { ScrollView } from "react-native-gesture-handler";
+
+import Mountain from "../../assets/images/mountain.svg";
+import { fetchAsyncData, useAsyncData } from "../AsyncData";
 
 const SIGN_IN = "Login";
 const REGISTER = "Register";
 
-/**
- * Due to how react-async works, [email, password, operation] are
- * passed from running:
- *
- * run(email, password, operation)
- */
-async function signInOrSignUp([email, password, operation]: [
-  string,
-  string,
-  string
-]) {
+async function signInOrSignUp(
+  email: string,
+  password: string,
+  operation: string
+) {
   if (!validateEmail(email)) {
     return;
   }
@@ -73,14 +69,24 @@ async function signInOrSignUp([email, password, operation]: [
   return true;
 }
 
-const Login: React.FC = () => {
+const MOUNTAIN_WIDTH = 1920;
+const MOUNTAIN_HEIGHT = 810;
+const MOUNTAIN_ASPECT_RATIO = MOUNTAIN_HEIGHT / MOUNTAIN_WIDTH;
+
+const Login: React.FC = observer(() => {
+  const { screen } = useDimensions();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // "Sign In" and "Register" are valid values.
   const [operation, setOperation] = useState(SIGN_IN);
 
-  const { isPending, run } = useAsync({ deferFn: signInOrSignUp });
   const isValidEmail = validateEmail(email);
+
+  const submitStatus = useAsyncData<boolean>();
+  const submit = () => {
+    fetchAsyncData(submitStatus, () => signInOrSignUp(email, password, operation));
+  };
 
   return (
     // Reset theme to follow something easier to work with for this screen
@@ -93,15 +99,22 @@ const Login: React.FC = () => {
 
       {/* This dialog shows up after the user clicks the login/register button */}
       <Portal>
-        <Dialog visible={isPending}>
+        <Dialog visible={submitStatus.loading}>
           <Dialog.Content>
-            <ActivityIndicator animating={isPending} size="large" />
+            <ActivityIndicator animating={submitStatus.loading} size="large" />
           </Dialog.Content>
         </Dialog>
       </Portal>
 
-      <SafeAreaView>
-        <ScrollView style={styles.root}>
+      <View style={styles.mountain}>
+        <Mountain
+          width={screen.width}
+          height={screen.width * MOUNTAIN_ASPECT_RATIO}
+        />
+      </View>
+
+      <ScrollView style={styles.root}>
+        <SafeAreaView>
           <BigLogo />
           <Title style={styles.title}>{operation}</Title>
 
@@ -148,18 +161,18 @@ const Login: React.FC = () => {
           <View style={styles.loginButtonContainer}>
             <FAB
               icon="send"
-              onPress={() => run(email, password, operation)}
+              onPress={submit}
               // disabled={!email || !isValidEmail || !password}
               color={"white"}
             >
               {operation}
             </FAB>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+        </SafeAreaView>
+      </ScrollView>
     </PaperProvider>
   );
-};
+});
 
 const loginTheme = {
   ...DefaultTheme,
@@ -175,8 +188,10 @@ const loginTheme = {
 
 const styles = StyleSheet.create({
   root: {
-    marginTop: 16,
-    marginHorizontal: 16
+    width: "100%",
+    height: "100%",
+    paddingTop: 16,
+    paddingHorizontal: 16
   },
 
   title: {
@@ -207,6 +222,13 @@ const styles = StyleSheet.create({
 
   bottomButtons: {
     fontSize: 5
+  },
+
+  mountain: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0
   }
 });
 

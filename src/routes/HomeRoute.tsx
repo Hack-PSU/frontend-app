@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, Linking } from "react-native";
 import { Text, Title } from "react-native-paper";
-import { useAsync } from "react-async";
+
 import { observer } from "mobx-react";
 import HomeListItem from "../components/HomeListItem";
 import HomeListItemSecondary from "../components/HomeListItemSecondary";
@@ -10,25 +10,18 @@ import { TEXT_LIGHT } from "../theme";
 
 import Scaffold from "../components/Scaffold";
 
-import { RegistrationApiResponse } from "../models/registration";
-
 import AuthService from "../services/AuthService";
 import DataService from "../services/DataService";
 import { ScrollView } from "react-native-gesture-handler";
-
-async function getRegistrationStatus({
-  currentUser
-}: {
-  currentUser: firebase.User;
-}): Promise<RegistrationApiResponse> {
-  return DataService.getRegistrationStatus(currentUser);
-}
+import ErrorCard from "../components/ErrorCard";
 
 const HomeRoute: React.FC = observer(() => {
-  const { data: registration, isPending } = useAsync({
-    promiseFn: getRegistrationStatus,
-    currentUser: AuthService.currentUser
-  });
+  const { currentUser } = AuthService;
+  const { registrationStatus } = DataService;
+
+  useEffect(() => {
+    DataService.fetchRegistrationStatus(currentUser);
+  }, [currentUser]);
 
   const slackInviteUrl =
     "https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU";
@@ -39,10 +32,23 @@ const HomeRoute: React.FC = observer(() => {
         <Title style={styles.title}>HOME</Title>
 
         <DateCountDown />
-        <HomeListItem
-          description="My PIN Number"
-          info={isPending ? "..." : registration.pin.toString()}
-        />
+
+        {registrationStatus.error && (
+          <ErrorCard
+            error={registrationStatus.error.message || registrationStatus.error}
+          />
+        )}
+
+        {!registrationStatus.error && (
+          <HomeListItem
+            description="My PIN Number"
+            info={
+              registrationStatus.loading || !registrationStatus.data
+                ? "..."
+                : registrationStatus.data.pin.toString()
+            }
+          />
+        )}
 
         <View style={styles.horizontalCardView}>
           <HomeListItemSecondary description="Wi-Fi">

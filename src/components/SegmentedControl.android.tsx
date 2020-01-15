@@ -1,22 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { StyleSheet } from "react-native";
 
-import SegmentedControlIOS from "@react-native-community/segmented-control";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 
 import { BACKGROUND, TEXT_LIGHT } from "../theme";
 
 const styles = StyleSheet.create({
-  // iOS only
-  iosContainerStyle: {
-    marginLeft: 32,
-    marginRight: 32,
-    fontSize: 14,
-  },
-  iosSubContainerStyle: {
-    borderRadius: 8,
-    backgroundColor: "white"
-  },
   // Android only
   tabsContainerStyle: {
     height: 40,
@@ -43,6 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND,
   },
   tabTextStyle: {
+    fontFamily: "Plex-Mono",
     fontWeight: "500",
     fontSize: 14,
     textTransform: "uppercase",
@@ -57,21 +47,7 @@ interface Props {
 }
 
 const SegmentedControl: React.FC<Props> = ({ values, value, onChange }) => {
-  // Use native segmented control.
-  if (Platform.OS === "ios") {
-    return (
-      <View style={styles.iosContainerStyle}>
-        <View style={styles.iosSubContainerStyle}>
-          <SegmentedControlIOS
-            values={values}
-            selectedIndex={values.indexOf(value)}
-            onChange={event => onChange(values[event.nativeEvent.selectedSegmentIndex])}
-          />
-        </View>
-      </View>
-    );
-  }
-
+  // Use custom segmented control.
   return (
     <SegmentedControlTab
       values={values}
