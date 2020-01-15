@@ -42,6 +42,11 @@ export class DataService {
   async getEvents(): Promise<EventModel[]> {
     if (!this.events) {
       const eventsRaw = await httpGet<EventModelJSON[]>("live/events");
+
+      if (!eventsRaw) {
+        return []
+      }
+
       this.events = EventModel.parseFromJSONArray(eventsRaw).sort((a, b) => {
         return compare(
           a.event_start_time.getTime(),
