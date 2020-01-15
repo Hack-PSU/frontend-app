@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StatusBar } from "react-native";
+import { YellowBox, StatusBar } from "react-native";
 import { useAsync } from "react-async";
 
 import { AppLoading } from "expo";
@@ -24,6 +24,12 @@ import ProfileModal from "../routes/modals/ProfileModal";
 
 import { THEME } from "../theme";
 import initServices from "../initServices";
+
+// This is a fix for react-native-safe-view, which many libraries use
+// but has a warning with React 16.9 (since, in the future, it won't work with React 17).
+//
+// Basically disables the warning.
+YellowBox.ignoreWarnings(["Warning: componentWillReceiveProps"]);
 
 // Faster stacks, according to here:
 // https://reactnavigation.org/docs/en/react-native-screens.html
