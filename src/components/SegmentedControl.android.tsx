@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND,
   },
   tabTextStyle: {
+    fontFamily: "Plex-Mono",
     fontWeight: "500",
     fontSize: 14,
     textTransform: "uppercase",
