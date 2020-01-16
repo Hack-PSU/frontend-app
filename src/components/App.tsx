@@ -31,7 +31,7 @@ import initServices from "../initServices";
 // but has a warning with React 16.9 (since, in the future, it won't work with React 17).
 //
 // Basically disables the warning.
-YellowBox.ignoreWarnings(["Warning: componentWillReceiveProps"]);
+YellowBox.ignoreWarnings(["Warning: componentWillReceiveProps", "Warning: componentWillMount"]);
 
 // Faster stacks, according to here:
 // https://reactnavigation.org/docs/en/react-native-screens.html
