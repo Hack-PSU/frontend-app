@@ -55,7 +55,7 @@ const MapRoute: React.FC = observer(() => {
   ];
 
   return (
-    <Scaffold title="Map">
+    <Scaffold title="Map" smallLogo>
       <Modal
         animationType="fade"
         visible={isModalVisible}

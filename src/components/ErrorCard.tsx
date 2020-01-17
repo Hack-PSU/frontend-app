@@ -23,6 +23,7 @@ const ErrorCard: React.FC<Props> = props => {
 
 const styles = StyleSheet.create({
   card: {
+    marginTop: 20,
     marginBottom: 10,
     marginLeft: 10,
     marginRight: 10,

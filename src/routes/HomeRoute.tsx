@@ -8,7 +8,7 @@ import HomeListItemSecondary from "../components/HomeListItemSecondary";
 import DateCountDown from "../components/DateCountDown";
 import { TEXT_LIGHT } from "../theme";
 
-import Scaffold from "../components/Scaffold";
+import Scaffold, { LOGO_SAFE_PADDING } from "../components/Scaffold";
 
 import AuthService from "../services/AuthService";
 import DataService from "../services/DataService";
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontFamily: "Cornerstone",
     color: TEXT_LIGHT,
     fontSize: 48,
-    paddingTop: 44,
+    paddingTop: 44 + LOGO_SAFE_PADDING,
     paddingBottom: 16,
     paddingLeft: 16
   },
