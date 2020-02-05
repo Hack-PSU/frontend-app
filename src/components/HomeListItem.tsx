@@ -1,20 +1,23 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Card, Paragraph, Headline } from "react-native-paper";
+import { Card, Title, Paragraph, Headline } from "react-native-paper";
 
 import { TEXT, DARK_TEXT_THEME } from "../theme";
 
 interface Props {
-  description: string;
-  info: string;
+  description?: string;
+  info?: string;
+  onPress?: any;
+  children?: React.ReactNode;
 }
 
 const HomeListItem: React.FC<Props> = props => {
   return (
-    <Card theme={DARK_TEXT_THEME} style={styles.card}>
+    <Card theme={DARK_TEXT_THEME} style={styles.card} onPress={props.onPress}>
       <Card.Content>
-        <Paragraph style={styles.description}>{props.description}</Paragraph>
-        <Headline style={styles.info}>{props.info}</Headline>
+        {props.description && <Paragraph style={styles.description}>{props.description}</Paragraph>}
+        {props.info && <Headline style={styles.info}>{props.info}</Headline>}
+        {props.children}
       </Card.Content>
     </Card>
   );

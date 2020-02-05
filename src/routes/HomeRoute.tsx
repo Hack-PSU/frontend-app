@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Linking } from "react-native";
-import { Text, Title } from "react-native-paper";
+import { StyleSheet, View, Linking, RefreshControl } from "react-native";
+import { Text, Title, Button } from "react-native-paper";
 
 import { observer } from "mobx-react";
 import HomeListItem from "../components/HomeListItem";
@@ -15,6 +15,11 @@ import DataService from "../services/DataService";
 import { ScrollView } from "react-native-gesture-handler";
 import ErrorCard from "../components/ErrorCard";
 
+const REGISTER_URL = "https://app.hackpsu.org/register";
+
+const SLACK_URL =
+  "https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU";
+
 const HomeRoute: React.FC = observer(() => {
   const { currentUser } = AuthService;
   const { registrationStatus } = DataService;
@@ -23,12 +28,17 @@ const HomeRoute: React.FC = observer(() => {
     DataService.fetchRegistrationStatus(currentUser);
   }, [currentUser]);
 
-  const slackInviteUrl =
-    "https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU";
-
   return (
     <Scaffold title="Home">
       <ScrollView>
+        <RefreshControl
+          refreshing={registrationStatus.loading}
+          onRefresh={() => DataService.fetchRegistrationStatus(currentUser, true)}
+          tintColor="white"
+          title="Fetching data"
+          titleColor="white"
+        />
+
         <Title style={styles.title}>HOME</Title>
 
         <DateCountDown />
@@ -39,15 +49,21 @@ const HomeRoute: React.FC = observer(() => {
           />
         )}
 
-        {!registrationStatus.error && (
+        {!registrationStatus.error && (registrationStatus.loading || registrationStatus.data) && (
           <HomeListItem
             description="My PIN Number"
             info={
-              registrationStatus.loading || !registrationStatus.data
+              registrationStatus.loading
                 ? "..."
                 : registrationStatus.data.pin.toString()
             }
           />
+        )}
+
+        {!registrationStatus.error && !registrationStatus.data && (
+          <HomeListItem description="My PIN Number" onPress={() => Linking.openURL(REGISTER_URL)}>
+            <View style={styles.buttonContainer}><Button mode="contained" dark>Register</Button></View>
+          </HomeListItem>
         )}
 
         <View style={styles.horizontalCardView}>
@@ -57,11 +73,12 @@ const HomeRoute: React.FC = observer(() => {
           </HomeListItemSecondary>
           <HomeListItemSecondary
             description="Slack"
-            onPress={() => Linking.openURL(slackInviteUrl)}
+            onPress={() => Linking.openURL(SLACK_URL)}
           >
             <Text style={styles.horizontalCardText}>
               Request an invite by clicking here!
             </Text>
+            <View style={styles.buttonContainer}><Button mode="contained" dark>Open</Button></View>
           </HomeListItemSecondary>
         </View>
       </ScrollView>
@@ -77,6 +94,12 @@ const styles = StyleSheet.create({
     paddingTop: 44,
     paddingBottom: 16,
     paddingLeft: 16
+  },
+
+  buttonContainer: {
+    paddingTop: 10,
+    width: '100%',
+    alignItems: 'flex-start',
   },
 
   horizontalCardView: {
