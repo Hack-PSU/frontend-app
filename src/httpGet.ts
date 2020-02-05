@@ -5,6 +5,7 @@ import * as Firebase from "firebase";
 import createFetchRetry from "@zeit/fetch-retry";
 
 import getEnvironment from "./getEnvironment";
+import sessionStorage from "./sessionStorage";
 
 // Gets the base urls for V1 API and V2 API.
 // Also just copied this from frontend repo.
@@ -22,34 +23,29 @@ export interface ApiError {
   message: string;
 }
 
+export type HeadersObj = { [key: string]: string };
+
 // Wrap "browser" (React Native) fetch in our fetch retry.
-const browserFetch = window.fetch;
-const fetchRetry: typeof browserFetch = createFetchRetry(browserFetch);
+const fetchRetry: typeof window.fetch = createFetchRetry(window.fetch);
 
-function createUniqueCacheKey(url: string, headers?: Headers) {
-  let key = `@HackPSU:httpGet:${url}`;
-
-  // We have to cast headers to 'any' because the TS types
-  // aren't complete for this.
-  for (const { name, value } of (<any>headers).entries()) {
-    key += `\n${name}\n${value}`;
-  }
-
-  return key;
+export interface HttpGetOptions {
+  v2?: boolean;
+  cache?: boolean;
+  // If force is true, ignore cache at the beginning but still (optionally) write to it.
+  force?: boolean;
+  headers?: HeadersObj;
 }
-
-const SESSION_STORAGE = new Map<string, unknown>();
 
 export async function httpGet<T>(
   url: string,
-  v2: boolean = true,
-  headers?: Headers,
-  cache: boolean = true
+  options: HttpGetOptions = {}
 ): Promise<T> {
-  const cacheKey = createUniqueCacheKey(url, headers);
+  const { v2 = true, cache = true, force = false, headers = {} } = options;
+
+  const cacheKey = cacheKeyFunc(url, headers);
   const fullUrl = v2 ? API_BASE_URL_V2.concat(url) : API_BASE_URL.concat(url);
 
-  console.log(`debug url: ${fullUrl}`);
+  console.log(`httpGet url: ${fullUrl}`);
 
   /**
    * How cache works:
@@ -59,10 +55,10 @@ export async function httpGet<T>(
    * 3) Try to fetch from server
    *    a) If (3) failed, check async storage.
    */
-  if (cache) {
+  if (cache && !force) {
     // If in session storage return immediately.
-    if (SESSION_STORAGE.has(cacheKey)) {
-      return SESSION_STORAGE.get(cacheKey) as T;
+    if (sessionStorage[cacheKey]) {
+      return sessionStorage[cacheKey] as T;
     }
 
     // const { isConnected } = await NetInfo.fetch();
@@ -76,7 +72,7 @@ export async function httpGet<T>(
   }
 
   let res;
-  try {
+  try { 
     res = await fetchRetry(fullUrl, { headers });
   } catch (e) {
     if (cache) {
@@ -101,7 +97,7 @@ export async function httpGet<T>(
     // Save to cache since we're successful.
     // Session storage first in case we fail to write to async.
     if (cache) {
-      SESSION_STORAGE.set(cacheKey, data);
+      sessionStorage[cacheKey] = data;
       await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
     }
 
@@ -119,7 +115,7 @@ export async function httpGet<T>(
     // Save to cache since we're successful.
     // Session storage first in case we fail to write to async.
     if (cache) {
-      SESSION_STORAGE.set(cacheKey, json);
+      sessionStorage[cacheKey] = json;
       await AsyncStorage.setItem(cacheKey, JSON.stringify(json));
     }
 
@@ -130,12 +126,34 @@ export async function httpGet<T>(
 export async function httpGetWithAuth<T>(
   url: string,
   user: Firebase.User,
-  v2: boolean = true,
-  cache: boolean = true
+  options: HttpGetOptions = {}
 ): Promise<T> {
-  const headers = new Headers({
+  const headers = {
+    ...(options.headers || {}),
     idtoken: await user.getIdToken()
-  });
+  }
 
-  return httpGet<T>(url, v2, headers, cache);
+  return httpGet<T>(url, {
+    ...options,
+    headers
+  });
+}
+
+/**
+ * Creates a unique key for the given httpGet request.
+ */
+function cacheKeyFunc(url: string, headers?: HeadersObj): string {
+  let key = `@HackPSU:httpGet:${url}`;
+
+  if (!headers) {
+    return key
+  }
+
+  // We have to cast headers to 'any' because the TS types
+  // aren't complete for this.
+  for (const [ name, value ] of Object.entries(headers)) {
+    key += `\n${name}\n${value}`;
+  }
+
+  return key;
 }

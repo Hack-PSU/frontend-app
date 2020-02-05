@@ -17,12 +17,17 @@ export class DataService {
   events: AsyncData<EventModel[]> = createAsyncData();
 
   // Caches registration data per session storage.
-  fetchRegistrationStatus(currentUser: firebase.User): Promise<void> {
+  fetchRegistrationStatus(
+    currentUser: firebase.User,
+    force: boolean = false
+  ): Promise<void> {
     return fetchAsyncData(this.registrationStatus, async () => {
       const registrations = await httpGetWithAuth<RegistrationApiResponse[]>(
         "users/register",
         currentUser,
-        true
+        {
+          force
+        }
       );
 
       if (!registrations || !registrations.length) {
@@ -36,6 +41,8 @@ export class DataService {
           new Date(parseFloat(a.end_time)).getTime()
         );
       })[0];
+
+      console.log(JSON.stringify(hackathon));
 
       return RegistrationApiResponse.parseJSON(hackathon);
     });
