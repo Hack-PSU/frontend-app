@@ -5,19 +5,7 @@ import { EventModel, EventModelJSON } from "../models/event-model";
 
 import { httpGet, httpGetWithAuth } from "../httpGet";
 import { AsyncData, createAsyncData, fetchAsyncData } from "../AsyncData";
-
-function compare(a: number, b: number): -1 | 0 | 1 {
-  if (a < b) {
-    return -1;
-  }
-
-  if (a > b) {
-    return 1;
-  }
-
-  // a must be equal to b
-  return 0;
-}
+import { compare } from "../utils";
 
 export class DataService {
   @observable
@@ -28,7 +16,7 @@ export class DataService {
   @observable
   events: AsyncData<EventModel[]> = createAsyncData();
 
-  // TODO: Frontend doesn't use a cache for this... but should it?
+  // Caches registration data per session storage.
   fetchRegistrationStatus(currentUser: firebase.User): Promise<void> {
     return fetchAsyncData(this.registrationStatus, async () => {
       const registrations = await httpGetWithAuth<RegistrationApiResponse[]>(
@@ -41,7 +29,15 @@ export class DataService {
         return;
       }
 
-      return RegistrationApiResponse.parseJSON(registrations[0]);
+      // Get most recent hackathon by sorting in reverse order.
+      const hackathon = registrations.sort((a, b) => {
+        return compare(
+          new Date(parseFloat(b.end_time)).getTime(),
+          new Date(parseFloat(a.end_time)).getTime()
+        );
+      })[0];
+
+      return RegistrationApiResponse.parseJSON(hackathon);
     });
   }
 
