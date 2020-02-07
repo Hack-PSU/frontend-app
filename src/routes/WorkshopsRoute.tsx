@@ -1,14 +1,14 @@
 import React from "react";
-import { View } from "react-native";
 
-import Scaffold from "../components/Scaffold";
+import EventWorkshopPage from "../components/EventWorkshopPage";
+import EventListItem from "../components/EventListItem";
 
 const WorkshopsRoute: React.FC = () => {
-  return (
-    <Scaffold title="Workshops">
-      <View />
-    </Scaffold>
+  const renderItem = ({ item }) => (
+    // TODO: Make a Workshops list item
+    <EventListItem key={item.uid} model={item} />
   );
+  return <EventWorkshopPage eventType="Workshops" renderItem={renderItem} />;
 };
 
 export default WorkshopsRoute;
