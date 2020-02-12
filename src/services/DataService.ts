@@ -1,4 +1,5 @@
 import { observable } from "mobx";
+import { isPast, addWeeks } from "date-fns";
 
 import { RegistrationApiResponse } from "../models/registration";
 import { EventModel, EventModelJSON } from "../models/event-model";
@@ -42,7 +43,11 @@ export class DataService {
         );
       })[0];
 
-      console.log(JSON.stringify(hackathon));
+      const hackathonDate = new Date(parseFloat(hackathon.end_time));
+      // If too far in the past (3 weeks ago) return null.
+      if (isPast(addWeeks(hackathonDate, 3))) {
+        return;
+      }
 
       return RegistrationApiResponse.parseJSON(hackathon);
     });
