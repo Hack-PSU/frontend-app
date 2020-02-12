@@ -1,5 +1,4 @@
 import { AsyncStorage } from "react-native";
-import NetInfo from "@react-native-community/netinfo";
 
 import * as Firebase from "firebase";
 import createFetchRetry from "@zeit/fetch-retry";
@@ -51,24 +50,14 @@ export async function httpGet<T>(
    * How cache works:
    *
    * 1) Check session storage, return if true.
-   * 2) If offline, check async storage.
-   * 3) Try to fetch from server
-   *    a) If (3) failed, check async storage.
+   * 2) Try to fetch from server
+   *    a) If (2) failed, check async storage.
    */
   if (cache && !force) {
     // If in session storage return immediately.
     if (sessionStorage[cacheKey]) {
       return sessionStorage[cacheKey] as T;
     }
-
-    // const { isConnected } = await NetInfo.fetch();
-
-    // if (!isConnected) {
-    //   const asyncValue = await AsyncStorage.getItem(cacheKey);
-    //   if (asyncValue) {
-    //     return JSON.parse(asyncValue) as T;
-    //   }
-    // }
   }
 
   let res;
