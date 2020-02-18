@@ -6,13 +6,7 @@ import { format } from "date-fns";
 
 import { EventModel } from "../models/event-model";
 
-import {
-  TEXT,
-  PRIMARY,
-  DARK_TEXT_THEME,
-  RED,
-  YELLOW
-} from "../theme";
+import { TEXT, PRIMARY, DARK_TEXT_THEME, RED, YELLOW, PURPLE } from "../theme";
 
 // Date formats.
 // See options here: https://date-fns.org/v2.6.0/docs/format
@@ -56,17 +50,20 @@ const styles = StyleSheet.create({
 
 const EVENT_TYPE_COLORS = {
   activity: YELLOW,
-  food: RED
+  food: RED,
+  workshop: PURPLE
 };
 
 const EVENT_TYPE_TEXT_COLORS = {
   activity: "rgba(255,255,255,0.89)",
   food: "rgba(255,255,255,0.89)",
-}
+  workshop: "rgba(255,255,255,0.89)"
+};
 
 const EVENT_TYPE_ICONS = {
   activity: "star",
-  food: "restaurant-menu"
+  food: "restaurant-menu",
+  workshop: "code"
 };
 
 interface Props {
