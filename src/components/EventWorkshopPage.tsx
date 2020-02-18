@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SectionList,
-  ActivityIndicator
-} from "react-native";
+import { View, StyleSheet, SectionList, ActivityIndicator } from "react-native";
 
-import { observer, PropTypes } from "mobx-react";
+import { observer } from "mobx-react";
 
 import Scaffold from "../components/Scaffold";
 import Subtitle from "../components/Subtitle";
@@ -34,7 +28,7 @@ const STARRED = "Starred";
 
 interface Props {
   eventType: string;
-  renderItem: any; // TODO: Find a more specific type
+  renderItem: ({ item }) => JSX.Element;
 }
 
 const EventWorkshopPage: React.FC<Props> = observer(props => {
@@ -69,7 +63,6 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
         sections={[
           // Workshops get their own section so filter them out.
           {
-            // TODO: Find a better condition for events lmao
             data: data.filter(event =>
               props.eventType === "Events"
                 ? event.event_type !== "workshop"
