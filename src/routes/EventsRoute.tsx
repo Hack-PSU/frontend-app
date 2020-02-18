@@ -1,11 +1,11 @@
 import React from "react";
 
 import EventWorkshopPage from "../components/EventWorkshopPage";
-import EventListItem from "../components/EventListItem";
+import EventWorkshopListItem from "../components/EventWorkshopListItem";
 
 const EventsRoute: React.FC = () => {
   const renderItem = ({ item }) => (
-    <EventListItem key={item.uid} model={item} />
+    <EventWorkshopListItem key={item.uid} model={item} />
   );
   return <EventWorkshopPage eventType="Events" renderItem={renderItem} />;
 };

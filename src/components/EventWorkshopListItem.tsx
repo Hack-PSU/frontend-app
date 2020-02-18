@@ -70,7 +70,7 @@ interface Props {
   model: EventModel;
 }
 
-const EventListItem: React.FC<Props> = ({ model }) => {
+const EventWorkshopListItem: React.FC<Props> = ({ model }) => {
   const startDate = model.event_start_time;
   const endDate = model.event_end_time;
 
@@ -109,4 +109,4 @@ const EventListItem: React.FC<Props> = ({ model }) => {
   );
 };
 
-export default EventListItem;
+export default EventWorkshopListItem;
