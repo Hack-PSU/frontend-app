@@ -1,20 +1,22 @@
 import React, { useEffect } from "react";
 import { StyleSheet, View, Linking, RefreshControl } from "react-native";
 import { Text, Title, Button } from "react-native-paper";
+import Animated from "react-native-reanimated";
 import * as WebBrowser from 'expo-web-browser';
 
-import { ScrollView } from "react-native-gesture-handler";
 import { observer } from "mobx-react";
+
 import HomeListItem from "../components/HomeListItem";
 import HomeListItemSecondary from "../components/HomeListItemSecondary";
 import DateCountDown from "../components/DateCountDown";
-import { TEXT_LIGHT } from "../theme";
+import Scaffold, { LOGO_SAFE_PADDING } from "../components/Scaffold";
+import ErrorCard from "../components/ErrorCard";
 
-import Scaffold from "../components/Scaffold";
+import useScrollY from "../useScrollY";
+import { TEXT_LIGHT } from "../theme";
 
 import AuthService from "../services/AuthService";
 import DataService from "../services/DataService";
-import ErrorCard from "../components/ErrorCard";
 
 const REGISTER_URL = "https://app.hackpsu.org/register";
 
@@ -24,6 +26,8 @@ const SLACK_URL =
 const HomeRoute: React.FC = observer(() => {
   const { currentUser } = AuthService;
   const { registrationStatus } = DataService;
+
+  const { scrollY, onScroll } = useScrollY();
 
   useEffect(() => {
     DataService.fetchRegistrationStatus(currentUser);
@@ -37,17 +41,18 @@ const HomeRoute: React.FC = observer(() => {
     return WebBrowser.openBrowserAsync(REGISTER_URL).then(refresh);
   }
 
-  const refreshControl = (
-    <RefreshControl
-      refreshing={registrationStatus && registrationStatus.loading}
-      onRefresh={refresh}
-      tintColor="white"
-    />
-  );
+  // Disable for now.
+  // const refreshControl = (
+  //   <RefreshControl
+  //     refreshing={registrationStatus && registrationStatus.loading}
+  //     onRefresh={refresh}
+  //     tintColor="white"
+  //   />
+  // );
 
   return (
-    <Scaffold title="Home">
-      <ScrollView refreshControl={refreshControl}>
+    <Scaffold scrollY={scrollY}>
+      <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
         <Title style={styles.title}>HOME</Title>
 
         <DateCountDown />
@@ -93,7 +98,7 @@ const HomeRoute: React.FC = observer(() => {
             <View style={styles.buttonContainer}><Button mode="contained" dark>Open</Button></View>
           </HomeListItemSecondary>
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </Scaffold>
   );
 });
@@ -103,7 +108,7 @@ const styles = StyleSheet.create({
     fontFamily: "Cornerstone",
     color: TEXT_LIGHT,
     fontSize: 48,
-    paddingTop: 44,
+    paddingTop: 44 + LOGO_SAFE_PADDING,
     paddingBottom: 16,
     paddingLeft: 16
   },
