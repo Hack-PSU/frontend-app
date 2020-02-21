@@ -7,7 +7,7 @@ import { TEXT, DARK_TEXT_THEME } from "../theme";
 interface Props {
   description: string,
   onPress?: any,
-  children: any
+  children: React.ReactNode
 }
 
 const HomeListItemHorizontal: React.FC<Props> = props => {

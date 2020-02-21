@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { Card } from "react-native-paper";
 
-import { DARK_TEXT_THEME, RED } from "../theme";
+import { DARK_TEXT_THEME, RED, ACCENT } from "../theme";
 
 interface Props {
   error: string;
@@ -14,7 +14,7 @@ const ErrorCard: React.FC<Props> = props => {
       <Card.Content>
         <Text>
           Error "{props.error}". Please screenshot this and contact the HackPSU
-          team at app@hackpsu.org
+          team.
         </Text>
       </Card.Content>
     </Card>
@@ -27,7 +27,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
     marginRight: 10,
-    backgroundColor: RED
+    backgroundColor: RED,
+    borderColor: ACCENT,
+    borderWidth: 2
   }
 });
 
