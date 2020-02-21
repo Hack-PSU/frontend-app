@@ -41,17 +41,18 @@ const HomeRoute: React.FC = observer(() => {
     return WebBrowser.openBrowserAsync(REGISTER_URL).then(refresh);
   }
 
-  const refreshControl = (
-    <RefreshControl
-      refreshing={registrationStatus && registrationStatus.loading}
-      onRefresh={refresh}
-      tintColor="white"
-    />
-  );
+  // Disable for now.
+  // const refreshControl = (
+  //   <RefreshControl
+  //     refreshing={registrationStatus && registrationStatus.loading}
+  //     onRefresh={refresh}
+  //     tintColor="white"
+  //   />
+  // );
 
   return (
     <Scaffold scrollY={scrollY}>
-      <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll} refreshControl={refreshControl}>
+      <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
         <Title style={styles.title}>HOME</Title>
 
         <DateCountDown />

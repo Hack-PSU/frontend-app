@@ -31,29 +31,23 @@ const BigLogoAnimated: React.FC<Props> = ({ scrollY }: Props) => {
   }, [scale]);
 
   return (
-    <View style={styles.root}>
-      <Animated.View style={[styles.container, {
-        transform: [
-          {
-            scale: scale as any,
-            translateY: translateY as any,
-          }
-        ],
-      }]}>
-        <LogoSVG
-          width={SIZE}
-          height={SIZE}
-        />
-      </Animated.View>
-    </View>
+    <Animated.View style={[styles.container, {
+      transform: [
+        {
+          scale: scale as any,
+          translateY: translateY as any,
+        }
+      ],
+    }]}>
+      <LogoSVG
+        width={SIZE}
+        height={SIZE}
+      />
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
   container: {
     height: SIZE,
     width: SIZE,
@@ -61,7 +55,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignSelf: "center",
     backgroundColor: "rgb(222,222,222)",
-    borderRadius: 20
+    borderRadius: 20,
+    zIndex: 10000,
   },
 });
 
