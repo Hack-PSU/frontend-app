@@ -5,6 +5,7 @@ import {
   SectionList,
   ActivityIndicator
 } from "react-native";
+import Animated from "react-native-reanimated";
 
 import { observer } from "mobx-react";
 
@@ -16,6 +17,7 @@ import ErrorCard from "../components/ErrorCard";
 
 import DataService from "../services/DataService";
 
+import useScrollY from "../useScrollY";
 import { BACKGROUND } from "../theme";
 
 const styles = StyleSheet.create({
@@ -35,11 +37,15 @@ const styles = StyleSheet.create({
 const ALL = "All";
 const STARRED = "Starred";
 
+const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
+
 const EventsRoute: React.FC = observer(() => {
   const [filter, setFilter] = useState(ALL);
   useEffect(() => {
     DataService.fetchEvents();
   }, []);
+
+  const { scrollY, onScroll } = useScrollY();
 
   const { events } = DataService;
   const data = events.data || [];
@@ -62,8 +68,8 @@ const EventsRoute: React.FC = observer(() => {
   );
 
   return (
-    <Scaffold title="Events">
-      <SectionList
+    <Scaffold scrollY={scrollY}>
+      <AnimatedSectionList
         sections={[
           // Workshops get their own section so filter them out.
           {
@@ -71,6 +77,9 @@ const EventsRoute: React.FC = observer(() => {
           }
         ]}
         renderItem={({ item }) => <EventListItem key={item.uid} model={item} />}
+        scrollEventThrottle={1}
+        onScroll={onScroll}
+        renderScrollComponent={props => <Animated.ScrollView {...props} />}
         keyExtractor={item => item.uid}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}

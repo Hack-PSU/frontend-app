@@ -1,23 +1,26 @@
 import React, { useEffect } from "react";
 import { StyleSheet, View, Linking } from "react-native";
 import { Text, Title } from "react-native-paper";
-
+import Animated from "react-native-reanimated";
 import { observer } from "mobx-react";
+
 import HomeListItem from "../components/HomeListItem";
 import HomeListItemSecondary from "../components/HomeListItemSecondary";
 import DateCountDown from "../components/DateCountDown";
-import { TEXT_LIGHT } from "../theme";
-
 import Scaffold, { LOGO_SAFE_PADDING } from "../components/Scaffold";
+import ErrorCard from "../components/ErrorCard";
+
+import useScrollY from "../useScrollY";
+import { TEXT_LIGHT } from "../theme";
 
 import AuthService from "../services/AuthService";
 import DataService from "../services/DataService";
-import { ScrollView } from "react-native-gesture-handler";
-import ErrorCard from "../components/ErrorCard";
 
 const HomeRoute: React.FC = observer(() => {
   const { currentUser } = AuthService;
   const { registrationStatus } = DataService;
+
+  const { scrollY, onScroll } = useScrollY();
 
   useEffect(() => {
     DataService.fetchRegistrationStatus(currentUser);
@@ -27,8 +30,8 @@ const HomeRoute: React.FC = observer(() => {
     "https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU";
 
   return (
-    <Scaffold title="Home">
-      <ScrollView>
+    <Scaffold scrollY={scrollY}>
+      <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
         <Title style={styles.title}>HOME</Title>
 
         <DateCountDown />
@@ -64,7 +67,7 @@ const HomeRoute: React.FC = observer(() => {
             </Text>
           </HomeListItemSecondary>
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </Scaffold>
   );
 });
