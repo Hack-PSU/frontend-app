@@ -31,10 +31,13 @@ const styles = StyleSheet.create({
 const ALL = "All";
 const STARRED = "Starred";
 
+export const EVENTS = "Events";
+export const WORKSHOPS = "Workshops";
+
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
 interface Props {
-  eventType: string;
+  eventType: "Events" | "Workshops";
   renderItem: ({ item }) => JSX.Element;
 }
 
