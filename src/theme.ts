@@ -18,6 +18,7 @@ export const BACKGROUND = "#113654";
 
 export const RED = "#F24418";
 export const YELLOW = "#B6C767";
+export const PURPLE = "#6200EE";
 
 // Our customized theme for react-native-paper.
 export const THEME = {

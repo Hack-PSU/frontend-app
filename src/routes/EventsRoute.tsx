@@ -1,93 +1,13 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  SectionList,
-  ActivityIndicator
-} from "react-native";
-import Animated from "react-native-reanimated";
+import React from "react";
 
-import { observer } from "mobx-react";
+import EventWorkshopPage, { EVENTS } from "../components/EventWorkshopPage";
+import EventWorkshopListItem from "../components/EventWorkshopListItem";
 
-import Scaffold, { LOGO_SAFE_PADDING } from "../components/Scaffold";
-import Subtitle from "../components/Subtitle";
-import SegmentedControl from "../components/SegmentedControl";
-import EventListItem from "../components/EventListItem";
-import ErrorCard from "../components/ErrorCard";
-
-import DataService from "../services/DataService";
-
-import useScrollY from "../useScrollY";
-import { BACKGROUND } from "../theme";
-
-const styles = StyleSheet.create({
-  title: {
-    paddingTop: LOGO_SAFE_PADDING
-  },
-  section: {
-    paddingTop: 16,
-    paddingBottom: 16,
-    backgroundColor: BACKGROUND
-  },
-  loading: {
-    margin: 20
-  }
-});
-
-const ALL = "All";
-const STARRED = "Starred";
-
-const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
-
-const EventsRoute: React.FC = observer(() => {
-  const [filter, setFilter] = useState(ALL);
-  useEffect(() => {
-    DataService.fetchEvents();
-  }, []);
-
-  const { scrollY, onScroll } = useScrollY();
-
-  const { events } = DataService;
-  const data = events.data || [];
-
-  const listHeader = <View style={styles.title}><Subtitle>Events</Subtitle></View>;
-  const sectionHeader = (
-    <View style={styles.section}>
-      <SegmentedControl
-        values={[ALL, STARRED]}
-        value={filter}
-        onChange={newValue => setFilter(newValue)}
-      />
-      {(events.loading) && (
-        <ActivityIndicator animating size="large" style={styles.loading} />
-      )}
-      {events.error && (
-        <ErrorCard error={events.error.message || events.error} />
-      )}
-    </View>
+const EventsRoute: React.FC = () => {
+  const renderItem = ({ item }) => (
+    <EventWorkshopListItem key={item.uid} model={item} />
   );
-
-  return (
-    <Scaffold scrollY={scrollY}>
-      <AnimatedSectionList
-        sections={[
-          // Workshops get their own section so filter them out.
-          {
-            data: data.filter(event => event.event_type !== "workshop")
-          }
-        ]}
-        renderItem={({ item }) => <EventListItem key={item.uid} model={item} />}
-        scrollEventThrottle={1}
-        onScroll={onScroll}
-        renderScrollComponent={props => <Animated.ScrollView {...props} />}
-        keyExtractor={item => item.uid}
-        ListHeaderComponent={listHeader}
-        stickyHeaderIndices={[0]}
-        renderSectionHeader={() => sectionHeader}
-        stickySectionHeadersEnabled={true}
-      />
-    </Scaffold>
-  );
-});
+  return <EventWorkshopPage eventType={EVENTS} renderItem={renderItem} />;
+};
 
 export default EventsRoute;
