@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Card, Avatar, Chip, IconButton } from "react-native-paper";
 
@@ -87,7 +87,17 @@ const EventWorkshopListItem: React.FC<Props> = ({ model }) => {
     />
   );
 
-  const star = <IconButton icon="star-border" size={24} />;
+  const [isStarred, changeIsStarred] = useState(false);
+
+  const star = (
+    <IconButton
+      icon={isStarred ? "star" : "star-border"}
+      size={24}
+      animated
+      onPress={() => changeIsStarred(!isStarred)}
+      color={isStarred ? "#FDD835" : "#000"}
+    />
+  );
 
   return (
     <Card theme={DARK_TEXT_THEME} style={styles.card}>
