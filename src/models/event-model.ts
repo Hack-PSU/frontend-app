@@ -6,6 +6,7 @@ export interface EventModelJSON {
   event_end_time: string;
   event_description: string;
   location_name: string;
+  starred?: boolean; // This will only be used when reading from the storage for starred (offline) events
 }
 
 export class EventModel {
@@ -16,6 +17,7 @@ export class EventModel {
   public event_end_time: Date;
   public event_description: string;
   public location_name: string;
+  public starred: boolean;
 
   static parseJSON(value: EventModelJSON): EventModel {
     const event = new EventModel();
@@ -23,6 +25,10 @@ export class EventModel {
 
     event.event_start_time = new Date(parseFloat(value.event_start_time));
     event.event_end_time = new Date(parseFloat(value.event_end_time));
+
+    if (value.starred == null) {
+      event.starred = false;
+    }
 
     return event;
   }

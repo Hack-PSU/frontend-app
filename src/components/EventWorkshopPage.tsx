@@ -8,6 +8,7 @@ import Scaffold, { LOGO_SAFE_PADDING } from "../components/Scaffold";
 import Subtitle from "../components/Subtitle";
 import SegmentedControl from "../components/SegmentedControl";
 import ErrorCard from "../components/ErrorCard";
+import EventWorkshopListItem from "../components/EventWorkshopListItem";
 
 import DataService from "../services/DataService";
 
@@ -38,7 +39,6 @@ const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
 interface Props {
   eventType: "Events" | "Workshops";
-  renderItem: ({ item }) => JSX.Element;
 }
 
 const EventWorkshopPage: React.FC<Props> = observer(props => {
@@ -51,6 +51,44 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
 
   const { events } = DataService;
   const data = events.data || [];
+
+  const [actualEventsList, setActualEventsList] = useState([]);
+  const [workshopsList, setWorkshopsList] = useState([]);
+
+  // Set the separate lists to actual data when the data from the server is loaded
+  // And when the lists aren't already loaded (so the starred items aren't overridden)
+  if (events.data && !actualEventsList.length && !workshopsList.length) {
+    setActualEventsList(data.filter(event => event.event_type !== "workshop"));
+    setWorkshopsList(data.filter(event => event.event_type === "workshop"));
+  }
+
+  const renderItem = ({ item, index }) => (
+    <EventWorkshopListItem
+      key={item.uid}
+      model={item}
+      starItem={() => starItem(index)}
+    />
+  );
+
+  // This is called when the star button is clicked on an item
+  const starItem = index => {
+    var temp = [];
+    // Make sure we're modifying the correct event
+    if (props.eventType === "Events") {
+      // Don't copy the pointer of the array, copy the values of the array
+      Object.assign(temp, actualEventsList);
+    } else {
+      Object.assign(temp, workshopsList);
+    }
+
+    temp[index].starred = !temp[index].starred;
+
+    if (props.eventType === "Events") {
+      setActualEventsList(temp);
+    } else {
+      setWorkshopsList(temp);
+    }
+  };
 
   const listHeader = (
     <View style={styles.title}>
@@ -73,20 +111,22 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     </View>
   );
 
+  var correctEventList =
+    props.eventType === "Events" ? actualEventsList : workshopsList;
+  // If the user is in the starred section, then only show the starred items
+  if (filter === STARRED) {
+    correctEventList = correctEventList.filter(event => event.starred);
+  }
+
   return (
     <Scaffold scrollY={scrollY}>
       <AnimatedSectionList
         sections={[
-          // Workshops get their own section so filter them out.
           {
-            data: data.filter(event =>
-              props.eventType === "Events"
-                ? event.event_type !== "workshop"
-                : event.event_type === "workshop"
-            )
+            data: correctEventList
           }
         ]}
-        renderItem={props.renderItem}
+        renderItem={renderItem}
         scrollEventThrottle={1}
         onScroll={onScroll}
         renderScrollComponent={props => <Animated.ScrollView {...props} />}

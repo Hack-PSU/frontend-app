@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Card, Avatar, Chip, IconButton } from "react-native-paper";
 
@@ -68,9 +68,10 @@ const EVENT_TYPE_ICONS = {
 
 interface Props {
   model: EventModel;
+  starItem: () => void;
 }
 
-const EventWorkshopListItem: React.FC<Props> = ({ model }) => {
+const EventWorkshopListItem: React.FC<Props> = ({ model, starItem }) => {
   const startDate = model.event_start_time;
   const endDate = model.event_end_time;
 
@@ -87,15 +88,13 @@ const EventWorkshopListItem: React.FC<Props> = ({ model }) => {
     />
   );
 
-  const [isStarred, changeIsStarred] = useState(false);
-
   const star = (
     <IconButton
-      icon={isStarred ? "star" : "star-border"}
+      icon={model.starred ? "star" : "star-border"}
       size={24}
       animated
-      onPress={() => changeIsStarred(!isStarred)}
-      color={isStarred ? "#FDD835" : "#000"}
+      onPress={() => starItem()}
+      color={model.starred ? "#FDD835" : "#000"}
     />
   );
 
