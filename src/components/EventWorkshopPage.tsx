@@ -41,6 +41,8 @@ const STARRED = "Starred";
 export const EVENTS = "Events";
 export const WORKSHOPS = "Workshops";
 
+const STORAGE_KEY = "EventsList";
+
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
 interface Props {
@@ -56,16 +58,12 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   const { scrollY, onScroll } = useScrollY();
 
   const { events } = DataService;
-  const data = events.data || [];
-
-  const [actualEventsList, setActualEventsList] = useState([]);
-  const [workshopsList, setWorkshopsList] = useState([]);
+  const [data, setData] = useState([]);
 
   // Set the separate lists to actual data when the data from the server is loaded
   // And when the lists aren't already loaded (so the starred items aren't overridden)
-  if (events.data && !actualEventsList.length && !workshopsList.length) {
-    setActualEventsList(data.filter(event => event.event_type !== "workshop"));
-    setWorkshopsList(data.filter(event => event.event_type === "workshop"));
+  if (events.data && !data.length) {
+    setData(events.data);
   }
 
   const renderItem = ({ item }) => (
@@ -79,38 +77,28 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   // This is called when the star button is clicked on an item
   const starItem = item => {
     var temp = [];
-    // Make sure we're modifying the correct event
-    if (props.eventType === EVENTS) {
-      // Don't copy the pointer of the array, copy the values of the array
-      Object.assign(temp, actualEventsList);
-    } else {
-      Object.assign(temp, workshopsList);
-    }
+    // Don't copy the pointer of the array, copy the values of the array
+    Object.assign(temp, data);
 
     // Find which index the event is in with the uid
     const index = temp.findIndex(event => event.uid === item.uid);
     temp[index].starred = !temp[index].starred;
 
-    if (props.eventType === EVENTS) {
-      setActualEventsList(temp);
-    } else {
-      setWorkshopsList(temp);
-    }
+    setData(temp);
 
-    storeList(
-      props.eventType,
-      temp.filter(event => event.starred)
-    );
+    storeList(temp.filter(event => event.starred));
   };
 
   // Used for storing starred items
-  const storeList = async (key, value) => {
+  const storeList = async value => {
     try {
-      await AsyncStorage.setItem(key, JSON.stringify(value));
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(value));
     } catch (e) {
       console.log(e);
     }
-    console.log(`Successfully saved ${JSON.stringify(value)} in ${key}`);
+    console.log(
+      `Successfully saved ${JSON.stringify(value)} in ${STORAGE_KEY}`
+    );
   };
 
   const listHeader = (
@@ -134,8 +122,11 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     </View>
   );
 
-  var correctEventList =
-    props.eventType === EVENTS ? actualEventsList : workshopsList;
+  var correctEventList = data.filter(event =>
+    props.eventType === EVENTS
+      ? event.event_type !== "workshop"
+      : event.event_type === "workshop"
+  );
   // If the user is in the starred section, then only show the starred items
   if (filter === STARRED) {
     correctEventList = correctEventList.filter(event => event.starred);
