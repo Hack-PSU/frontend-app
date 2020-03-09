@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, SectionList, ActivityIndicator } from "react-native";
+import { View, StyleSheet, SectionList, ActivityIndicator, AsyncStorage } from "react-native";
 import Animated from "react-native-reanimated";
 
 import { observer } from "mobx-react";
@@ -74,7 +74,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   const starItem = index => {
     var temp = [];
     // Make sure we're modifying the correct event
-    if (props.eventType === "Events") {
+    if (props.eventType === EVENTS) {
       // Don't copy the pointer of the array, copy the values of the array
       Object.assign(temp, actualEventsList);
     } else {
@@ -83,12 +83,24 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
 
     temp[index].starred = !temp[index].starred;
 
-    if (props.eventType === "Events") {
+    if (props.eventType === EVENTS) {
       setActualEventsList(temp);
     } else {
       setWorkshopsList(temp);
     }
+
+    storeList(props.eventType, temp.filter(event => event.starred));
   };
+
+  // Used for storing starred items
+  const storeList = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(`Successfully saved ${JSON.stringify(value)} in ${key}`)
+  }
 
   const listHeader = (
     <View style={styles.title}>
@@ -112,7 +124,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   );
 
   var correctEventList =
-    props.eventType === "Events" ? actualEventsList : workshopsList;
+    props.eventType === EVENTS ? actualEventsList : workshopsList;
   // If the user is in the starred section, then only show the starred items
   if (filter === STARRED) {
     correctEventList = correctEventList.filter(event => event.starred);
