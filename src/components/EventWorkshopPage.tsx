@@ -99,7 +99,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     } catch (e) {
       console.log(e);
     }
-    console.log(`Successfully saved ${JSON.stringify(value)} in ${key}`)
+    console.log(`Successfully saved ${JSON.stringify(value)} in ${key}`);
   }
 
   const listHeader = (
