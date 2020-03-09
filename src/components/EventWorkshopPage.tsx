@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, SectionList, ActivityIndicator, AsyncStorage } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SectionList,
+  ActivityIndicator,
+  AsyncStorage
+} from "react-native";
 import Animated from "react-native-reanimated";
 
 import { observer } from "mobx-react";
@@ -62,16 +68,16 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     setWorkshopsList(data.filter(event => event.event_type === "workshop"));
   }
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item }) => (
     <EventWorkshopListItem
       key={item.uid}
       model={item}
-      starItem={() => starItem(index)}
+      starItem={() => starItem(item)}
     />
   );
 
   // This is called when the star button is clicked on an item
-  const starItem = index => {
+  const starItem = item => {
     var temp = [];
     // Make sure we're modifying the correct event
     if (props.eventType === EVENTS) {
@@ -81,6 +87,8 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
       Object.assign(temp, workshopsList);
     }
 
+    // Find which index the event is in with the uid
+    const index = temp.findIndex(event => event.uid === item.uid);
     temp[index].starred = !temp[index].starred;
 
     if (props.eventType === EVENTS) {
@@ -89,7 +97,10 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
       setWorkshopsList(temp);
     }
 
-    storeList(props.eventType, temp.filter(event => event.starred));
+    storeList(
+      props.eventType,
+      temp.filter(event => event.starred)
+    );
   };
 
   // Used for storing starred items
@@ -100,7 +111,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
       console.log(e);
     }
     console.log(`Successfully saved ${JSON.stringify(value)} in ${key}`);
-  }
+  };
 
   const listHeader = (
     <View style={styles.title}>
