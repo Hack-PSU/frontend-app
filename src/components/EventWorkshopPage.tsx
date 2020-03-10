@@ -41,6 +41,7 @@ const STARRED = "Starred";
 
 export const EVENTS = "Events";
 export const WORKSHOPS = "Workshops";
+const WORKSHOP_EVENT_TYPE = "workshop";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
@@ -51,7 +52,7 @@ interface Props {
 const EventWorkshopPage: React.FC<Props> = observer(props => {
   const [filter, setFilter] = useState(ALL);
 
-  // This is needed to ensure that offline data and online data is'nt combined
+  // This is needed to ensure that offline data and online data isn't combined
   // on every rerender.
   const [loadedBothOfflineOnline, setLoadedBothOfflineOnline] = useState(false);
   // This is so that the page is rerendered when offlineData is loaded with
@@ -181,8 +182,8 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
         event =>
           event.starred &&
           (props.eventType === EVENTS
-            ? event.event_type !== "workshop"
-            : event.event_type === "workshop")
+            ? event.event_type !== WORKSHOP_EVENT_TYPE
+            : event.event_type === WORKSHOP_EVENT_TYPE)
       )
     );
   };
@@ -210,8 +211,8 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
 
   var correctEventList = data.filter(event =>
     props.eventType === EVENTS
-      ? event.event_type !== "workshop"
-      : event.event_type === "workshop"
+      ? event.event_type !== WORKSHOP_EVENT_TYPE
+      : event.event_type === WORKSHOP_EVENT_TYPE
   );
   // If the user is in the starred section, then only show the starred items.
   if (filter === STARRED) {
