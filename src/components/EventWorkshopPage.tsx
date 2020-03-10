@@ -51,10 +51,31 @@ interface Props {
 const EventWorkshopPage: React.FC<Props> = observer(props => {
   const [filter, setFilter] = useState(ALL);
 
-  // This is needed to ensure that offline data and online data is combined properly and not on every rerender.
+  // This is needed to ensure that offline data and online data is'nt combined
+  // on every rerender.
   const [loadedBothOfflineOnline, setLoadedBothOfflineOnline] = useState(false);
-  // This is so that the page is rerendered when offlineData is loaded with actual data from storage. Events that are stored offline were starred previously
+  // This is so that the page is rerendered when offlineData is loaded with
+  // actual data from storage. Events that are stored offline were starred
+  // previously.
   const [offlineData, setOfflineData] = useState([]);
+
+  // Used for storing starred items.
+  const storeList = async value => {
+    try {
+      // Change the dates format to match with what comes in with the server.
+      const valWithModifiedDate = value.map(event => {
+        event.event_start_time = new Date(event.event_start_time).getTime();
+        event.event_end_time = new Date(event.event_end_time).getTime();
+        return event;
+      });
+      await AsyncStorage.setItem(
+        props.eventType,
+        JSON.stringify(valWithModifiedDate)
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const readStoredList = async () => {
     try {
@@ -72,6 +93,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     }
   };
 
+  // Load offlineData with actual data if it's not already full.
   if (!offlineData.length) {
     readStoredList();
   }
@@ -89,7 +111,9 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   // onlineData and offlineData (if they both exist).
   const [data, setData] = useState([]);
 
-  // If the data hasn't been loaded yet, check to see if the offline or online data loaded first and set it accordingly.
+  // If the data hasn't been filled yet, check to see if the offline or online
+  // data loaded first and set it accordingly instead of waiting for both so
+  // the user can see results more quickly.
   if (!data.length) {
     if (offlineData.length) {
       setData(offlineData);
@@ -101,14 +125,13 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
 
   // This is for when both offline and online are both loaded for the first
   // time. We combine them, which essentially means looking to see if an online
-  // event shows up in as an offline event and marking that event as starred.
+  // event shows up as an offline event and marking that event as starred.
   // If their id's match, we mark it as starred. The reason we have onlineData
   // overriding offlineData is that info (descriptions, locations, etc.) may
   // change and events could be cancelled. This means that if an offline event
   // isn't found in online data, it is discarded.
   if (!loadedBothOfflineOnline && offlineData.length && onlineData.data) {
     setData(
-      //
       onlineData.data.map(onlineEvent => {
         // eventMatch is an event found both in both onlineData and
         // offlineData. This means it was starred in a previous session.
@@ -139,13 +162,13 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     />
   );
 
-  // This is called when the star button is clicked on an item
+  // This is called when the star button is clicked on an item.
   const starItem = item => {
     var temp = [];
-    // Don't copy the pointer of the array, copy the values of the array
+    // Don't copy the pointer of the array, copy the values of the array.
     Object.assign(temp, data);
 
-    // Find which index the event is in with the uid
+    // Find which index the event is in with the uid.
     const index = temp.findIndex(event => event.uid === item.uid);
     temp[index].starred = !temp[index].starred;
 
@@ -161,27 +184,6 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
             ? event.event_type !== "workshop"
             : event.event_type === "workshop")
       )
-    );
-  };
-
-  // Used for storing starred items
-  const storeList = async value => {
-    try {
-      // Change the dates format to match with what comes in with the server.
-      const valWithModifiedDate = value.map(event => {
-        event.event_start_time = new Date(event.event_start_time).getTime();
-        event.event_end_time = new Date(event.event_end_time).getTime();
-        return event;
-      });
-      await AsyncStorage.setItem(
-        props.eventType,
-        JSON.stringify(valWithModifiedDate)
-      );
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(
-      `Successfully saved ${JSON.stringify(value)} in ${props.eventType}`
     );
   };
 
@@ -211,7 +213,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
       ? event.event_type !== "workshop"
       : event.event_type === "workshop"
   );
-  // If the user is in the starred section, then only show the starred items
+  // If the user is in the starred section, then only show the starred items.
   if (filter === STARRED) {
     correctEventList = correctEventList.filter(event => event.starred);
   }
