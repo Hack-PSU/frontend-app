@@ -15,6 +15,7 @@ import Subtitle from "../components/Subtitle";
 import SegmentedControl from "../components/SegmentedControl";
 import ErrorCard from "../components/ErrorCard";
 import EventWorkshopListItem from "../components/EventWorkshopListItem";
+import { EventModelJSON } from "../models/event-model";
 
 import DataService from "../services/DataService";
 
@@ -41,8 +42,6 @@ const STARRED = "Starred";
 export const EVENTS = "Events";
 export const WORKSHOPS = "Workshops";
 
-const STORAGE_KEY = "EventsList";
-
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
 interface Props {
@@ -51,19 +50,85 @@ interface Props {
 
 const EventWorkshopPage: React.FC<Props> = observer(props => {
   const [filter, setFilter] = useState(ALL);
+
+  // This is needed to ensure that offline data and online data is combined properly and not on every rerender.
+  const [loadedBothOfflineOnline, setLoadedBothOfflineOnline] = useState(false);
+  // This is so that the page is rerendered when offlineData is loaded with actual data from storage. Events that are stored offline were starred previously
+  const [offlineData, setOfflineData] = useState([]);
+
+  const readStoredList = async () => {
+    try {
+      // Separated data for workshops and actual events so they don't conflict
+      // from the 2 EventWorkshopPage instances (one on EventsRoute, other on
+      // WorkshopsRoute).
+      const value = await AsyncStorage.getItem(props.eventType);
+
+      if (value !== null) {
+        // Update state when offline data is loaded for a rerender.
+        setOfflineData(JSON.parse(value) as EventModelJSON[]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  if (!offlineData.length) {
+    readStoredList();
+  }
+
   useEffect(() => {
     DataService.fetchEvents();
   }, []);
 
   const { scrollY, onScroll } = useScrollY();
 
-  const { events } = DataService;
+  // Renamed to more clearly differentiate other names.
+  const { events: onlineData } = DataService;
+
+  // This is the actual data shown on the page. This is a combination and
+  // onlineData and offlineData (if they both exist).
   const [data, setData] = useState([]);
 
-  // Set the separate lists to actual data when the data from the server is loaded
-  // And when the lists aren't already loaded (so the starred items aren't overridden)
-  if (events.data && !data.length) {
-    setData(events.data);
+  // If the data hasn't been loaded yet, check to see if the offline or online data loaded first and set it accordingly.
+  if (!data.length) {
+    if (offlineData.length) {
+      setData(offlineData);
+    }
+    if (onlineData.data) {
+      setData(onlineData.data);
+    }
+  }
+
+  // This is for when both offline and online are both loaded for the first
+  // time. We combine them, which essentially means looking to see if an online
+  // event shows up in as an offline event and marking that event as starred.
+  // If their id's match, we mark it as starred. The reason we have onlineData
+  // overriding offlineData is that info (descriptions, locations, etc.) may
+  // change and events could be cancelled. This means that if an offline event
+  // isn't found in online data, it is discarded.
+  if (!loadedBothOfflineOnline && offlineData.length && onlineData.data) {
+    setData(
+      //
+      onlineData.data.map(onlineEvent => {
+        // eventMatch is an event found both in both onlineData and
+        // offlineData. This means it was starred in a previous session.
+        const eventMatch = offlineData.find(
+          offlineEvent => onlineEvent.uid === offlineEvent.uid
+        );
+        if (eventMatch) {
+          // We mark the onlineEvent as starred instead of using the eventMatch
+          // and returning that because eventMatch is from offline data and
+          // could have updated info from the server.
+          onlineEvent.starred = true;
+        }
+        return onlineEvent;
+      })
+    );
+    // After combining the data, we set this to true so this entire if
+    // statement isn't running with every rerender. Otherwise, it would
+    // decrease performance and could override stars from this session causing
+    // bugs.
+    setLoadedBothOfflineOnline(true);
   }
 
   const renderItem = ({ item }) => (
@@ -86,18 +151,37 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
 
     setData(temp);
 
-    storeList(temp.filter(event => event.starred));
+    // Make sure we are only storing events that are starred and are from the
+    // right category.
+    storeList(
+      temp.filter(
+        event =>
+          event.starred &&
+          (props.eventType === EVENTS
+            ? event.event_type !== "workshop"
+            : event.event_type === "workshop")
+      )
+    );
   };
 
   // Used for storing starred items
   const storeList = async value => {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+      // Change the dates format to match with what comes in with the server.
+      const valWithModifiedDate = value.map(event => {
+        event.event_start_time = new Date(event.event_start_time).getTime();
+        event.event_end_time = new Date(event.event_end_time).getTime();
+        return event;
+      });
+      await AsyncStorage.setItem(
+        props.eventType,
+        JSON.stringify(valWithModifiedDate)
+      );
     } catch (e) {
       console.log(e);
     }
     console.log(
-      `Successfully saved ${JSON.stringify(value)} in ${STORAGE_KEY}`
+      `Successfully saved ${JSON.stringify(value)} in ${props.eventType}`
     );
   };
 
@@ -113,11 +197,11 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
         value={filter}
         onChange={newValue => setFilter(newValue)}
       />
-      {events.loading && (
+      {onlineData.loading && (
         <ActivityIndicator animating size="large" style={styles.loading} />
       )}
-      {events.error && (
-        <ErrorCard error={events.error.message || events.error} />
+      {onlineData.error && (
+        <ErrorCard error={onlineData.error.message || onlineData.error} />
       )}
     </View>
   );
