@@ -165,9 +165,8 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
 
   // This is called when the star button is clicked on an item.
   const starItem = item => {
-    var temp = [];
     // Don't copy the pointer of the array, copy the values of the array.
-    Object.assign(temp, data);
+    let temp = [...data];
 
     // Find which index the event is in with the uid.
     const index = temp.findIndex(event => event.uid === item.uid);
@@ -209,7 +208,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     </View>
   );
 
-  var correctEventList = data.filter(event =>
+  let correctEventList = data.filter(event =>
     props.eventType === EVENTS
       ? event.event_type !== WORKSHOP_EVENT_TYPE
       : event.event_type === WORKSHOP_EVENT_TYPE
