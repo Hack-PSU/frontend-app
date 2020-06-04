@@ -18,25 +18,25 @@ const WEEKDAY = "EEEE";
 
 const styles = StyleSheet.create({
   avatar: {
-    borderRadius: 16
+    borderRadius: 16,
   },
   card: {
     marginLeft: 8,
     marginRight: 8,
-    marginBottom: 8
+    marginBottom: 8,
   },
   title: {
     lineHeight: 32,
     fontSize: 24,
     color: TEXT,
-    fontWeight: "normal"
+    fontWeight: "normal",
   },
   subtitle: {
     fontFamily: "Plex-Mono",
     lineHeight: 18,
     fontSize: 14,
     color: PRIMARY,
-    letterSpacing: 0.2
+    letterSpacing: 0.2,
   },
   row: {
     width: "100%",
@@ -44,26 +44,26 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginRight: 16,
     marginTop: 4,
-    marginBottom: 12
-  }
+    marginBottom: 12,
+  },
 });
 
 const EVENT_TYPE_COLORS = {
   activity: YELLOW,
   food: RED,
-  workshop: PURPLE
+  workshop: PURPLE,
 };
 
 const EVENT_TYPE_TEXT_COLORS = {
   activity: "rgba(255,255,255,0.89)",
   food: "rgba(255,255,255,0.89)",
-  workshop: "rgba(255,255,255,0.89)"
+  workshop: "rgba(255,255,255,0.89)",
 };
 
 const EVENT_TYPE_ICONS = {
   activity: "star",
   food: "restaurant-menu",
-  workshop: "code"
+  workshop: "code",
 };
 
 interface Props {

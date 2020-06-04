@@ -34,7 +34,7 @@ export class EventModel {
   }
 
   static parseFromJSONArray(array: EventModelJSON[]): EventModel[] {
-    return array.map(value => {
+    return array.map((value) => {
       return EventModel.parseJSON(value);
     });
   }

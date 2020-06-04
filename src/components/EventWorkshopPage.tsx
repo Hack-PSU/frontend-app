@@ -4,7 +4,7 @@ import {
   StyleSheet,
   SectionList,
   ActivityIndicator,
-  AsyncStorage
+  AsyncStorage,
 } from "react-native";
 import Animated from "react-native-reanimated";
 
@@ -24,16 +24,16 @@ import { BACKGROUND } from "../theme";
 
 const styles = StyleSheet.create({
   title: {
-    paddingTop: LOGO_SAFE_PADDING
+    paddingTop: LOGO_SAFE_PADDING,
   },
   section: {
     paddingTop: 16,
     paddingBottom: 16,
-    backgroundColor: BACKGROUND
+    backgroundColor: BACKGROUND,
   },
   loading: {
-    margin: 20
-  }
+    margin: 20,
+  },
 });
 
 const ALL = "All";
@@ -49,7 +49,7 @@ interface Props {
   eventType: "Events" | "Workshops";
 }
 
-const EventWorkshopPage: React.FC<Props> = observer(props => {
+const EventWorkshopPage: React.FC<Props> = observer((props) => {
   const [filter, setFilter] = useState(ALL);
 
   // This is needed to ensure that offline data and online data isn't combined
@@ -61,10 +61,10 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   const [offlineData, setOfflineData] = useState([]);
 
   // Used for storing starred items.
-  const storeList = async value => {
+  const storeList = async (value) => {
     try {
       // Change the dates format to match with what comes in with the server.
-      const valWithModifiedDate = value.map(event => {
+      const valWithModifiedDate = value.map((event) => {
         event.event_start_time = new Date(event.event_start_time).getTime();
         event.event_end_time = new Date(event.event_end_time).getTime();
         return event;
@@ -133,11 +133,11 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   // isn't found in online data, it is discarded.
   if (!loadedBothOfflineOnline && offlineData.length && onlineData.data) {
     setData(
-      onlineData.data.map(onlineEvent => {
+      onlineData.data.map((onlineEvent) => {
         // eventMatch is an event found both in both onlineData and
         // offlineData. This means it was starred in a previous session.
         const eventMatch = offlineData.find(
-          offlineEvent => onlineEvent.uid === offlineEvent.uid
+          (offlineEvent) => onlineEvent.uid === offlineEvent.uid
         );
         if (eventMatch) {
           // We mark the onlineEvent as starred instead of using the eventMatch
@@ -164,12 +164,12 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
   );
 
   // This is called when the star button is clicked on an item.
-  const starItem = item => {
+  const starItem = (item) => {
     // Don't copy the pointer of the array, copy the values of the array.
     let temp = [...data];
 
     // Find which index the event is in with the uid.
-    const index = temp.findIndex(event => event.uid === item.uid);
+    const index = temp.findIndex((event) => event.uid === item.uid);
     temp[index].starred = !temp[index].starred;
 
     setData(temp);
@@ -178,7 +178,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     // right category.
     storeList(
       temp.filter(
-        event =>
+        (event) =>
           event.starred &&
           (props.eventType === EVENTS
             ? event.event_type !== WORKSHOP_EVENT_TYPE
@@ -197,7 +197,7 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
       <SegmentedControl
         values={[ALL, STARRED]}
         value={filter}
-        onChange={newValue => setFilter(newValue)}
+        onChange={(newValue) => setFilter(newValue)}
       />
       {onlineData.loading && (
         <ActivityIndicator animating size="large" style={styles.loading} />
@@ -208,14 +208,14 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
     </View>
   );
 
-  let correctEventList = data.filter(event =>
+  let correctEventList = data.filter((event) =>
     props.eventType === EVENTS
       ? event.event_type !== WORKSHOP_EVENT_TYPE
       : event.event_type === WORKSHOP_EVENT_TYPE
   );
   // If the user is in the starred section, then only show the starred items.
   if (filter === STARRED) {
-    correctEventList = correctEventList.filter(event => event.starred);
+    correctEventList = correctEventList.filter((event) => event.starred);
   }
 
   return (
@@ -223,14 +223,14 @@ const EventWorkshopPage: React.FC<Props> = observer(props => {
       <AnimatedSectionList
         sections={[
           {
-            data: correctEventList
-          }
+            data: correctEventList,
+          },
         ]}
         renderItem={renderItem}
         scrollEventThrottle={1}
         onScroll={onScroll}
-        renderScrollComponent={props => <Animated.ScrollView {...props} />}
-        keyExtractor={item => item.uid}
+        renderScrollComponent={(props) => <Animated.ScrollView {...props} />}
+        keyExtractor={(item) => item.uid}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
         renderSectionHeader={() => sectionHeader}
