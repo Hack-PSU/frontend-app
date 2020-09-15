@@ -2,8 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 57534,
-  "expoServerNgrokUrl": "https://g3-s2r.mbullington.app.exp.direct",
-  "packagerNgrokUrl": "https://packager.g3-s2r.mbullington.app.exp.direct",
-  "ngrokPid": 57565
+  "packagerPid": 18560,
+  "expoServerNgrokUrl": "https://u3-qyf.mbullington.app.exp.direct",
+  "packagerNgrokUrl": "https://packager.u3-qyf.mbullington.app.exp.direct",
+  "ngrokPid": 19313,
+  "webpackServerPort": null
 }

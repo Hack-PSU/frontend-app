@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import LogoSVG from "../../assets/images/logo.svg";
 
 // Wanted size in pixels.
-const SIZE = 116;
+const SIZE = 136;
 
 const BigLogo: React.FC = () => {
   return (

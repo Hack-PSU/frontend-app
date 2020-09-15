@@ -189,7 +189,7 @@ const EventWorkshopPage: React.FC<Props> = observer((props) => {
 
   const listHeader = (
     <View style={styles.title}>
-      <Subtitle>{props.eventType}</Subtitle>
+      <Subtitle style={{paddingBottom: 0}}>{props.eventType}</Subtitle>
     </View>
   );
   const sectionHeader = (
@@ -203,7 +203,7 @@ const EventWorkshopPage: React.FC<Props> = observer((props) => {
         <ActivityIndicator animating size="large" style={styles.loading} />
       )}
       {onlineData.error && (
-        <ErrorCard error={onlineData.error.message || onlineData.error} />
+        <ErrorCard error={onlineData.error} />
       )}
     </View>
   );

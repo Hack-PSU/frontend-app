@@ -7,7 +7,7 @@ import {
   Linking,
   TouchableOpacity,
   ActivityIndicator,
-  Modal
+  Modal,
 } from "react-native";
 import { FAB, Caption } from "react-native-paper";
 import { observer } from "mobx-react";
@@ -30,13 +30,10 @@ const MapRoute: React.FC = observer(() => {
   // The modal is used for the image zoom viewer
   const [isModalVisible, changeIsModalVisible] = useState(false);
 
-  const imageLoaded = useAsyncData<boolean>();
-  useEffect(() => {
-    fetchAsyncData(imageLoaded, async () => {
-      await BuildingMap.downloadAsync();
-      return true;
-    })
-  }, []);
+  const imageLoaded = useAsyncData<boolean>(async () => {
+    await BuildingMap.downloadAsync();
+    return true;
+  });
 
   // Opens phone's default map app with the address for the Business Building
   const openMaps = () => {
@@ -72,7 +69,7 @@ const MapRoute: React.FC = observer(() => {
       </Modal>
 
       <View style={styles.root}>
-        <Caption>Touch the image to move and zoom.</Caption>
+        <Caption style={styles.caption}>Touch the image to move and zoom.</Caption>
 
         {(imageLoaded.loading || !BuildingMap.downloaded) && (
           <View style={styles.loading}><ActivityIndicator animating size="large" /></View>
@@ -112,6 +109,10 @@ const styles = StyleSheet.create({
   touchable: {
     width: "100%",
     aspectRatio: MAP_ASPECT_RATIO
+  },
+
+  caption: {
+    color: 'white' 
   },
 
   loading: {

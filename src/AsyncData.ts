@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useLocalStore } from "mobx-react";
 
 // Helper for cleanly and plainly fetching async data.
@@ -40,6 +40,14 @@ export async function fetchAsyncData<T>(
 }
 
 // React Hook helper.
-export function useAsyncData<T>() {
-  return useLocalStore(() => createAsyncData<T>());
+export function useAsyncData<T>(func?: () => Promise<T>) {
+  const store = useLocalStore(() => createAsyncData<T>());
+
+  if (func) {
+    useEffect(() => {
+      fetchAsyncData(store, func);
+    }, []);
+  }
+
+  return store;
 }

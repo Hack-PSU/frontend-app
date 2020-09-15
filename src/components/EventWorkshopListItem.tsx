@@ -6,7 +6,7 @@ import { format } from "date-fns";
 
 import { EventModel } from "../models/event-model";
 
-import { TEXT, PRIMARY, DARK_TEXT_THEME, RED, YELLOW, PURPLE } from "../theme";
+import { TEXT, PRIMARY, RED, YELLOW, PURPLE } from "../theme";
 
 // Date formats.
 // See options here: https://date-fns.org/v2.6.0/docs/format
@@ -15,38 +15,6 @@ import { TEXT, PRIMARY, DARK_TEXT_THEME, RED, YELLOW, PURPLE } from "../theme";
 const TIME = "h:mmaaaaa";
 // Displays 'Sunday', etc.
 const WEEKDAY = "EEEE";
-
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 16,
-  },
-  card: {
-    marginLeft: 8,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  title: {
-    lineHeight: 32,
-    fontSize: 24,
-    color: TEXT,
-    fontWeight: "normal",
-  },
-  subtitle: {
-    fontFamily: "Plex-Mono",
-    lineHeight: 18,
-    fontSize: 14,
-    color: PRIMARY,
-    letterSpacing: 0.2,
-  },
-  row: {
-    width: "100%",
-    flexDirection: "row",
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: 4,
-    marginBottom: 12,
-  },
-});
 
 const EVENT_TYPE_COLORS = {
   activity: YELLOW,
@@ -99,7 +67,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem }) => {
   );
 
   return (
-    <Card theme={DARK_TEXT_THEME} style={styles.card}>
+    <Card style={styles.card}>
       <Card.Title
         title={model.event_title}
         titleStyle={styles.title}
@@ -110,7 +78,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem }) => {
       />
 
       <View style={styles.row}>
-        <Chip icon="location-on" mode="outlined">
+        <Chip icon="location-on" mode="outlined" style={styles.chip}>
           {model.location_name}
         </Chip>
       </View>
@@ -119,3 +87,40 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem }) => {
 };
 
 export default EventWorkshopListItem;
+
+const styles = StyleSheet.create({
+  avatar: {
+    borderRadius: 16,
+  },
+  card: {
+    marginLeft: 8,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  title: {
+    lineHeight: 32,
+    fontSize: 24,
+    color: TEXT,
+    fontWeight: "normal",
+  },
+  subtitle: {
+    fontFamily: "Plex-Mono",
+    lineHeight: 18,
+    fontSize: 14,
+    color: PRIMARY,
+    letterSpacing: 0.2,
+  },
+  row: {
+    width: "100%",
+    flexDirection: "row",
+    marginLeft: 16,
+    marginRight: 16,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  chip: {
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "rgba(0,0,0,0.12)",
+  },
+});

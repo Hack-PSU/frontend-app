@@ -8,7 +8,7 @@ const { multiply, cond, greaterThan, divide, min, max, sub, add } = Animated;
 
 // Wanted size in pixels.
 const SMALL_SIZE = 42;
-const SIZE = 116;
+const SIZE = 136;
 
 export interface Props {
   scrollY: Animated.Value<number>;

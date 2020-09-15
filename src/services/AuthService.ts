@@ -18,11 +18,11 @@ export class AuthService {
   }
 
   init() {
-    console.log('auth init');
+    console.log("auth init");
     Firebase.auth().onAuthStateChanged(user => {
-      console.log('auth state changed');
+      console.log("auth state changed");
       this.currentUser = user;
-    })
+    });
 
     this.currentUser = Firebase.auth().currentUser;
   }
@@ -37,6 +37,23 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     return Firebase.auth().createUserWithEmailAndPassword(email, password);
+  }
+
+  reauthCurrentUser(email: string, password: string) {
+    if (!this.currentUser) {
+      return;
+    }
+
+    const cred = Firebase.auth.EmailAuthProvider.credential(email, password);
+
+    return this.currentUser.reauthenticateWithCredential(cred);
+  }
+
+  deleteCurrentUser() {
+    if (!this.currentUser) {
+      return;
+    }
+    this.currentUser.delete();
   }
 
   // signInWithProvider(provider: AuthProviders): Promise<any> {

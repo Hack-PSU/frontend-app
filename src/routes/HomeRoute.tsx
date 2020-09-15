@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Linking, RefreshControl } from "react-native";
+import { StyleSheet, View, Linking } from "react-native";
 import { Text, Title, Button } from "react-native-paper";
 import Animated from "react-native-reanimated";
-import * as WebBrowser from 'expo-web-browser';
+import * as WebBrowser from "expo-web-browser";
 
 import { observer } from "mobx-react";
 
@@ -34,7 +34,7 @@ const HomeRoute: React.FC = observer(() => {
   }, [currentUser]);
 
   function refresh() {
-    DataService.fetchRegistrationStatus(currentUser, true)
+    DataService.fetchRegistrationStatus(currentUser, true);
   }
 
   function openRegisterURL() {
@@ -53,32 +53,42 @@ const HomeRoute: React.FC = observer(() => {
   return (
     <Scaffold scrollY={scrollY}>
       <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
+
         <Title style={styles.title}>HOME</Title>
 
         <DateCountDown />
 
         {registrationStatus.error && (
-          <ErrorCard
-            error={registrationStatus.error.message || registrationStatus.error}
-          />
+          <ErrorCard error={registrationStatus.error} />
         )}
 
-        {!registrationStatus.error && (registrationStatus.loading || registrationStatus.data) && (
-          <HomeListItem
-            description="My PIN Number"
-            info={
-              registrationStatus.loading
-                ? "..."
-                : registrationStatus.data.pin.toString()
-            }
-          />
-        )}
+        {!registrationStatus.error &&
+          (registrationStatus.loading || registrationStatus.data) && (
+            <HomeListItem
+              description="My PIN Number"
+              info={
+                registrationStatus.loading
+                  ? "..."
+                  : registrationStatus.data.pin.toString()
+              }
+            />
+          )}
 
         {!registrationStatus.error && !registrationStatus.data && (
           <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
             <View style={styles.buttonContainer}>
-              {__DEV__ && (<Text>So if you're on staging (probably), you can't register since there is no staging deployment of HackPSU website lmao. Please setup frontend and register for staging hackathon there. I wish this could be fixed.</Text>)}
-              <Button mode="contained" dark>Register</Button>
+              {__DEV__ && (
+                <Text style={styles.stagingWarning}>
+                  This **only** shows in development mode. So if you're on staging
+                  (probably), you can't register since there is no staging
+                  deployment of HackPSU website lmao. Please setup frontend and
+                  register for staging hackathon there. I wish this could be
+                  fixed.
+                </Text>
+              )}
+              <Button mode="contained" dark>
+                Register
+              </Button>
             </View>
           </HomeListItem>
         )}
@@ -95,7 +105,11 @@ const HomeRoute: React.FC = observer(() => {
             <Text style={styles.horizontalCardText}>
               Request an invite by clicking here!
             </Text>
-            <View style={styles.buttonContainer}><Button mode="contained" dark>Open</Button></View>
+            <View style={styles.buttonContainer}>
+              <Button mode="contained" dark>
+                Open
+              </Button>
+            </View>
           </HomeListItemSecondary>
         </View>
       </Animated.ScrollView>
@@ -110,22 +124,26 @@ const styles = StyleSheet.create({
     fontSize: 48,
     paddingTop: 44 + LOGO_SAFE_PADDING,
     paddingBottom: 16,
-    paddingLeft: 16
+    paddingLeft: 16,
   },
 
   buttonContainer: {
     paddingTop: 10,
-    width: '100%',
-    alignItems: 'flex-start',
+    width: "100%",
+    alignItems: "flex-start",
+  },
+
+  stagingWarning: {
+    paddingBottom: 8
   },
 
   horizontalCardView: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
 
   horizontalCardText: {
-    color: "gray"
-  }
+    color: "gray",
+  },
 });
 
 export default HomeRoute;

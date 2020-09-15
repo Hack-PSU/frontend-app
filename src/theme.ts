@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import { DefaultTheme } from "react-native-paper";
+import { DefaultTheme, Theme } from "react-native-paper";
 
 export const IS_ANDROID = Platform.OS === "android";
 
@@ -21,24 +21,15 @@ export const YELLOW = "#B6C767";
 export const PURPLE = "#6200EE";
 
 // Our customized theme for react-native-paper.
-export const THEME = {
+export const THEME: Theme = {
   ...DefaultTheme,
+  dark: false,
   roundness: 16,
   colors: {
     ...DefaultTheme.colors,
     primary: PRIMARY,
     accent: ACCENT,
     background: BACKGROUND,
-    text: TEXT_LIGHT
+    text: TEXT
   }
 };
-
-/**
- * To use:
- *
- * import { DARK_TEXT_THEME } from "../theme";
- *
- * ... stuff you write like code ...
- * <SomePaperComponent theme={DARK_TEXT_THEME} />
- */
-export const DARK_TEXT_THEME = { colors: { text: TEXT } };

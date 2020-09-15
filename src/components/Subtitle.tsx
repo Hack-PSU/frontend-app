@@ -14,10 +14,11 @@ const styles = StyleSheet.create({
 
 interface Props {
   children: string;
+  style?: any;
 }
 
-const Subtitle: React.FC<Props> = ({ children }: Props) => {
-  return <Text style={styles.pageTitle}>{children}</Text>;
+const Subtitle: React.FC<Props> = ({ children, style }: Props) => {
+  return <Text style={[styles.pageTitle, style]}>{children}</Text>;
 };
 
 export default Subtitle;

@@ -2,18 +2,18 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { Card } from "react-native-paper";
 
-import { DARK_TEXT_THEME, RED, ACCENT } from "../theme";
+import { RED, ACCENT } from "../theme";
 
 interface Props {
-  error: string;
+  error: Error;
 }
 
-const ErrorCard: React.FC<Props> = props => {
+const ErrorCard: React.FC<Props> = ({ error }) => {
   return (
-    <Card theme={DARK_TEXT_THEME} style={styles.card}>
+    <Card style={styles.card} onPress={() => console.log(error)}>
       <Card.Content>
         <Text>
-          Error "{props.error}". Please screenshot this and contact the HackPSU
+          Error "{error.message || error.toString()}". Please screenshot this and contact the HackPSU
           team.
         </Text>
       </Card.Content>

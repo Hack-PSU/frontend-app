@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Card, Title, Headline } from "react-native-paper";
 
-import { TEXT, DARK_TEXT_THEME } from "../theme";
+import { TEXT } from "../theme";
 
 interface Props {
   description: string,
@@ -12,7 +12,7 @@ interface Props {
 
 const HomeListItemHorizontal: React.FC<Props> = props => {
   return (
-    <Card theme={DARK_TEXT_THEME} style={styles.card} onPress={props.onPress}>
+    <Card style={styles.card} onPress={props.onPress}>
       <Card.Content>
         <Title style={styles.headline}>{props.description}</Title>
         {props.children}
