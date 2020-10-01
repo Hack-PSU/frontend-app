@@ -1,12 +1,12 @@
 import { observable } from 'mobx'
 import { isPast, addWeeks } from 'date-fns'
+import { compareFunc } from '@dji-dev/us-web-util'
 
 import { RegistrationApiResponse } from '../models/registration'
 import { EventModel, EventModelJSON } from '../models/event-model'
 
 import { httpGet, httpGetWithAuth } from '../httpGet'
 import { AsyncData, createAsyncData, fetchAsyncData } from '../AsyncData'
-import { compare } from '../utils'
 
 export class DataService {
     @observable
@@ -32,7 +32,7 @@ export class DataService {
 
             // Get most recent hackathon by sorting in reverse order.
             const hackathon = registrations.sort((a, b) => {
-                return compare(
+                return compareFunc(
                     new Date(parseFloat(b.end_time)).getTime(),
                     new Date(parseFloat(a.end_time)).getTime()
                 )
@@ -57,7 +57,7 @@ export class DataService {
             }
 
             return EventModel.parseFromJSONArray(eventsRaw).sort((a, b) => {
-                return compare(a.event_start_time.getTime(), b.event_start_time.getTime())
+                return compareFunc(a.event_start_time.getTime(), b.event_start_time.getTime())
             })
         })
     }
