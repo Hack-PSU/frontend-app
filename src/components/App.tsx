@@ -1,5 +1,5 @@
 import React from 'react'
-import { YellowBox, StatusBar, Text, StyleSheet, Platform } from 'react-native'
+import { LogBox, StatusBar, Text, StyleSheet, Platform } from 'react-native'
 
 import { SWRConfig } from 'swr'
 
@@ -40,7 +40,7 @@ import AuthService from '../data/AuthService'
 // but has a warning with React 16.9 (since, in the future, it won't work with React 17).
 //
 // Basically disables the warning.
-YellowBox.ignoreWarnings([
+LogBox.ignoreLogs([
     'Warning: componentWillReceiveProps',
     'Warning: componentWillMount',
     // https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
@@ -137,9 +137,9 @@ const App: React.FC = () => {
             <SWRConfig
                 value={{
                     shouldRetryOnError: true,
-                    fetcher: (url: string | [string, (arg1: string) => any]) => {
-                        if (Array.isArray(url)) {
-                            return httpGetWithAuth(url[0], currentUser).then(url[1])
+                    fetcher: (url: string, transform?: (arg1: string) => any) => {
+                        if (transform) {
+                            return httpGetWithAuth(url, currentUser).then(transform)
                         }
 
                         return httpGetWithAuth(url, currentUser)

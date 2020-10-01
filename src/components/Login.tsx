@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     StyleSheet,
     SafeAreaView,
@@ -55,10 +55,21 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
     const [submitLoading, setSubmitLoading] = useState<boolean>(false)
     const submit = () => {
         setSubmitLoading(true)
-        onSubmit(email, password, operation).finally(() => {
-            setSubmitLoading(false)
-        })
     }
+
+    useEffect(() => {
+        let disposed = false
+
+        if (submitLoading) {
+            onSubmit(email, password, operation).finally(() => {
+                if (!disposed) {
+                    setSubmitLoading(false)
+                }
+            })
+        }
+
+        return () => (disposed = true)
+    }, [submitLoading, onSubmit, email, password, operation])
 
     return (
         // Reset theme to follow something easier to work with for this screen

@@ -39,6 +39,8 @@ const HomeRoute: React.FC = () => {
     //   />
     // );
 
+    console.log(registrationStatus)
+
     return (
         <Scaffold scrollY={scrollY}>
             <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
