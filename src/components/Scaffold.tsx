@@ -7,7 +7,7 @@ import BigLogo from './BigLogo'
 import BigLogoAnimated from './BigLogoAnimated'
 
 import { ACCENT } from '../theme'
-import useStackNavigation from '../useStackNavigation'
+import useStackNavigation from '../hooks/useStackNavigation'
 
 const isAndroid = Platform.OS !== 'ios'
 

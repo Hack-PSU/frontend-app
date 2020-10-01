@@ -11,14 +11,14 @@ import {
 } from 'react-native-paper'
 
 import { useNavigation } from '@react-navigation/native'
-import { observer } from 'mobx-react'
 
-import useForceUpdate from '../../useForceUpdate'
+import useForceUpdate from '../../hooks/useForceUpdate'
 
-import AuthService from '../../services/AuthService'
+import AuthService from '../../data/AuthService'
 
 import { BACKGROUND, RED, THEME } from '../../theme'
 import ModalAppBar from '../../components/ModalAppbar'
+import useChangeNotifierMemo from '../../hooks/useChangeNotifierMemo'
 
 const UserImage = require('../../../assets/images/user.png')
 
@@ -72,10 +72,10 @@ function prompt(
     Alert.prompt(title, description, updateFunc, type)
 }
 
-const ProfileModal: React.FC = observer(() => {
+const ProfileModal: React.FC = () => {
     const forceUpdate = useForceUpdate()
     const navigation = useNavigation()
-    const currentUser = AuthService.currentUser
+    const currentUser = useChangeNotifierMemo(AuthService, () => AuthService.currentUser)
 
     // We need to reauthenticate before preforming critical actions.
     function reauth() {
@@ -206,6 +206,6 @@ const ProfileModal: React.FC = observer(() => {
             </View>
         </PaperProvider>
     )
-})
+}
 
 export default ProfileModal

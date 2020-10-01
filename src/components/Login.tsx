@@ -20,14 +20,12 @@ import {
     Provider as PaperProvider,
 } from 'react-native-paper'
 import { useDimensions } from 'react-native-hooks'
-import { observer } from 'mobx-react'
 
 import { validate as validateEmail } from 'email-validator'
 
 import BigLogo from './BigLogo'
 
 import Mountain from '../../assets/images/mountain.svg'
-import { fetchAsyncData, useAsyncData } from '../AsyncData'
 
 export const SIGN_IN = 'Login'
 export const REGISTER = 'Register'
@@ -44,7 +42,7 @@ const MOUNTAIN_WIDTH = 1920
 const MOUNTAIN_HEIGHT = 810
 const MOUNTAIN_ASPECT_RATIO = MOUNTAIN_HEIGHT / MOUNTAIN_WIDTH
 
-const Login: React.FC<Props> = observer(({ signInOnly, caption, onSubmit }: Props) => {
+const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
     const { screen } = useDimensions()
 
     const [email, setEmail] = useState('')
@@ -54,9 +52,12 @@ const Login: React.FC<Props> = observer(({ signInOnly, caption, onSubmit }: Prop
 
     const isValidEmail = validateEmail(email)
 
-    const submitStatus = useAsyncData<boolean>()
+    const [submitLoading, setSubmitLoading] = useState<boolean>(false)
     const submit = () => {
-        fetchAsyncData(submitStatus, () => onSubmit(email, password, operation))
+        setSubmitLoading(true)
+        onSubmit(email, password, operation).finally(() => {
+            setSubmitLoading(false)
+        })
     }
 
     return (
@@ -70,9 +71,9 @@ const Login: React.FC<Props> = observer(({ signInOnly, caption, onSubmit }: Prop
 
             {/* This dialog shows up after the user clicks the login/register button */}
             <Portal>
-                <Dialog visible={submitStatus.loading}>
+                <Dialog visible={submitLoading}>
                     <Dialog.Content>
-                        <ActivityIndicator animating={submitStatus.loading} size="large" />
+                        <ActivityIndicator animating={submitLoading} size="large" />
                     </Dialog.Content>
                 </Dialog>
             </Portal>
@@ -143,7 +144,7 @@ const Login: React.FC<Props> = observer(({ signInOnly, caption, onSubmit }: Prop
             </ScrollView>
         </PaperProvider>
     )
-})
+}
 
 const loginTheme = {
     ...DefaultTheme,

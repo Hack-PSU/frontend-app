@@ -1,5 +1,6 @@
 import * as Firebase from 'firebase'
-import { observable, computed } from 'mobx'
+
+import ChangeNotifier from '../ChangeNotifier'
 
 // I pretty much stole & refactored auth.service.ts from the frontend repo.
 
@@ -10,10 +11,10 @@ export enum AuthProviders {
     APPLE_PROVIDER,
 }
 
-export class AuthService {
-    @observable currentUser: Firebase.User
+export class AuthService extends ChangeNotifier {
+    currentUser: Firebase.User | null
 
-    @computed get isLoggedIn() {
+    get isLoggedIn() {
         return this.currentUser != null
     }
 
@@ -22,9 +23,11 @@ export class AuthService {
         Firebase.auth().onAuthStateChanged((user) => {
             console.log('auth state changed')
             this.currentUser = user
+            this.notifyListeners()
         })
 
         this.currentUser = Firebase.auth().currentUser
+        this.notifyListeners()
     }
 
     signIn(email: string, password: string) {

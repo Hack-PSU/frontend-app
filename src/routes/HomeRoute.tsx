@@ -1,11 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect } from 'react'
+import React from 'react'
 import { StyleSheet, View, Linking } from 'react-native'
 import { Text, Title, Button } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import * as WebBrowser from 'expo-web-browser'
-
-import { observer } from 'mobx-react'
 
 import HomeListItem from '../components/HomeListItem'
 import HomeListItemSecondary from '../components/HomeListItemSecondary'
@@ -13,33 +11,23 @@ import DateCountDown from '../components/DateCountDown'
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
 
-import useScrollY from '../useScrollY'
-import { TEXT_LIGHT } from '../theme'
+import useScrollY from '../hooks/useScrollY'
+import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
 
-import AuthService from '../services/AuthService'
-import DataService from '../services/DataService'
+import { TEXT_LIGHT } from '../theme'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
 const SLACK_URL =
     'https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU'
 
-const HomeRoute: React.FC = observer(() => {
-    const { currentUser } = AuthService
-    const { registrationStatus } = DataService
+const HomeRoute: React.FC = () => {
+    const registrationStatus = useRegistrationStatus()
 
     const { scrollY, onScroll } = useScrollY()
 
-    useEffect(() => {
-        DataService.fetchRegistrationStatus(currentUser)
-    }, [currentUser])
-
-    function refresh() {
-        DataService.fetchRegistrationStatus(currentUser, true)
-    }
-
     function openRegisterURL() {
-        return WebBrowser.openBrowserAsync(REGISTER_URL).then(refresh)
+        return WebBrowser.openBrowserAsync(REGISTER_URL).then(() => registrationStatus.mutate())
     }
 
     // Disable for now.
@@ -60,17 +48,16 @@ const HomeRoute: React.FC = observer(() => {
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
-                {!registrationStatus.error &&
-                    (registrationStatus.loading || registrationStatus.data) && (
-                        <HomeListItem
-                            description="My PIN Number"
-                            info={
-                                registrationStatus.loading
-                                    ? '...'
-                                    : registrationStatus.data.pin.toString()
-                            }
-                        />
-                    )}
+                {!registrationStatus.error && (
+                    <HomeListItem
+                        description="My PIN Number"
+                        info={
+                            !registrationStatus.data
+                                ? '...'
+                                : registrationStatus.data.pin.toString()
+                        }
+                    />
+                )}
 
                 {!registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
@@ -113,7 +100,7 @@ const HomeRoute: React.FC = observer(() => {
             </Animated.ScrollView>
         </Scaffold>
     )
-})
+}
 
 const styles = StyleSheet.create({
     title: {

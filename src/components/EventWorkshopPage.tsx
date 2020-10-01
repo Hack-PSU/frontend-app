@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, SectionList, ActivityIndicator, AsyncStorage } from 'react-native'
 import Animated from 'react-native-reanimated'
-
-import { observer } from 'mobx-react'
 
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import Subtitle from '../components/Subtitle'
@@ -11,9 +9,9 @@ import ErrorCard from '../components/ErrorCard'
 import EventWorkshopListItem from '../components/EventWorkshopListItem'
 import { EventModelJSON } from '../models/event-model'
 
-import DataService from '../services/DataService'
+import useScrollY from '../hooks/useScrollY'
+import useEvents from '../data/hooks/useEvents'
 
-import useScrollY from '../useScrollY'
 import { BACKGROUND } from '../theme'
 
 const styles = StyleSheet.create({
@@ -43,7 +41,7 @@ interface Props {
     eventType: 'Events' | 'Workshops'
 }
 
-const EventWorkshopPage: React.FC<Props> = observer((props) => {
+const EventWorkshopPage: React.FC<Props> = (props) => {
     const [filter, setFilter] = useState(ALL)
 
     // This is needed to ensure that offline data and online data isn't combined
@@ -90,14 +88,10 @@ const EventWorkshopPage: React.FC<Props> = observer((props) => {
         readStoredList()
     }
 
-    useEffect(() => {
-        DataService.fetchEvents()
-    }, [])
-
     const { scrollY, onScroll } = useScrollY()
 
     // Renamed to more clearly differentiate other names.
-    const { events: onlineData } = DataService
+    const onlineData = useEvents()
 
     // This is the actual data shown on the page. This is a combination and
     // onlineData and offlineData (if they both exist).
@@ -186,7 +180,7 @@ const EventWorkshopPage: React.FC<Props> = observer((props) => {
                 value={filter}
                 onChange={(newValue) => setFilter(newValue)}
             />
-            {onlineData.loading && (
+            {!onlineData.data && (
                 <ActivityIndicator animating size="large" style={styles.loading} />
             )}
             {onlineData.error && <ErrorCard error={onlineData.error} />}
@@ -223,6 +217,6 @@ const EventWorkshopPage: React.FC<Props> = observer((props) => {
             />
         </Scaffold>
     )
-})
+}
 
 export default EventWorkshopPage

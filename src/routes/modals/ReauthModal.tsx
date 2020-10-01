@@ -2,13 +2,12 @@ import React from 'react'
 import { Alert, View, StyleSheet } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
-import { observer } from 'mobx-react'
 
 import { validate as validateEmail } from 'email-validator'
 
 import Login from '../../components/Login'
 
-import AuthService from '../../services/AuthService'
+import AuthService from '../../data/AuthService'
 import ModalAppBar from '../../components/ModalAppbar'
 
 interface Props {
@@ -31,7 +30,7 @@ function goBackAsync(navigation) {
     return promise
 }
 
-const ReauthModal: React.FC<Props> = observer(({ route }: Props) => {
+const ReauthModal: React.FC<Props> = ({ route }: Props) => {
     const { onSuccess } = route.params
     const navigation = useNavigation()
 
@@ -63,7 +62,7 @@ const ReauthModal: React.FC<Props> = observer(({ route }: Props) => {
             />
         </View>
     )
-})
+}
 
 const styles = StyleSheet.create({
     root: {

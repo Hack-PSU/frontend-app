@@ -1,12 +1,13 @@
 import React from 'react'
 import { Alert } from 'react-native'
-import { observer } from 'mobx-react'
 
 import { validate as validateEmail } from 'email-validator'
 
+import useChangeNotifierMemo from '../hooks/useChangeNotifierMemo'
+
 import Login, { SIGN_IN, REGISTER } from './Login'
 
-import AuthService from '../services/AuthService'
+import AuthService from '../data/AuthService'
 
 interface Props {
     children: React.ReactNode
@@ -46,16 +47,15 @@ async function signInOrSignUp(email: string, password: string, operation: string
  *
  * If false --> shows login screen
  * If true  --> shows children
- *
- * Technical notes:
- * observer() is what allows our component to re-render every time the user changes.
  */
-const LoginGuard: React.FC<Props> = observer(({ children }: Props) => {
-    if (!AuthService.isLoggedIn) {
+const LoginGuard: React.FC<Props> = ({ children }: Props) => {
+    const isLoggedIn = useChangeNotifierMemo(AuthService, () => AuthService.isLoggedIn)
+
+    if (!isLoggedIn) {
         return <Login onSubmit={signInOrSignUp} />
     }
 
     return <>{children}</>
-})
+}
 
 export default LoginGuard

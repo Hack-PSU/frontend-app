@@ -10,7 +10,6 @@ import {
     Modal,
 } from 'react-native'
 import { FAB, Caption } from 'react-native-paper'
-import { observer } from 'mobx-react'
 // https://github.com/ascoders/react-native-image-viewer
 import ImageViewer from 'react-native-image-zoom-viewer'
 
@@ -18,22 +17,21 @@ import { Asset } from 'expo-asset'
 
 import Scaffold from '../components/Scaffold'
 
-import { useAsyncData } from '../AsyncData'
-
 const BuildingMap = Asset.fromModule(require('../../assets/images/BuildingMap.png'))
 
 const MAP_WIDTH = 10800
 const MAP_HEIGHT = 7200
 const MAP_ASPECT_RATIO = MAP_WIDTH / MAP_HEIGHT
 
-const MapRoute: React.FC = observer(() => {
+const MapRoute: React.FC = () => {
     // The modal is used for the image zoom viewer
     const [isModalVisible, changeIsModalVisible] = useState(false)
 
-    const imageLoaded = useAsyncData<boolean>(async () => {
-        await BuildingMap.downloadAsync()
-        return true
-    })
+    const imageLoaded = { loading: false }
+    // const imageLoaded = useAsyncData<boolean>(async () => {
+    //     await BuildingMap.downloadAsync()
+    //     return true
+    // })
 
     // Opens phone's default map app with the address for the Business Building
     const openMaps = () => {
@@ -92,7 +90,7 @@ const MapRoute: React.FC = observer(() => {
             </View>
         </Scaffold>
     )
-})
+}
 
 const styles = StyleSheet.create({
     root: {

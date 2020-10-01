@@ -1,6 +1,6 @@
 import * as Firebase from 'firebase'
 
-import AuthService from './services/AuthService'
+import AuthService from './data/AuthService'
 import getEnvironment from './getEnvironment'
 
 let hasInit = false
