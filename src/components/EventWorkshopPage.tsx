@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, SectionList, ActivityIndicator, AsyncStorage } from 'react-native'
+import { View, StyleSheet, SectionList, ActivityIndicator } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
 
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
