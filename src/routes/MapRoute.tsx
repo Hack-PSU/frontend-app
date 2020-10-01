@@ -18,7 +18,7 @@ import { Asset } from "expo-asset";
 
 import Scaffold from "../components/Scaffold";
 
-import { useAsyncData, fetchAsyncData } from "../AsyncData";
+import { useAsyncData } from "../AsyncData";
 
 const BuildingMap = Asset.fromModule(require("../../assets/images/BuildingMap.png"));
 
