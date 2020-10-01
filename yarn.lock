@@ -1268,10 +1268,10 @@
     eslint-plugin-vue "^6.2.2"
     prettier "^2.1.1"
 
-"@dji-dev/us-web-util@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@dji-dev/us-web-util/-/us-web-util-1.0.0.tgz#34f54f1122ca2f24d4c95bceaa00a5e03e670ea2"
-  integrity sha512-r1/MrkazQ1D/XPsKzYxlgfZHMYG4AY1BehW4ouIzrwFp/2inYIl+uSK2qoBmVYCJZvToQ9YhWWuEnFt4hvl0ZQ==
+"@dji-dev/us-web-util@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dji-dev/us-web-util/-/us-web-util-1.0.1.tgz#ba0f2bd4d57227863d1ad03af2f4af265a84baca"
+  integrity sha512-H98vJB7iS/YvZ+hfcn1VD7M9HP1ZplVX6tOH2F9qda3clGpLthtCy9fYZ46+R99nXw+4NexAi04zn9X1v4FM0w==
   dependencies:
     clone-deep "^4.0.1"
     deepmerge "^4.2.2"
