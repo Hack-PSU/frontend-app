@@ -12,7 +12,7 @@ import useStackNavigation from '../hooks/useStackNavigation'
 const isAndroid = Platform.OS !== 'ios'
 
 export const NOTCH_HEIGHT = isAndroid ? 0 : 44
-export const LOGO_SAFE_PADDING = 136 + 48 - 56
+export const LOGO_SAFE_PADDING = 116 + 48 - 56
 
 // Fix needed for Android display order.
 const LOGO_ELEVATION = isAndroid ? 6 : undefined
