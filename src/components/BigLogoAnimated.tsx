@@ -14,7 +14,7 @@ export interface Props {
     scrollY: Animated.Value<number>
 }
 
-const HEADER_THRESHOLD = 175
+const HEADER_THRESHOLD = 150
 
 // Documentation:
 // https://software-mansion.github.io/react-native-reanimated/index.html
