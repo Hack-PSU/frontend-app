@@ -21,7 +21,6 @@ import LoginGuard from './LoginGuard'
 import HomeRoute from '../routes/HomeRoute'
 import EventsRoute from '../routes/EventsRoute'
 import WorkshopsRoute from '../routes/WorkshopsRoute'
-import MapRoute from '../routes/MapRoute'
 
 import ProfileModal from '../routes/modals/ProfileModal'
 import ReauthModal from '../routes/modals/ReauthModal'
@@ -63,13 +62,13 @@ const Stack = Platform.OS === 'ios' ? createNativeStackNavigator() : createStack
 const stackOptions: any =
     Platform.OS === 'ios'
         ? {
-              headerShown: false,
-              stackPresentation: 'modal',
-          }
+            headerShown: false,
+            stackPresentation: 'modal',
+        }
         : {
-              headerShown: false,
-              cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
-          }
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
+        }
 
 const HomeModal: React.FC<any> = ({ navigator }) => {
     return (
@@ -100,11 +99,11 @@ const HomeModal: React.FC<any> = ({ navigator }) => {
                     component={WorkshopsRoute}
                     options={{ tabBarIcon: 'brush' }}
                 />
-                <BottomTabs.Screen
+                {/* <BottomTabs.Screen
                     name="Map"
                     component={MapRoute}
                     options={{ tabBarIcon: 'map' }}
-                />
+                /> */}
             </BottomTabs.Navigator>
         </StackContext.Provider>
     )
