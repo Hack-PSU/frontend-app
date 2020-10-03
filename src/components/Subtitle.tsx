@@ -1,24 +1,24 @@
-import React from "react";
-import { StyleSheet, Text } from "react-native";
+import React from 'react'
+import { StyleSheet, Text } from 'react-native'
 
 const styles = StyleSheet.create({
-  pageTitle: {
-    fontFamily: "Cornerstone",
-    paddingTop: 24,
-    paddingBottom: 24,
-    paddingLeft: 16,
-    fontSize: 48,
-    color: "white"
-  }
-});
+    pageTitle: {
+        fontFamily: 'Cornerstone',
+        paddingTop: 24,
+        paddingBottom: 24,
+        paddingLeft: 16,
+        fontSize: 48,
+        color: 'white',
+    },
+})
 
 interface Props {
-  children: string;
-  style?: any;
+    children: string
+    style?: any
 }
 
 const Subtitle: React.FC<Props> = ({ children, style }: Props) => {
-  return <Text style={[styles.pageTitle, style]}>{children}</Text>;
-};
+    return <Text style={[styles.pageTitle, style]}>{children}</Text>
+}
 
-export default Subtitle;
+export default Subtitle

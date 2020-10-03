@@ -1,48 +1,45 @@
-import React from "react";
-import { Alert } from "react-native";
-import { observer } from "mobx-react";
+import React from 'react'
+import { Alert } from 'react-native'
 
-import { validate as validateEmail } from "email-validator";
+import { validate as validateEmail } from 'email-validator'
 
-import Login, { SIGN_IN, REGISTER } from "./Login";
+import useChangeNotifierMemo from '../hooks/useChangeNotifierMemo'
 
-import AuthService from "../services/AuthService";
+import Login, { SIGN_IN, REGISTER } from './Login'
+
+import AuthService from '../data/AuthService'
 
 interface Props {
-  children: React.ReactNode;
+    children: React.ReactNode
 }
 
-async function signInOrSignUp(
-  email: string,
-  password: string,
-  operation: string
-) {
-  if (!validateEmail(email)) {
-    return;
-  }
-
-  if (operation == SIGN_IN) {
-    try {
-      const user = await AuthService.signIn(email, password);
-      if (!user) {
-        console.log("Test2");
-        Alert.alert("Error", "User does not exist");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Username or password is incorrect");
+async function signInOrSignUp(email: string, password: string, operation: string) {
+    if (!validateEmail(email)) {
+        return
     }
-  }
 
-  if (operation == REGISTER) {
-    try {
-      const user = await AuthService.createUser(email, password);
-      if (!user) {
-        Alert.alert("Error", "User does not exist");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Could not create user");
+    if (operation == SIGN_IN) {
+        try {
+            const user = await AuthService.signIn(email, password)
+            if (!user) {
+                console.log('Test2')
+                Alert.alert('Error', 'User does not exist')
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Username or password is incorrect')
+        }
     }
-  }
+
+    if (operation == REGISTER) {
+        try {
+            const user = await AuthService.createUser(email, password)
+            if (!user) {
+                Alert.alert('Error', 'User does not exist')
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Could not create user')
+        }
+    }
 }
 
 /**
@@ -50,18 +47,15 @@ async function signInOrSignUp(
  *
  * If false --> shows login screen
  * If true  --> shows children
- *
- * Technical notes:
- * observer() is what allows our component to re-render every time the user changes.
  */
-const LoginGuard: React.FC<Props> = observer(({ children }: Props) => {
-  if (!AuthService.isLoggedIn) {
-    return (
-      <Login onSubmit={signInOrSignUp} />
-    );
-  }
+const LoginGuard: React.FC<Props> = ({ children }: Props) => {
+    const isLoggedIn = useChangeNotifierMemo(AuthService, () => AuthService.isLoggedIn)
 
-  return <>{children}</>;
-});
+    if (!isLoggedIn) {
+        return <Login onSubmit={signInOrSignUp} />
+    }
 
-export default LoginGuard;
+    return <>{children}</>
+}
+
+export default LoginGuard

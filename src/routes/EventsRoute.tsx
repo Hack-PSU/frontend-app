@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
-import EventWorkshopPage, { EVENTS } from "../components/EventWorkshopPage";
+import EventWorkshopPage, { EVENTS } from '../components/EventWorkshopPage'
 
 const EventsRoute: React.FC = () => {
-  return <EventWorkshopPage eventType={EVENTS} />;
-};
+    return <EventWorkshopPage eventType={EVENTS} />
+}
 
-export default EventsRoute;
+export default EventsRoute
