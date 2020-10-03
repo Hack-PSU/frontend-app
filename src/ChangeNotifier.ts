@@ -1,9 +1,7 @@
 type VoidCallback = () => unknown
 
-// Copying Flutter vs. using MobX.
-//
 // https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html
-export default class ChangeNotifier {
+export class ChangeNotifier {
     private _listeners: VoidCallback[] = []
 
     get hasListeners() {
@@ -22,5 +20,24 @@ export default class ChangeNotifier {
         for (const listener of this._listeners) {
             listener()
         }
+    }
+}
+
+// https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html
+export class ValueNotifier<T> extends ChangeNotifier {
+    _value: T
+
+    get value() {
+        return this._value
+    }
+
+    set value(val: T) {
+        this._value = val
+        this.notifyListeners()
+    }
+
+    constructor(initialValue: T) {
+        super()
+        this._value = initialValue
     }
 }
