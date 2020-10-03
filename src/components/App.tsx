@@ -45,6 +45,9 @@ LogBox.ignoreLogs([
     'Warning: componentWillMount',
     // https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
     'Non-serializable values were found in the navigation state',
+    // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
+    // This helps with the warning but doesn't entirely fix it. Because we can't fix it, we'll ignore it for now.
+    'Setting a timer for a long period of time',
 ])
 
 // Faster stacks, according to here:

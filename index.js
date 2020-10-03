@@ -8,7 +8,8 @@ const _clearTimeout = global.clearTimeout
 const MAX_TIMER_DURATION_MS = 60 * 1000
 if (Platform.OS === 'android') {
     // Work around issue `Setting a timer for long time`
-    // see: https://github.com/firebase/firebase-js-sdk/issues/97
+    // see: https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-427512040
+    // Doesn't fix it entirely but it definitely helps reduce the amount of times this pops up.
     const timerFix = {}
     const runTask = (id, fn, ttl, args) => {
         const waitingTime = ttl - Date.now()
