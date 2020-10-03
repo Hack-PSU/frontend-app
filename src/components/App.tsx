@@ -62,13 +62,13 @@ const Stack = Platform.OS === 'ios' ? createNativeStackNavigator() : createStack
 const stackOptions: any =
     Platform.OS === 'ios'
         ? {
-            headerShown: false,
-            stackPresentation: 'modal',
-        }
+              headerShown: false,
+              stackPresentation: 'modal',
+          }
         : {
-            headerShown: false,
-            cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
-        }
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
+          }
 
 const HomeModal: React.FC<any> = ({ navigator }) => {
     return (
