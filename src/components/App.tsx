@@ -21,7 +21,6 @@ import LoginGuard from './LoginGuard'
 import HomeRoute from '../routes/HomeRoute'
 import EventsRoute from '../routes/EventsRoute'
 import WorkshopsRoute from '../routes/WorkshopsRoute'
-import MapRoute from '../routes/MapRoute'
 
 import ProfileModal from '../routes/modals/ProfileModal'
 import ReauthModal from '../routes/modals/ReauthModal'
@@ -100,11 +99,11 @@ const HomeModal: React.FC<any> = ({ navigator }) => {
                     component={WorkshopsRoute}
                     options={{ tabBarIcon: 'brush' }}
                 />
-                <BottomTabs.Screen
+                {/* <BottomTabs.Screen
                     name="Map"
                     component={MapRoute}
                     options={{ tabBarIcon: 'map' }}
-                />
+                /> */}
             </BottomTabs.Navigator>
         </StackContext.Provider>
     )
