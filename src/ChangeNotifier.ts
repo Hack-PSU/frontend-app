@@ -1,7 +1,7 @@
 type VoidCallback = () => unknown
 
 // https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html
-export class ChangeNotifier {
+export default class ChangeNotifier {
     private _listeners: VoidCallback[] = []
 
     get hasListeners() {
