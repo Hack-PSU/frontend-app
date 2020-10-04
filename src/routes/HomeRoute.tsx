@@ -4,6 +4,8 @@ import { StyleSheet, View, Linking } from 'react-native'
 import { Text, Title, Button } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import * as WebBrowser from 'expo-web-browser'
+// TODO: Delete this import when done testing notifications
+import * as Notifications from 'expo-notifications'
 
 import HomeListItem from '../components/HomeListItem'
 import HomeListItemSecondary from '../components/HomeListItemSecondary'
@@ -14,7 +16,7 @@ import ErrorCard from '../components/ErrorCard'
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
 
-import { TEXT_LIGHT } from '../theme'
+import { TEXT_LIGHT, PRIMARY } from '../theme'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
@@ -28,6 +30,27 @@ const HomeRoute: React.FC = () => {
 
     function openRegisterURL() {
         return WebBrowser.openBrowserAsync(REGISTER_URL).then(() => registrationStatus.mutate())
+    }
+
+    const testNotification = async () => {
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: true,
+                shouldSetBadge: false,
+            }),
+        })
+        Notifications.scheduleNotificationAsync({
+            content: {
+                title: 'Holy cow!/Title',
+                body: 'poggers poggers poggers poggers poggers/In 10 mins',
+                color: PRIMARY,
+                subtitle: 'bars/workshop/event',
+            },
+            trigger: {
+                seconds: 5,
+            },
+        })
     }
 
     // Disable for now.
@@ -45,6 +68,13 @@ const HomeRoute: React.FC = () => {
                 <Title style={styles.title}>HOME</Title>
 
                 <DateCountDown />
+
+                {/* TODO: Delete this when done testing */}
+                <HomeListItem
+                    description="Notification test"
+                    info="Press here to schedule a notification 5 secs from now"
+                    onPress={testNotification}
+                />
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
