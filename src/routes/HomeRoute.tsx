@@ -4,8 +4,6 @@ import { StyleSheet, View, Linking } from 'react-native'
 import { Text, Title, Button } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import * as WebBrowser from 'expo-web-browser'
-// TODO: Delete this import when done testing notifications
-import * as Notifications from 'expo-notifications'
 
 import HomeListItem from '../components/HomeListItem'
 import HomeListItemSecondary from '../components/HomeListItemSecondary'
@@ -15,8 +13,10 @@ import ErrorCard from '../components/ErrorCard'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
+// TODO: Delete this
+import { testNotification } from '../utils'
 
-import { TEXT_LIGHT, PRIMARY } from '../theme'
+import { TEXT_LIGHT } from '../theme'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
@@ -32,40 +32,6 @@ const HomeRoute: React.FC = () => {
         return WebBrowser.openBrowserAsync(REGISTER_URL).then(() => registrationStatus.mutate())
     }
 
-    const testNotification = async () => {
-        Notifications.setNotificationHandler({
-            handleNotification: async () => ({
-                shouldShowAlert: true,
-                shouldPlaySound: true,
-                shouldSetBadge: false,
-            }),
-        })
-
-        let settings = await Notifications.getPermissionsAsync()
-        while (settings.canAskAgain && !settings.granted) {
-            await Notifications.requestPermissionsAsync()
-            // Refresh settings.
-            settings = await Notifications.getPermissionsAsync()
-        }
-
-        if (!settings.canAskAgain && !settings.granted) {
-            // Error state, this is bad.
-            return
-        }
-
-        Notifications.scheduleNotificationAsync({
-            content: {
-                title: 'Holy cow!/Title',
-                body: 'poggers poggers poggers poggers poggers/In 10 mins',
-                color: PRIMARY,
-                subtitle: 'bars/workshop/event',
-            },
-            trigger: {
-                seconds: 5,
-            },
-        })
-    }
-
     // Disable for now.
     // const refreshControl = (
     //   <RefreshControl
@@ -74,6 +40,8 @@ const HomeRoute: React.FC = () => {
     //     tintColor="white"
     //   />
     // );
+    let trigger = new Date()
+    trigger.setSeconds(trigger.getSeconds() + 5)
 
     return (
         <Scaffold scrollY={scrollY}>
@@ -86,7 +54,7 @@ const HomeRoute: React.FC = () => {
                 <HomeListItem
                     description="Notification test"
                     info="Press here to schedule a notification 5 secs from now"
-                    onPress={testNotification}
+                    onPress={() => testNotification(trigger, 'test', 'tesat', 'asdf')}
                 />
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
