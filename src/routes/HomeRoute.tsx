@@ -40,6 +40,19 @@ const HomeRoute: React.FC = () => {
                 shouldSetBadge: false,
             }),
         })
+
+        let settings = await Notifications.getPermissionsAsync()
+        while (settings.canAskAgain && !settings.granted) {
+            await Notifications.requestPermissionsAsync()
+            // Refresh settings.
+            settings = await Notifications.getPermissionsAsync()
+        }
+
+        if (!settings.canAskAgain && !settings.granted) {
+            // Error state, this is bad.
+            return
+        }
+
         Notifications.scheduleNotificationAsync({
             content: {
                 title: 'Holy cow!/Title',
