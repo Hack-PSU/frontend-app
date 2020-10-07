@@ -9,6 +9,7 @@ import SegmentedControl from '../components/SegmentedControl'
 import ErrorCard from '../components/ErrorCard'
 import EventWorkshopListItem from '../components/EventWorkshopListItem'
 import { EventModelJSON } from '../models/event-model'
+import { cancelNotification, setNotification } from '../utils'
 
 import useScrollY from '../hooks/useScrollY'
 import useEvents from '../data/hooks/useEvents'
@@ -145,14 +146,36 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         <EventWorkshopListItem key={item.uid} model={item} starItem={() => starItem(item)} />
     )
 
+    const setEventWorkshopNotification = (item: EventModelJSON) => {
+        const notifTime = new Date(item.event_start_time)
+        // Send notification 10 mins before the event.
+        notifTime.setMinutes(notifTime.getTime() - 10)
+        setNotification(
+            item.uid,
+            notifTime,
+            item.event_title,
+            props.eventType,
+            // To remove the "s" at the end of "events" and "workshops".
+            `10 mins before the ${props.eventType.slice(0, -1)} begins!`
+        )
+    }
+
     // This is called when the star button is clicked on an item.
-    const starItem = (item) => {
+    const starItem = (item: EventModelJSON) => {
         // Don't copy the pointer of the array, copy the values of the array.
         let temp = [...data]
 
         // Find which index the event is in with the uid.
         const index = temp.findIndex((event) => event.uid === item.uid)
         temp[index].starred = !temp[index].starred
+
+        // If it got starred, set it as a notification. If not, cancel it.
+        // Note that we need to program this in case an event gets updated/cancelled.
+        if (temp[index].starred) {
+            setEventWorkshopNotification(item)
+        } else {
+            cancelNotification(item.uid)
+        }
 
         setData(temp)
 

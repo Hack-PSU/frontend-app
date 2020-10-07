@@ -2,7 +2,8 @@ import * as Notifications from 'expo-notifications'
 
 import { PRIMARY } from './theme'
 
-export async function testNotification(
+export async function setNotification(
+    identifier: string,
     trigger: Date,
     title: string,
     subtitle: string,
@@ -30,6 +31,7 @@ export async function testNotification(
     }
 
     Notifications.scheduleNotificationAsync({
+        identifier,
         content: {
             title: title,
             body: body,
@@ -38,4 +40,8 @@ export async function testNotification(
         },
         trigger,
     })
+}
+
+export async function cancelNotification(identifier: string) {
+    Notifications.cancelScheduledNotificationAsync(identifier)
 }

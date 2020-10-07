@@ -13,8 +13,6 @@ import ErrorCard from '../components/ErrorCard'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
-// TODO: Delete this
-import { testNotification } from '../utils'
 
 import { TEXT_LIGHT } from '../theme'
 
@@ -49,13 +47,6 @@ const HomeRoute: React.FC = () => {
                 <Title style={styles.title}>HOME</Title>
 
                 <DateCountDown />
-
-                {/* TODO: Delete this when done testing */}
-                <HomeListItem
-                    description="Notification test"
-                    info="Press here to schedule a notification 5 secs from now"
-                    onPress={() => testNotification(trigger, 'test', 'tesat', 'asdf')}
-                />
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
