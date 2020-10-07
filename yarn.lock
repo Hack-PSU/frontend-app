@@ -5216,6 +5216,11 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+change-notifier@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/change-notifier/-/change-notifier-1.0.0.tgz#112bf2cac80886afd47fa60fc17e5a7b0f46f6b0"
+  integrity sha512-i/a1ncpxnZJvlMPwZPfX9m0Nyb6XxcD+2z6wyMQIXIvfL0AZnGVT296wdCzKZH3Mz+G5WFuliXVvFekwm5zQ5g==
+
 chardet@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
