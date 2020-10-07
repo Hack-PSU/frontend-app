@@ -1,33 +1,33 @@
 import * as Firebase from 'firebase'
-
-import ChangeNotifier from '../ChangeNotifier'
+import { ValueNotifier } from 'change-notifier'
 
 // I pretty much stole & refactored auth.service.ts from the frontend repo.
 
 // TODO: Sign in with Google, GitHub, and Apple on iOS
+// eslint-disable-next-line no-shadow
 export enum AuthProviders {
     GOOGLE_PROVIDER,
     GITHUB_PROVIDER,
     APPLE_PROVIDER,
 }
 
-export class AuthService extends ChangeNotifier {
-    currentUser: Firebase.User | null
-
+export class AuthService extends ValueNotifier<Firebase.User | null> {
     get isLoggedIn() {
-        return this.currentUser != null
+        return this.value != null
+    }
+
+    constructor() {
+        super(null)
     }
 
     init() {
-        console.log('auth init')
         Firebase.auth().onAuthStateChanged((user) => {
+            // eslint-disable-next-line no-console
             console.log('auth state changed')
-            this.currentUser = user
-            this.notifyListeners()
+            this.value = user
         })
 
-        this.currentUser = Firebase.auth().currentUser
-        this.notifyListeners()
+        this.value = Firebase.auth().currentUser
     }
 
     signIn(email: string, password: string) {
@@ -43,20 +43,24 @@ export class AuthService extends ChangeNotifier {
     }
 
     reauthCurrentUser(email: string, password: string) {
-        if (!this.currentUser) {
+        const { value } = this
+
+        if (!value) {
             return
         }
 
         const cred = Firebase.auth.EmailAuthProvider.credential(email, password)
 
-        return this.currentUser.reauthenticateWithCredential(cred)
+        return value.reauthenticateWithCredential(cred)
     }
 
     deleteCurrentUser() {
-        if (!this.currentUser) {
+        const { value } = this
+
+        if (!value) {
             return
         }
-        this.currentUser.delete()
+        value.delete()
     }
 
     // signInWithProvider(provider: AuthProviders): Promise<any> {

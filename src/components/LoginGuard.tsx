@@ -1,9 +1,8 @@
 import React from 'react'
 import { Alert } from 'react-native'
+import { useValueNotifier } from 'change-notifier'
 
 import { validate as validateEmail } from 'email-validator'
-
-import useChangeNotifierMemo from '../hooks/useChangeNotifierMemo'
 
 import Login, { SIGN_IN, REGISTER } from './Login'
 
@@ -49,7 +48,7 @@ async function signInOrSignUp(email: string, password: string, operation: string
  * If true  --> shows children
  */
 const LoginGuard: React.FC<Props> = ({ children }: Props) => {
-    const isLoggedIn = useChangeNotifierMemo(AuthService, () => AuthService.isLoggedIn)
+    const isLoggedIn = !!useValueNotifier(AuthService)
 
     if (!isLoggedIn) {
         return <Login onSubmit={signInOrSignUp} />

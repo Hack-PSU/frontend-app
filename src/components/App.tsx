@@ -15,6 +15,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
 import { Provider as PaperProvider } from 'react-native-paper'
+import { useValueNotifier } from 'change-notifier'
 
 import LoginGuard from './LoginGuard'
 
@@ -26,7 +27,6 @@ import ProfileModal from '../routes/modals/ProfileModal'
 import ReauthModal from '../routes/modals/ReauthModal'
 
 import { StackContext } from '../hooks/useStackNavigation'
-import useChangeNotifierMemo from '../hooks/useChangeNotifierMemo'
 
 import { THEME, PRIMARY } from '../theme'
 import initServices from '../initServices'
@@ -123,7 +123,7 @@ const App: React.FC = () => {
         Cornerstone: require('../../assets/fonts/Cornerstone.ttf'),
     })
 
-    const currentUser = useChangeNotifierMemo(AuthService, () => AuthService.currentUser)
+    const currentUser = useValueNotifier(AuthService)
 
     if (!fontsLoaded) {
         return <AppLoading />

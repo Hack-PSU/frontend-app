@@ -11,6 +11,7 @@ import {
 } from 'react-native-paper'
 
 import { useNavigation } from '@react-navigation/native'
+import { useValueNotifier } from 'change-notifier'
 
 import useForceUpdate from '../../hooks/useForceUpdate'
 
@@ -18,7 +19,6 @@ import AuthService from '../../data/AuthService'
 
 import { BACKGROUND, RED, THEME } from '../../theme'
 import ModalAppBar from '../../components/ModalAppbar'
-import useChangeNotifierMemo from '../../hooks/useChangeNotifierMemo'
 
 const UserImage = require('../../../assets/images/user.png')
 
@@ -75,7 +75,7 @@ function prompt(
 const ProfileModal: React.FC = () => {
     const forceUpdate = useForceUpdate()
     const navigation = useNavigation()
-    const currentUser = useChangeNotifierMemo(AuthService, () => AuthService.currentUser)
+    const currentUser = useValueNotifier(AuthService)
 
     // We need to reauthenticate before preforming critical actions.
     function reauth() {
