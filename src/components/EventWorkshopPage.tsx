@@ -8,8 +8,8 @@ import Subtitle from '../components/Subtitle'
 import SegmentedControl from '../components/SegmentedControl'
 import ErrorCard from '../components/ErrorCard'
 import EventWorkshopListItem from '../components/EventWorkshopListItem'
-import { EventModelJSON } from '../models/event-model'
-import { cancelNotification, setNotification } from '../utils'
+import { EventModelJSON, EventModel } from '../models/event-model'
+import * as Utils from '../utils'
 
 import useScrollY from '../hooks/useScrollY'
 import useEvents from '../data/hooks/useEvents'
@@ -85,6 +85,31 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         }
     }
 
+    const setEventWorkshopNotification = (item: EventModel) => {
+        // Want to make sure we don't alter the date in EventModel, just here locally.
+        const notifTime = new Date(item.event_start_time)
+        // Set notification to show 10 mins before the event.
+        notifTime.setMinutes(item.event_start_time.getTime() - 10)
+
+        // To remove the "s" at the end of "events" and "workshops".
+        const eventTypeString = props.eventType.slice(0, -1)
+
+        Utils.setNotification(
+            item.uid,
+            notifTime,
+            item.event_title,
+            eventTypeString,
+            `10 mins before the ${eventTypeString} begins!`
+        )
+    }
+
+    // To update a notification with new info from online, it's easiest to cancel it, wait for it to be cancelled, then
+    // set it again but with new details.
+    const updateNotification = async (updatedEvent: EventModel) => {
+        await Utils.cancelNotification(updatedEvent.uid)
+        setEventWorkshopNotification(updatedEvent)
+    }
+
     // Load offlineData with actual data if it's not already full.
     if (!offlineData.length) {
         readStoredList()
@@ -92,7 +117,6 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
 
     const { scrollY, onScroll } = useScrollY()
 
-    // Renamed to more clearly differentiate other names.
     const onlineData = useEvents()
 
     // This is the actual data shown on the page. This is a combination and
@@ -131,6 +155,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
                     // and returning that because eventMatch is from offline data and
                     // could have updated info from the server.
                     onlineEvent.starred = true
+
+                    updateNotification(onlineEvent)
                 }
                 return onlineEvent
             })
@@ -146,22 +172,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         <EventWorkshopListItem key={item.uid} model={item} starItem={() => starItem(item)} />
     )
 
-    const setEventWorkshopNotification = (item: EventModelJSON) => {
-        const notifTime = new Date(item.event_start_time)
-        // Send notification 10 mins before the event.
-        notifTime.setMinutes(notifTime.getTime() - 10)
-        setNotification(
-            item.uid,
-            notifTime,
-            item.event_title,
-            props.eventType,
-            // To remove the "s" at the end of "events" and "workshops".
-            `10 mins before the ${props.eventType.slice(0, -1)} begins!`
-        )
-    }
-
     // This is called when the star button is clicked on an item.
-    const starItem = (item: EventModelJSON) => {
+    const starItem = (item: EventModel) => {
         // Don't copy the pointer of the array, copy the values of the array.
         let temp = [...data]
 
@@ -174,7 +186,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         if (temp[index].starred) {
             setEventWorkshopNotification(item)
         } else {
-            cancelNotification(item.uid)
+            Utils.cancelNotification(item.uid)
         }
 
         setData(temp)

@@ -42,6 +42,6 @@ export async function setNotification(
     })
 }
 
-export async function cancelNotification(identifier: string) {
+export async function cancelNotification(identifier: string): Promise<void> {
     Notifications.cancelScheduledNotificationAsync(identifier)
 }
