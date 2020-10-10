@@ -54,6 +54,14 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     // previously.
     const [offlineData, setOfflineData] = useState([])
 
+    const { scrollY, onScroll } = useScrollY()
+
+    const onlineData = useEvents()
+
+    // This is the actual data shown on the page. This is a combination and
+    // onlineData and offlineData (if they both exist).
+    const [data, setData] = useState([])
+
     // Used for storing starred items.
     const storeList = async (value) => {
         try {
@@ -78,7 +86,11 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
 
             if (value !== null) {
                 // Update state when offline data is loaded for a rerender.
-                setOfflineData(JSON.parse(value) as EventModelJSON[])
+                // Parse json in an array and make sure it's EventModel, not EventModelJSON.
+                const convertedOfflineData = (JSON.parse(
+                    value
+                ) as EventModelJSON[]).map((eventModelJson) => EventModel.parseJSON(eventModelJson))
+                setOfflineData(convertedOfflineData)
             }
         } catch (e) {
             console.log(e)
@@ -86,10 +98,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     }
 
     const setEventWorkshopNotification = (item: EventModel) => {
-        // Want to make sure we don't alter the date in EventModel, just here locally.
-        const notifTime = new Date(item.event_start_time)
-        // Set notification to show 10 mins before the event.
-        notifTime.setMinutes(item.event_start_time.getTime() - 10)
+        // 600000 is 10 mins in milliseconds
+        const notifTime = new Date(Number(item.event_start_time) - 600000)
 
         // To remove the "s" at the end of "events" and "workshops".
         const eventTypeString = props.eventType.slice(0, -1)
@@ -110,18 +120,42 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         setEventWorkshopNotification(updatedEvent)
     }
 
+    // This is called when the star button is clicked on an item.
+    const starItem = (item: EventModel) => {
+        // Don't copy the pointer of the array, copy the values of the array.
+        let temp = [...data]
+
+        // Find which index the event is in with the uid.
+        const index = temp.findIndex((event) => event.uid === item.uid)
+        temp[index].starred = !temp[index].starred
+
+        // If it got starred, set it as a notification. If not, cancel it.
+        // Note that we need to program this in case an event gets updated/cancelled.
+        if (temp[index].starred) {
+            setEventWorkshopNotification(item)
+        } else {
+            Utils.cancelNotification(item.uid)
+        }
+
+        setData(temp)
+
+        // Make sure we are only storing events that are starred and are from the
+        // right category.
+        storeList(
+            temp.filter(
+                (event) =>
+                    event.starred &&
+                    (props.eventType === EVENTS
+                        ? event.event_type !== WORKSHOP_EVENT_TYPE
+                        : event.event_type === WORKSHOP_EVENT_TYPE)
+            )
+        )
+    }
+
     // Load offlineData with actual data if it's not already full.
     if (!offlineData.length) {
         readStoredList()
     }
-
-    const { scrollY, onScroll } = useScrollY()
-
-    const onlineData = useEvents()
-
-    // This is the actual data shown on the page. This is a combination and
-    // onlineData and offlineData (if they both exist).
-    const [data, setData] = useState([])
 
     // If the data hasn't been filled yet, check to see if the offline or online
     // data loaded first and set it accordingly instead of waiting for both so
@@ -168,41 +202,19 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         setLoadedBothOfflineOnline(true)
     }
 
+    let correctEventList = data.filter((event) =>
+        props.eventType === EVENTS
+            ? event.event_type !== WORKSHOP_EVENT_TYPE
+            : event.event_type === WORKSHOP_EVENT_TYPE
+    )
+    // If the user is in the starred section, then only show the starred items.
+    if (filter === STARRED) {
+        correctEventList = correctEventList.filter((event) => event.starred)
+    }
+
     const renderItem = ({ item }) => (
         <EventWorkshopListItem key={item.uid} model={item} starItem={() => starItem(item)} />
     )
-
-    // This is called when the star button is clicked on an item.
-    const starItem = (item: EventModel) => {
-        // Don't copy the pointer of the array, copy the values of the array.
-        let temp = [...data]
-
-        // Find which index the event is in with the uid.
-        const index = temp.findIndex((event) => event.uid === item.uid)
-        temp[index].starred = !temp[index].starred
-
-        // If it got starred, set it as a notification. If not, cancel it.
-        // Note that we need to program this in case an event gets updated/cancelled.
-        if (temp[index].starred) {
-            setEventWorkshopNotification(item)
-        } else {
-            Utils.cancelNotification(item.uid)
-        }
-
-        setData(temp)
-
-        // Make sure we are only storing events that are starred and are from the
-        // right category.
-        storeList(
-            temp.filter(
-                (event) =>
-                    event.starred &&
-                    (props.eventType === EVENTS
-                        ? event.event_type !== WORKSHOP_EVENT_TYPE
-                        : event.event_type === WORKSHOP_EVENT_TYPE)
-            )
-        )
-    }
 
     const listHeader = (
         <View style={styles.title}>
@@ -222,16 +234,6 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             {onlineData.error && <ErrorCard error={onlineData.error} />}
         </View>
     )
-
-    let correctEventList = data.filter((event) =>
-        props.eventType === EVENTS
-            ? event.event_type !== WORKSHOP_EVENT_TYPE
-            : event.event_type === WORKSHOP_EVENT_TYPE
-    )
-    // If the user is in the starred section, then only show the starred items.
-    if (filter === STARRED) {
-        correctEventList = correctEventList.filter((event) => event.starred)
-    }
 
     return (
         <Scaffold scrollY={scrollY}>

@@ -19,6 +19,32 @@ export class EventModel {
     public location_name: string
     public starred: boolean
 
+    // Created factory method instead of contstructor because didn't feel like dealing with overloaded constructors.
+    // https://stackoverflow.com/a/38688403
+    static create(
+        uid: string,
+        event_title: string,
+        event_type: string,
+        event_start_time: Date,
+        event_end_time: Date,
+        event_description: string,
+        location_name: string,
+        starred: boolean
+    ): EventModel {
+        const event = new EventModel()
+
+        event.uid = uid
+        event.event_title = event_title
+        event.event_type = event_type
+        event.event_start_time = event_start_time
+        event.event_end_time = event_end_time
+        event.event_description = event_description
+        event.location_name = location_name
+        event.starred = starred
+
+        return event
+    }
+
     static parseJSON(value: EventModelJSON): EventModel {
         const event = new EventModel()
         Object.assign(event, value)
