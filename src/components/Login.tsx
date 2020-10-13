@@ -71,6 +71,8 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
         return () => (disposed = true)
     }, [submitLoading, onSubmit, email, password, operation])
 
+    const operationColors = operation === SIGN_IN ? loginColors : registerColors
+
     return (
         // Reset theme to follow something easier to work with for this screen
         <PaperProvider theme={loginTheme}>
@@ -93,10 +95,10 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                 <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
             </View>
 
-            <ScrollView style={styles.root}>
+            <ScrollView style={[styles.root, operationColors.root]}>
                 <SafeAreaView>
                     <BigLogo />
-                    <Title style={styles.title}>{operation}</Title>
+                    <Title style={[styles.title, operationColors.title]}>{operation}</Title>
                     {caption && <Caption style={styles.caption}>{caption}</Caption>}
 
                     <TextInput
@@ -216,6 +218,30 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
+        zIndex: 1,
+    },
+})
+
+// We have this because the styles alternate between login and register so only one is used at a time at runtime
+const loginColors = StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
+    root: {
+        backgroundColor: '#FFFFFF',
+    },
+    // eslint-disable-next-line react-native/no-unused-styles
+    title: {
+        color: loginTheme.colors.primary,
+    },
+})
+
+const registerColors = StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
+    root: {
+        backgroundColor: loginTheme.colors.primary,
+    },
+    // eslint-disable-next-line react-native/no-unused-styles
+    title: {
+        color: loginColors.root.backgroundColor,
     },
 })
 
