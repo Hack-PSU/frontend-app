@@ -7,6 +7,7 @@ import {
     StatusBar,
     ScrollView,
     Platform,
+    Linking,
 } from 'react-native'
 import {
     TextInput,
@@ -123,6 +124,9 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                     {!signInOnly && (
                         <View style={styles.bottomButtonsContainer}>
                             <Button
+                                onPress={() => 
+                                    {Linking.openURL('https://app.hackpsu.org/forgot')}
+                                }
                                 compact={true}
                                 uppercase={false}
                                 color={loginTheme.colors.textButton}
