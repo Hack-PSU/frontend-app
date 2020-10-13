@@ -2,6 +2,9 @@ import * as Notifications from 'expo-notifications'
 
 import { PRIMARY } from './theme'
 
+// Note that all notification stuff on here are about scheduled notifications
+// https://docs.expo.io/versions/latest/sdk/notifications/#scheduling-notifications
+
 export async function setNotification(
     identifier: string,
     trigger: Date,
@@ -44,4 +47,8 @@ export async function setNotification(
 
 export async function cancelNotification(identifier: string): Promise<void> {
     Notifications.cancelScheduledNotificationAsync(identifier)
+}
+
+export async function cancelAllNotifications(): Promise<void> {
+    Notifications.cancelAllScheduledNotificationsAsync()
 }

@@ -113,13 +113,6 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         )
     }
 
-    // To update a notification with new info from online, it's easiest to cancel it, wait for it to be cancelled, then
-    // set it again but with new details.
-    const updateNotification = async (updatedEvent: EventModel) => {
-        await Utils.cancelNotification(updatedEvent.uid)
-        setEventWorkshopNotification(updatedEvent)
-    }
-
     // This is called when the star button is clicked on an item.
     const starItem = (item: EventModel) => {
         // Don't copy the pointer of the array, copy the values of the array.
@@ -169,14 +162,19 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         }
     }
 
+    // TODO: Test if events actually send notifications, add structural comments to this file, change it so that it deletes all notifications at boot then puts them back in so stale events don't get notified (like how offline/online data is currently processed)
+
     // This is for when both offline and online are both loaded for the first
     // time. We combine them, which essentially means looking to see if an online
     // event shows up as an offline event and marking that event as starred.
     // If their id's match, we mark it as starred. The reason we have onlineData
     // overriding offlineData is that info (descriptions, locations, etc.) may
     // change and events could be cancelled. This means that if an offline event
-    // isn't found in online data, it is discarded.
+    // isn't found in online data, it is discarded. We also want to update the
+    // notifications, so we apply that same logic to them too.
     if (!loadedBothOfflineOnline && offlineData.length && onlineData.data) {
+        Utils.cancelAllNotifications()
+
         setData(
             onlineData.data.map((onlineEvent) => {
                 // eventMatch is an event found both in both onlineData and
@@ -190,7 +188,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
                     // could have updated info from the server.
                     onlineEvent.starred = true
 
-                    updateNotification(onlineEvent)
+                    setEventWorkshopNotification(onlineEvent)
                 }
                 return onlineEvent
             })
