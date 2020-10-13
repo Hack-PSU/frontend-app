@@ -184,14 +184,18 @@ const styles = StyleSheet.create({
         fontSize: 48,
         color: loginTheme.colors.primary,
         paddingTop: 26,
+        // had to push these components up so they would be above the mountains when the keyboard pops up on android
+        zIndex: 2,
     },
 
     textInput: {
         marginTop: 10,
+        zIndex: 2,
     },
 
     caption: {
         lineHeight: 12,
+        zIndex: 2,
     },
 
     loginButtonContainer: {
@@ -201,12 +205,14 @@ const styles = StyleSheet.create({
         padding: 8,
         marginTop: 5,
         marginRight: 4,
+        zIndex: 2,
     },
 
     bottomButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5,
+        zIndex: 2,
     },
 
     bottomButtons: {
@@ -218,6 +224,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
+        // this pushes the mountains forward to be in front of the background
         zIndex: 1,
     },
 })
