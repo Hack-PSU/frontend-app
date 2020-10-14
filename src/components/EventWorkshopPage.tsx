@@ -44,15 +44,17 @@ interface Props {
 }
 
 const EventWorkshopPage: React.FC<Props> = (props) => {
-    const [filter, setFilter] = useState(ALL)
+    //****************** STATE DECLARATIONS ******************//
+
+    const [filter, setFilter] = useState<'All' | 'Starred'>(ALL)
 
     // This is needed to ensure that offline data and online data isn't combined
     // on every rerender.
-    const [loadedBothOfflineOnline, setLoadedBothOfflineOnline] = useState(false)
+    const [loadedBothOfflineOnline, setLoadedBothOfflineOnline] = useState<boolean>(false)
     // This is so that the page is rerendered when offlineData is loaded with
     // actual data from storage. Events that are stored offline were starred
     // previously.
-    const [offlineData, setOfflineData] = useState([])
+    const [offlineData, setOfflineData] = useState<EventModel[]>([])
 
     const { scrollY, onScroll } = useScrollY()
 
@@ -60,13 +62,18 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
 
     // This is the actual data shown on the page. This is a combination and
     // onlineData and offlineData (if they both exist).
-    const [data, setData] = useState([])
+    const [data, setData] = useState<EventModel[]>([])
 
-    // Used for storing starred items.
-    const storeList = async (value) => {
+    //****************** HELPER METHODS ******************//
+
+    // Stores the events specified in the parameter.
+    // We don't specificy the parameter type becaues we change the type of event_start/end_time from a Date to a number,
+    // but we pass in EventModel[]
+    const storeList = async (events: any[]): Promise<void> => {
         try {
             // Change the dates format to match with what comes in with the server.
-            const valWithModifiedDate = value.map((event) => {
+            const valWithModifiedDate = events.map((event) => {
+                // Change from Date to number so it's "JSON-ifiable"
                 event.event_start_time = new Date(event.event_start_time).getTime()
                 event.event_end_time = new Date(event.event_end_time).getTime()
                 return event
@@ -77,7 +84,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         }
     }
 
-    const readStoredList = async () => {
+    // Sets offlineData from events in device storage.
+    const readStoredList = async (): Promise<void> => {
         try {
             // Separated data for workshops and actual events so they don't conflict
             // from the 2 EventWorkshopPage instances (one on EventsRoute, other on
@@ -97,7 +105,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         }
     }
 
-    const setEventWorkshopNotification = (item: EventModel) => {
+    // Called when an event gets starred or updated from online data on initialization
+    const setEventWorkshopNotification = (item: EventModel): void => {
         // 600000 is 10 mins in milliseconds
         const notifTime = new Date(Number(item.event_start_time) - 600000)
 
@@ -113,8 +122,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         )
     }
 
-    // This is called when the star button is clicked on an item.
-    const starItem = (item: EventModel) => {
+    // Called when the star button is clicked on an item.
+    const starItem = (item: EventModel): void => {
         // Don't copy the pointer of the array, copy the values of the array.
         let temp = [...data]
 
@@ -145,6 +154,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         )
     }
 
+    //****************** DATA PROCESSING AND FILTERING ******************//
+
     // Load offlineData with actual data if it's not already full.
     if (!offlineData.length) {
         readStoredList()
@@ -161,8 +172,6 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             setData(onlineData.data)
         }
     }
-
-    // TODO: Test if events actually send notifications, add structural comments to this file, change it so that it deletes all notifications at boot then puts them back in so stale events don't get notified (like how offline/online data is currently processed)
 
     // This is for when both offline and online are both loaded for the first
     // time. We combine them, which essentially means looking to see if an online
@@ -210,6 +219,8 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         correctEventList = correctEventList.filter((event) => event.starred)
     }
 
+    //****************** LAYOUT BUILD ******************//
+
     const renderItem = ({ item }) => (
         <EventWorkshopListItem key={item.uid} model={item} starItem={() => starItem(item)} />
     )
@@ -224,7 +235,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             <SegmentedControl
                 values={[ALL, STARRED]}
                 value={filter}
-                onChange={(newValue) => setFilter(newValue)}
+                onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
             />
             {!onlineData.data && (
                 <ActivityIndicator animating size="large" style={styles.loading} />
