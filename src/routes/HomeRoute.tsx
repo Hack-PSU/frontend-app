@@ -38,8 +38,6 @@ const HomeRoute: React.FC = () => {
     //     tintColor="white"
     //   />
     // );
-    let trigger = new Date()
-    trigger.setSeconds(trigger.getSeconds() + 5)
 
     return (
         <Scaffold scrollY={scrollY}>
