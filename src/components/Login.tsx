@@ -91,70 +91,74 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                 </Dialog>
             </Portal>
 
-            <View style={styles.mountain}>
-                <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
-            </View>
+            {/* Wrapped all this with a view so the background color will be visible behind the SVG. If
+                operationColors.bgColor were in the ScrollView, it would render over the Mountain and wouldn't be 
+                visible to the user */}
+            <View style={operationColors.bgColor}>
+                <View style={styles.mountain}>
+                    <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
+                </View>
+                <ScrollView style={styles.root}>
+                    <SafeAreaView>
+                        <BigLogo />
+                        <Title style={[styles.title, operationColors.title]}>{operation}</Title>
+                        {caption && <Caption style={styles.caption}>{caption}</Caption>}
 
-            <ScrollView style={[styles.root, operationColors.root]}>
-                <SafeAreaView>
-                    <BigLogo />
-                    <Title style={[styles.title, operationColors.title]}>{operation}</Title>
-                    {caption && <Caption style={styles.caption}>{caption}</Caption>}
+                        <TextInput
+                            label="Email"
+                            mode="flat"
+                            style={styles.textInput}
+                            autoCompleteType="email"
+                            textContentType="emailAddress"
+                            value={email}
+                            error={email !== '' && !isValidEmail}
+                            onChangeText={setEmail}
+                        />
+                        <TextInput
+                            label="Password"
+                            mode="flat"
+                            style={styles.textInput}
+                            autoCompleteType="password"
+                            textContentType="password"
+                            secureTextEntry
+                            value={password}
+                            onChangeText={setPassword}
+                        />
 
-                    <TextInput
-                        label="Email"
-                        mode="flat"
-                        style={styles.textInput}
-                        autoCompleteType="email"
-                        textContentType="emailAddress"
-                        value={email}
-                        error={email !== '' && !isValidEmail}
-                        onChangeText={setEmail}
-                    />
-                    <TextInput
-                        label="Password"
-                        mode="flat"
-                        style={styles.textInput}
-                        autoCompleteType="password"
-                        textContentType="password"
-                        secureTextEntry
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-
-                    {!signInOnly && (
-                        <View style={styles.bottomButtonsContainer}>
-                            <Button
-                                compact={true}
-                                uppercase={false}
-                                color={loginTheme.colors.textButton}
+                        {!signInOnly && (
+                            <View style={styles.bottomButtonsContainer}>
+                                <Button
+                                    compact={true}
+                                    uppercase={false}
+                                    color={loginTheme.colors.textButton}
+                                >
+                                    Forgot password?
+                                </Button>
+                                <Button
+                                    onPress={() =>
+                                        setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
+                                    }
+                                    compact={true}
+                                    uppercase={false}
+                                    color={loginTheme.colors.textButton}
+                                >
+                                    {operation === SIGN_IN ? 'Create account' : 'I have an account'}
+                                </Button>
+                            </View>
+                        )}
+                        <View style={styles.loginButtonContainer}>
+                            <FAB
+                                icon="send"
+                                onPress={submit}
+                                // disabled={!email || !isValidEmail || !password}
+                                color={'white'}
                             >
-                                Forgot password?
-                            </Button>
-                            <Button
-                                onPress={() =>
-                                    setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
-                                }
-                                compact={true}
-                                uppercase={false}
-                                color={loginTheme.colors.textButton}
-                            >
-                                {operation === SIGN_IN ? 'Create account' : 'I have an account'}
-                            </Button>
+                                {operation}
+                            </FAB>
                         </View>
-                    )}
-                    <View style={styles.loginButtonContainer}>
-                        <FAB
-                            icon="send"
-                            onPress={submit}
-                            // disabled={!email || !isValidEmail || !password}
-                            color={'white'}
-                        >
-                            {operation}
-                        </FAB>
-                    </View>
-                </SafeAreaView>
-            </ScrollView>
+                    </SafeAreaView>
+                </ScrollView>
+            </View>
         </PaperProvider>
     )
 }
@@ -184,18 +188,14 @@ const styles = StyleSheet.create({
         fontSize: 48,
         color: loginTheme.colors.primary,
         paddingTop: 26,
-        // had to push these components up so they would be above the mountains when the keyboard pops up on android
-        zIndex: 2,
     },
 
     textInput: {
         marginTop: 10,
-        zIndex: 2,
     },
 
     caption: {
         lineHeight: 12,
-        zIndex: 2,
     },
 
     loginButtonContainer: {
@@ -205,14 +205,12 @@ const styles = StyleSheet.create({
         padding: 8,
         marginTop: 5,
         marginRight: 4,
-        zIndex: 2,
     },
 
     bottomButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5,
-        zIndex: 2,
     },
 
     bottomButtons: {
@@ -224,15 +222,13 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        // this pushes the mountains forward to be in front of the background
-        zIndex: 1,
     },
 })
 
 // We have this because the styles alternate between login and register so only one is used at a time at runtime
 const loginColors = StyleSheet.create({
     // eslint-disable-next-line react-native/no-unused-styles
-    root: {
+    bgColor: {
         backgroundColor: '#FFFFFF',
     },
     // eslint-disable-next-line react-native/no-unused-styles
@@ -243,12 +239,12 @@ const loginColors = StyleSheet.create({
 
 const registerColors = StyleSheet.create({
     // eslint-disable-next-line react-native/no-unused-styles
-    root: {
+    bgColor: {
         backgroundColor: loginTheme.colors.primary,
     },
     // eslint-disable-next-line react-native/no-unused-styles
     title: {
-        color: loginColors.root.backgroundColor,
+        color: loginColors.bgColor.backgroundColor,
     },
 })
 
