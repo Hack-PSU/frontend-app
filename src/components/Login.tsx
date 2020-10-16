@@ -81,7 +81,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                 barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
             />
 
-            {/* This dialog shows up after the user clicks the login/SIGN_UP button */}
+            {/* This dialog shows up after the user clicks the login/signup button */}
             <Portal>
                 <Dialog visible={submitLoading}>
                     <Dialog.Content>
