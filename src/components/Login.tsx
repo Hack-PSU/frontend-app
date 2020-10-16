@@ -72,6 +72,8 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
         return () => (disposed = true)
     }, [submitLoading, onSubmit, email, password, operation])
 
+    const operationColors = operation === SIGN_IN ? loginColors : registerColors
+
     return (
         // Reset theme to follow something easier to work with for this screen
         <PaperProvider theme={loginTheme}>
@@ -90,73 +92,77 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                 </Dialog>
             </Portal>
 
-            <View style={styles.mountain}>
-                <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
-            </View>
+            {/* Wrapped all this with a view so the background color will be visible behind the SVG. If
+                operationColors.bgColor were in the ScrollView, it would render over the Mountain and wouldn't be 
+                visible to the user */}
+            <View style={operationColors.bgColor}>
+                <View style={styles.mountain}>
+                    <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
+                </View>
+                <ScrollView style={styles.root}>
+                    <SafeAreaView>
+                        <BigLogo />
+                        <Title style={[styles.title, operationColors.title]}>{operation}</Title>
+                        {caption && <Caption style={styles.caption}>{caption}</Caption>}
 
-            <ScrollView style={styles.root}>
-                <SafeAreaView>
-                    <BigLogo />
-                    <Title style={styles.title}>{operation}</Title>
-                    {caption && <Caption style={styles.caption}>{caption}</Caption>}
+                        <TextInput
+                            label="Email"
+                            mode="flat"
+                            style={styles.textInput}
+                            autoCompleteType="email"
+                            textContentType="emailAddress"
+                            value={email}
+                            error={email !== '' && !isValidEmail}
+                            onChangeText={setEmail}
+                        />
+                        <TextInput
+                            label="Password"
+                            mode="flat"
+                            style={styles.textInput}
+                            autoCompleteType="password"
+                            textContentType="password"
+                            secureTextEntry
+                            value={password}
+                            onChangeText={setPassword}
+                        />
 
-                    <TextInput
-                        label="Email"
-                        mode="flat"
-                        style={styles.textInput}
-                        autoCompleteType="email"
-                        textContentType="emailAddress"
-                        value={email}
-                        error={email !== '' && !isValidEmail}
-                        onChangeText={setEmail}
-                    />
-                    <TextInput
-                        label="Password"
-                        mode="flat"
-                        style={styles.textInput}
-                        autoCompleteType="password"
-                        textContentType="password"
-                        secureTextEntry
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-
-                    {!signInOnly && (
-                        <View style={styles.bottomButtonsContainer}>
-                            <Button
-                                onPress={() => {
-                                    Linking.openURL('https://app.hackpsu.org/forgot')
-                                }}
-                                compact={true}
-                                uppercase={false}
-                                color={loginTheme.colors.textButton}
+                        {!signInOnly && (
+                            <View style={styles.bottomButtonsContainer}>
+                                <Button
+                                    onPress={() => {
+                                        Linking.openURL('https://app.hackpsu.org/forgot')
+                                    }}
+                                    compact={true}
+                                    uppercase={false}
+                                    color={loginTheme.colors.textButton}
+                                >
+                                    Forgot password?
+                                </Button>
+                                <Button
+                                    onPress={() =>
+                                        setOperation(operation === SIGN_IN ? SIGN_UP : SIGN_IN)
+                                    }
+                                    compact={true}
+                                    uppercase={false}
+                                    color={loginTheme.colors.textButton}
+                                >
+                                    {operation === SIGN_IN ? 'Create account' : 'I have an account'}
+                                </Button>
+                            </View>
+                        )}
+                        <View style={styles.loginButtonContainer}>
+                            <FAB
+                                icon="send"
+                                onPress={submit}
+                                // disabled={!email || !isValidEmail || !password}
+                                color={'white'}
                             >
-                                Forgot password?
-                            </Button>
-                            <Button
-                                onPress={() =>
-                                    setOperation(operation === SIGN_IN ? SIGN_UP : SIGN_IN)
-                                }
-                                compact={true}
-                                uppercase={false}
-                                color={loginTheme.colors.textButton}
-                            >
-                                {operation === SIGN_IN ? 'Create account' : 'I have an account'}
-                            </Button>
+                                {operation}
+                            </FAB>
                         </View>
-                    )}
-                    <View style={styles.loginButtonContainer}>
-                        <FAB
-                            icon="send"
-                            onPress={submit}
-                            // disabled={!email || !isValidEmail || !password}
-                            color={'white'}
-                        >
-                            {operation}
-                        </FAB>
-                    </View>
-                </SafeAreaView>
-            </ScrollView>
+                    </SafeAreaView>
+                </ScrollView>
+            </View>
         </PaperProvider>
     )
 }
@@ -220,6 +226,29 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
+    },
+})
+
+// We have this because the styles alternate between login and register so only one is used at a time at runtime
+const loginColors = StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
+    bgColor: {
+        backgroundColor: '#FFFFFF',
+    },
+    // eslint-disable-next-line react-native/no-unused-styles
+    title: {
+        color: loginTheme.colors.primary,
+    },
+})
+
+const registerColors = StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
+    bgColor: {
+        backgroundColor: loginTheme.colors.primary,
+    },
+    // eslint-disable-next-line react-native/no-unused-styles
+    title: {
+        color: loginColors.bgColor.backgroundColor,
     },
 })
 
