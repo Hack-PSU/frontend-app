@@ -29,9 +29,9 @@ import BigLogo from './BigLogo'
 import Mountain from '../../assets/images/mountain.svg'
 
 export const SIGN_IN = 'Login'
-export const REGISTER = 'Register'
+export const SIGN_UP = 'Sign Up'
 
-export type Operation = 'Login' | 'Register'
+export type Operation = 'Login' | 'Sign Up'
 
 interface Props {
     signInOnly?: boolean
@@ -48,7 +48,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    // "Sign In" and "Register" are valid values.
+    // "Sign In" and "Sign Up" are valid values.
     const [operation, setOperation] = useState<Operation>(SIGN_IN)
 
     const isValidEmail = validateEmail(email)
@@ -81,7 +81,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                 barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
             />
 
-            {/* This dialog shows up after the user clicks the login/register button */}
+            {/* This dialog shows up after the user clicks the login/signup button */}
             <Portal>
                 <Dialog visible={submitLoading}>
                     <Dialog.Content>
@@ -135,7 +135,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                             </Button>
                             <Button
                                 onPress={() =>
-                                    setOperation(operation === SIGN_IN ? REGISTER : SIGN_IN)
+                                    setOperation(operation === SIGN_IN ? SIGN_UP : SIGN_IN)
                                 }
                                 compact={true}
                                 uppercase={false}
