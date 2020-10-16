@@ -4,7 +4,7 @@ import { useValueNotifier } from 'change-notifier'
 
 import { validate as validateEmail } from 'email-validator'
 
-import Login, { SIGN_IN, REGISTER } from './Login'
+import Login, { SIGN_IN, SIGN_UP } from './Login'
 
 import AuthService from '../data/AuthService'
 
@@ -29,7 +29,7 @@ async function signInOrSignUp(email: string, password: string, operation: string
         }
     }
 
-    if (operation == REGISTER) {
+    if (operation == SIGN_UP) {
         try {
             const user = await AuthService.createUser(email, password)
             if (!user) {
