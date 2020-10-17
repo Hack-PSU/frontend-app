@@ -10,7 +10,9 @@ interface Props {
     type?: AlertType
 }
 
-const AndroidIosPrompt: React.FC<Props> = (props) => {
+// Must treat this as a regular component with Portals unlike the native iOS Alert
+
+const AndroidPrompt: React.FC<Props> = (props) => {
     const [text, setText] = useState('')
 
     // TODO: See if this is even valid. Might want to change this to "updateFunc" if that changes the visible state of the dialog
@@ -41,4 +43,4 @@ const AndroidIosPrompt: React.FC<Props> = (props) => {
     )
 }
 
-export default AndroidIosPrompt
+export default AndroidPrompt
