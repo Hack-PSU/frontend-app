@@ -163,6 +163,7 @@ const ProfileModal: React.FC = () => {
 
     return (
         <PaperProvider theme={THEME}>
+            {/* TODO: Put different prompts here for Android. Each will have their own props and visible state. Visible state will be toggled by methods like onEditDisplayName if the OS is Android */}
             <View style={styles.root}>
                 <ModalAppBar />
                 <ScrollView>
