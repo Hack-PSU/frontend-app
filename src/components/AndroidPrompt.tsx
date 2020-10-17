@@ -1,42 +1,52 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AlertType } from 'react-native'
 import { Button, Dialog, Paragraph, Portal, TextInput } from 'react-native-paper'
 
-interface Props {
+// Making this a separate interface will make the code cleaner when using this component.
+export interface AndroidPromptData {
     title: string
     description: string
     updateFunc: (arg0: string) => unknown
-    visible: boolean
     type?: AlertType
 }
 
-// Must treat this as a regular component with Portals unlike the native iOS Alert
+interface Props {
+    androidPromptData: AndroidPromptData
+    visible: boolean
+}
 
-const AndroidPrompt: React.FC<Props> = (props) => {
-    const [text, setText] = useState('')
+// Must treat this as a regular component unlike native iOS Alert.
 
-    // TODO: See if this is even valid. Might want to change this to "updateFunc" if that changes the visible state of the dialog
-    const hideDialog = () => (props.visible = false)
+const AndroidPrompt: React.FC<Props> = ({ androidPromptData, visible }) => {
+    const [text, setText] = React.useState('')
 
-    if (!props.type) {
-        props.type = 'secure-text'
+    // If we pass no string, nothing will update server side and the dialog will close.
+    const hideDialog = (): void => {
+        androidPromptData.updateFunc(null)
+    }
+
+    // Avoid errors on optional prop
+    if (androidPromptData.type === undefined) {
+        androidPromptData.type = 'secure-text'
     }
 
     return (
         <Portal>
-            <Dialog visible={props.visible} onDismiss={hideDialog}>
-                <Dialog.Title>{props.title}</Dialog.Title>
+            <Dialog visible={visible} onDismiss={hideDialog}>
+                <Dialog.Title>{androidPromptData.title}</Dialog.Title>
                 <Dialog.Content>
-                    <Paragraph>{props.description}</Paragraph>
+                    <Paragraph>{androidPromptData.description}</Paragraph>
                     <TextInput
                         value={text}
                         onChangeText={setText}
-                        secureTextEntry={props.type === 'secure-text'}
+                        // TODO: Make themeing and stuff
+                        style={{ color: '#FFFFFF', backgroundColor: '#FFFFFF' }}
+                        secureTextEntry={androidPromptData.type === 'secure-text'}
                     />
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={hideDialog}>Cancel</Button>
-                    <Button onPress={() => {}}>Done</Button>
+                    <Button onPress={() => androidPromptData.updateFunc(text)}>Done</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Alert, ScrollView } from 'react-native'
+import { StyleSheet, View, Alert, ScrollView, Platform } from 'react-native'
 import {
     Title,
     Avatar,
@@ -19,6 +19,7 @@ import AuthService from '../../data/AuthService'
 
 import { BACKGROUND, RED, THEME } from '../../theme'
 import ModalAppBar from '../../components/ModalAppbar'
+import AndroidPrompt, { AndroidPromptData } from '../../components/AndroidPrompt'
 
 const UserImage = require('../../../assets/images/user.png')
 
@@ -62,20 +63,47 @@ const styles = StyleSheet.create({
     },
 })
 
-function prompt(
-    title: string,
-    description: string,
-    updateFunc: (arg0: string) => unknown,
-    type?: 'secure-text'
-) {
-    // TODO: Support Android.
-    Alert.prompt(title, description, updateFunc, type)
-}
-
 const ProfileModal: React.FC = () => {
     const forceUpdate = useForceUpdate()
     const navigation = useNavigation()
     const currentUser = useValueNotifier(AuthService)
+
+    // Since Android doesn't have their own Alert/prompt system, we need to work around it using our own custom Dialog.
+    const [isAndroidPromptVisible, setAndroidPromptVisible] = React.useState<boolean>(false)
+    // When the dialog is visible, it'll show using these props. We need to initialize them now or it'll through
+    // undefined errors.
+    const [androidPromptData, setAndroidPromptData] = React.useState<AndroidPromptData>({
+        title: '',
+        description: '',
+        updateFunc: () => {},
+        type: 'default',
+    })
+
+    function prompt(
+        title: string,
+        description: string,
+        updateFunc: (arg0: string) => unknown,
+        type?: 'secure-text'
+    ) {
+        if (Platform.OS === 'ios') {
+            Alert.prompt(title, description, updateFunc, type)
+        } else if (Platform.OS === 'android') {
+            setAndroidPromptData({
+                title,
+                description,
+                // Make a custom updateFunc to ensure the input isn't blank and that the prompt is set to be invisible
+                // after the input.
+                updateFunc: (arg: string) => {
+                    if (arg) {
+                        updateFunc(arg)
+                    }
+                    setAndroidPromptVisible(false)
+                },
+                type,
+            })
+            setAndroidPromptVisible(true)
+        }
+    }
 
     // We need to reauthenticate before preforming critical actions.
     function reauth() {
@@ -163,7 +191,14 @@ const ProfileModal: React.FC = () => {
 
     return (
         <PaperProvider theme={THEME}>
-            {/* TODO: Put different prompts here for Android. Each will have their own props and visible state. Visible state will be toggled by methods like onEditDisplayName if the OS is Android */}
+            {/* No reason in rendering the android prompt when iOS doesn't need it */}
+            {Platform.OS === 'android' && (
+                <AndroidPrompt
+                    androidPromptData={androidPromptData}
+                    visible={isAndroidPromptVisible}
+                />
+            )}
+
             <View style={styles.root}>
                 <ModalAppBar />
                 <ScrollView>
