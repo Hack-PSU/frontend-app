@@ -5211,10 +5211,10 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-change-notifier@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/change-notifier/-/change-notifier-1.0.0.tgz#112bf2cac80886afd47fa60fc17e5a7b0f46f6b0"
-  integrity sha512-i/a1ncpxnZJvlMPwZPfX9m0Nyb6XxcD+2z6wyMQIXIvfL0AZnGVT296wdCzKZH3Mz+G5WFuliXVvFekwm5zQ5g==
+change-notifier@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/change-notifier/-/change-notifier-1.0.1.tgz#983d91b7498038775f240ae5a64c429b0a47e6d3"
+  integrity sha512-3f9RYJjhZkBxJnVn/SdfDsVDjiQ5Hr0FsyOqb0oxelU32BjATUdh0INqcX47STTozGSHp65TA6kFDA5q+k/Qxg==
 
 chardet@^0.4.0:
   version "0.4.2"
