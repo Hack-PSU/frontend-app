@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Alert, ScrollView, Platform } from 'react-native'
+import { StyleSheet, View, Alert, AlertType, ScrollView, Platform } from 'react-native'
 import {
     Title,
     Avatar,
@@ -75,21 +75,24 @@ const ProfileModal: React.FC = () => {
     const [androidPromptData, setAndroidPromptData] = React.useState<AndroidPromptData>({
         title: '',
         description: '',
+        textLabel: '',
         updateFunc: () => {},
         type: 'default',
     })
 
     function prompt(
         title: string,
+        androidTextInputLabel: string,
         description: string,
         updateFunc: (arg0: string) => unknown,
-        type?: 'secure-text'
+        type: AlertType
     ) {
         if (Platform.OS === 'ios') {
             Alert.prompt(title, description, updateFunc, type)
         } else if (Platform.OS === 'android') {
             setAndroidPromptData({
                 title,
+                textLabel: androidTextInputLabel,
                 description,
                 // Make a custom updateFunc to ensure the input isn't blank and that the prompt is set to be invisible
                 // after the input.
@@ -97,6 +100,7 @@ const ProfileModal: React.FC = () => {
                     if (arg) {
                         updateFunc(arg)
                     }
+                    // Once the user is done with their changes, hide the prompt.
                     setAndroidPromptVisible(false)
                 },
                 type,
@@ -115,24 +119,36 @@ const ProfileModal: React.FC = () => {
     }
 
     function onEditDisplayName() {
-        prompt('Edit display name', currentUser.displayName, (displayName) => {
-            currentUser
-                .updateProfile({ displayName, photoURL: currentUser.photoURL })
-                .then(forceUpdate)
-        })
+        prompt(
+            'Edit display name',
+            'Display Name',
+            currentUser.displayName,
+            (displayName) => {
+                currentUser
+                    .updateProfile({ displayName, photoURL: currentUser.photoURL })
+                    .then(forceUpdate)
+            },
+            'default'
+        )
     }
 
     async function onEditEmail() {
         await reauth()
 
-        prompt('Edit email', currentUser.email, (email) => {
-            currentUser
-                .updateEmail(email)
-                .then(forceUpdate)
-                .catch((e) => {
-                    Alert.alert('Error', e.toString())
-                })
-        })
+        prompt(
+            'Edit email',
+            'Email',
+            currentUser.email,
+            (email) => {
+                currentUser
+                    .updateEmail(email)
+                    .then(forceUpdate)
+                    .catch((e) => {
+                        Alert.alert('Error', e.toString())
+                    })
+            },
+            'default'
+        )
     }
 
     async function onEditPassword() {
@@ -140,6 +156,7 @@ const ProfileModal: React.FC = () => {
 
         prompt(
             'Edit password',
+            'Password',
             null,
             (password) => {
                 currentUser
