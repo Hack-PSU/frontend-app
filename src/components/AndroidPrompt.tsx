@@ -27,7 +27,7 @@ const AndroidPrompt: React.FC<Props> = ({ androidPromptData, visible }) => {
         androidPromptData.updateFunc(null)
         // Once the user hides the dialog, the state for text stays and will show that in a seemingly
         // different dialog.If the user edits their display name to "asdf" and then goes to edit
-        // their email, the textinput will already be populated with "asdf"
+        // their email, the textinput will already be populated with "asdf".
         setText('')
     }
 
@@ -70,7 +70,7 @@ const AndroidPrompt: React.FC<Props> = ({ androidPromptData, visible }) => {
 const styles = StyleSheet.create({
     // The default text input theme from https://github.com/callstack/react-native-paper/blob/master/src/styles/DefaultTheme.tsx
     // If we don't theme this we get the textInput background as the background we set in theme.ts, which is blue and
-    // looks way off
+    // looks way off.
     textInput: {
         backgroundColor: '#f6f6f6',
     },

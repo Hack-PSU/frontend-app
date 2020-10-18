@@ -70,7 +70,7 @@ const ProfileModal: React.FC = () => {
 
     // Since Android doesn't have their own Alert/prompt system, we need to work around it using our own custom Dialog.
     const [isAndroidPromptVisible, setAndroidPromptVisible] = React.useState<boolean>(false)
-    // When the dialog is visible, it'll show using these props. We need to initialize them now or it'll through
+    // When the dialog is visible, it'll show using these props. We need to initialize them now or it'll throw.
     // undefined errors.
     const [androidPromptData, setAndroidPromptData] = React.useState<AndroidPromptData>({
         title: '',
@@ -208,7 +208,7 @@ const ProfileModal: React.FC = () => {
 
     return (
         <PaperProvider theme={THEME}>
-            {/* No reason in rendering the android prompt when iOS doesn't need it */}
+            {/* No reason in rendering the android prompt when iOS doesn't need it. */}
             {Platform.OS === 'android' && (
                 <AndroidPrompt
                     androidPromptData={androidPromptData}
