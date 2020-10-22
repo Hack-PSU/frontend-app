@@ -18,8 +18,8 @@ import { TEXT_LIGHT } from '../theme'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
-const SLACK_URL =
-    'https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU'
+const DISCORD_URL =
+    'https://discord.gg/ZXU7p6S'
 
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
@@ -79,13 +79,9 @@ const HomeRoute: React.FC = () => {
                 )}
 
                 <View style={styles.horizontalCardView}>
-                    <HomeListItemSecondary description="Wi-Fi">
-                        <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
-                        <Text style={styles.horizontalCardText}>Password: plz</Text>
-                    </HomeListItemSecondary>
                     <HomeListItemSecondary
-                        description="Slack"
-                        onPress={() => Linking.openURL(SLACK_URL)}
+                        description="Discord"
+                        onPress={() => Linking.openURL(DISCORD_URL)}
                     >
                         <Text style={styles.horizontalCardText}>
                             Request an invite by clicking here!
