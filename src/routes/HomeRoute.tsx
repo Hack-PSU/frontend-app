@@ -70,7 +70,7 @@ const HomeRoute: React.FC = () => {
                 )}
 
                 <View style={styles.horizontalCardView}>
-            
+
                     {!registrationStatus.error && (
                     <HomeListItem
                         description="My PIN Number"
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     },
 
     horizontalCardText: {
-        color: 'gray',
+        color: 'black',
     },
 })
 
