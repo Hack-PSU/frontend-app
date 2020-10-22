@@ -48,16 +48,7 @@ const HomeRoute: React.FC = () => {
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
-                {!registrationStatus.error && (
-                    <HomeListItem
-                        description="My PIN Number"
-                        info={
-                            !registrationStatus.data
-                                ? '...'
-                                : registrationStatus.data.pin.toString()
-                        }
-                    />
-                )}
+
 
                 {!registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
@@ -79,6 +70,18 @@ const HomeRoute: React.FC = () => {
                 )}
 
                 <View style={styles.horizontalCardView}>
+            
+                    {!registrationStatus.error && (
+                    <HomeListItem
+                        description="My PIN Number"
+                        info={
+                            !registrationStatus.data
+                                ? '...'
+                                : registrationStatus.data.pin.toString()
+                        }
+                    />
+                    )}
+
                     <HomeListItemSecondary
                         description="Discord"
                         onPress={() => Linking.openURL(DISCORD_URL)}
