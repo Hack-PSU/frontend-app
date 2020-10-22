@@ -23,13 +23,14 @@ const AndroidPrompt: React.FC<Props> = ({ androidPromptData, visible }) => {
 
     // If we pass no string, nothing will update server side and the dialog will close since the method that's passed
     // in will set this dialog invisible.
-    const hideDialog = (): void => {
+    // We use useCallback for a slight performance increase.
+    const hideDialog = React.useCallback((): void => {
         androidPromptData.updateFunc(null)
         // Once the user hides the dialog, the state for text stays and will show that in a seemingly
         // different dialog.If the user edits their display name to "asdf" and then goes to edit
         // their email, the textinput will already be populated with "asdf".
         setText('')
-    }
+    }, [androidPromptData])
 
     // Avoid errors on optional prop.
     if (androidPromptData.type === undefined) {
