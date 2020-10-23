@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { View, StyleSheet, SectionList, ActivityIndicator } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
+import { useBottomSheetModal, BottomSheetOverlay } from '@gorhom/bottom-sheet'
 
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import Subtitle from '../components/Subtitle'
@@ -9,25 +10,13 @@ import SegmentedControl from '../components/SegmentedControl'
 import ErrorCard from '../components/ErrorCard'
 import EventWorkshopListItem from '../components/EventWorkshopListItem'
 import { EventModelJSON } from '../models/event-model'
+import { EventModel } from '../models/event-model'
 
 import useScrollY from '../hooks/useScrollY'
 import useEvents from '../data/hooks/useEvents'
 
 import { BACKGROUND } from '../theme'
-
-const styles = StyleSheet.create({
-    title: {
-        paddingTop: LOGO_SAFE_PADDING,
-    },
-    section: {
-        paddingTop: 16,
-        paddingBottom: 16,
-        backgroundColor: BACKGROUND,
-    },
-    loading: {
-        margin: 20,
-    },
-})
+import EventDetail from './EventDetail'
 
 const ALL = 'All'
 const STARRED = 'Starred'
@@ -37,6 +26,8 @@ export const WORKSHOPS = 'Workshops'
 const WORKSHOP_EVENT_TYPE = 'workshop'
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
+
+const SNAP_POINTS = ['50%', '90%']
 
 interface Props {
     eventType: 'Events' | 'Workshops'
@@ -54,19 +45,22 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     const [offlineData, setOfflineData] = useState([])
 
     // Used for storing starred items.
-    const storeList = async (value) => {
-        try {
-            // Change the dates format to match with what comes in with the server.
-            const valWithModifiedDate = value.map((event) => {
-                event.event_start_time = new Date(event.event_start_time).getTime()
-                event.event_end_time = new Date(event.event_end_time).getTime()
-                return event
-            })
-            await AsyncStorage.setItem(props.eventType, JSON.stringify(valWithModifiedDate))
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    const storeList = useCallback(
+        async (value) => {
+            try {
+                // Change the dates format to match with what comes in with the server.
+                const valWithModifiedDate = value.map((event) => {
+                    event.event_start_time = new Date(event.event_start_time).getTime()
+                    event.event_end_time = new Date(event.event_end_time).getTime()
+                    return event
+                })
+                await AsyncStorage.setItem(props.eventType, JSON.stringify(valWithModifiedDate))
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        [props.eventType]
+    )
 
     const readStoredList = async () => {
         try {
@@ -103,7 +97,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     // the user can see results more quickly.
     if (!data.length) {
         if (offlineData.length) {
-            setData(offlineData)
+            setData(EventModel.parseFromJSONArray(offlineData))
         }
         if (onlineData.data) {
             setData(onlineData.data)
@@ -141,33 +135,57 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         setLoadedBothOfflineOnline(true)
     }
 
-    const renderItem = ({ item }) => (
-        <EventWorkshopListItem key={item.uid} model={item} starItem={() => starItem(item)} />
+    // This is called when the star button is clicked on an item.
+    const starItem = useCallback(
+        (item) => {
+            // Don't copy the pointer of the array, copy the values of the array.
+            let temp = [...data]
+
+            // Find which index the event is in with the uid.
+            const index = temp.findIndex((event) => event.uid === item.uid)
+            temp[index].starred = !temp[index].starred
+
+            setData(temp)
+
+            // Make sure we are only storing events that are starred and are from the
+            // right category.
+            storeList(
+                temp.filter(
+                    (event) =>
+                        event.starred &&
+                        (props.eventType === EVENTS
+                            ? event.event_type !== WORKSHOP_EVENT_TYPE
+                            : event.event_type === WORKSHOP_EVENT_TYPE)
+                )
+            )
+        },
+        [data, props.eventType, storeList]
     )
 
-    // This is called when the star button is clicked on an item.
-    const starItem = (item) => {
-        // Don't copy the pointer of the array, copy the values of the array.
-        let temp = [...data]
+    const { present } = useBottomSheetModal()
 
-        // Find which index the event is in with the uid.
-        const index = temp.findIndex((event) => event.uid === item.uid)
-        temp[index].starred = !temp[index].starred
+    const setDetailItem = useCallback(
+        (item: EventModel) => {
+            present(<EventDetail model={item} starItem={() => starItem(item)} />, {
+                snapPoints: SNAP_POINTS,
+                initialSnapIndex: 0,
+                animationDuration: 350,
+                overlayComponent: BottomSheetOverlay,
+                overlayOpacity: 0.57,
+                dismissOnOverlayPress: true,
+            })
+        },
+        [present, starItem]
+    )
 
-        setData(temp)
-
-        // Make sure we are only storing events that are starred and are from the
-        // right category.
-        storeList(
-            temp.filter(
-                (event) =>
-                    event.starred &&
-                    (props.eventType === EVENTS
-                        ? event.event_type !== WORKSHOP_EVENT_TYPE
-                        : event.event_type === WORKSHOP_EVENT_TYPE)
-            )
-        )
-    }
+    const renderItem = ({ item }) => (
+        <EventWorkshopListItem
+            key={item.uid}
+            model={item}
+            starItem={() => starItem(item)}
+            onPress={() => setDetailItem(item)}
+        />
+    )
 
     const listHeader = (
         <View style={styles.title}>
@@ -199,25 +217,41 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     }
 
     return (
-        <Scaffold scrollY={scrollY}>
-            <AnimatedSectionList
-                sections={[
-                    {
-                        data: correctEventList,
-                    },
-                ]}
-                renderItem={renderItem}
-                scrollEventThrottle={1}
-                onScroll={onScroll}
-                renderScrollComponent={(props) => <Animated.ScrollView {...props} />}
-                keyExtractor={(item) => item.uid}
-                ListHeaderComponent={listHeader}
-                stickyHeaderIndices={[0]}
-                renderSectionHeader={() => sectionHeader}
-                stickySectionHeadersEnabled={true}
-            />
-        </Scaffold>
+        <>
+            <Scaffold scrollY={scrollY}>
+                <AnimatedSectionList
+                    sections={[
+                        {
+                            data: correctEventList,
+                        },
+                    ]}
+                    renderItem={renderItem}
+                    scrollEventThrottle={1}
+                    onScroll={onScroll}
+                    renderScrollComponent={(viewProps) => <Animated.ScrollView {...viewProps} />}
+                    keyExtractor={(item) => item.uid}
+                    ListHeaderComponent={listHeader}
+                    stickyHeaderIndices={[0]}
+                    renderSectionHeader={() => sectionHeader}
+                    stickySectionHeadersEnabled={true}
+                />
+            </Scaffold>
+        </>
     )
 }
 
 export default EventWorkshopPage
+
+const styles = StyleSheet.create({
+    title: {
+        paddingTop: LOGO_SAFE_PADDING,
+    },
+    section: {
+        paddingTop: 16,
+        paddingBottom: 16,
+        backgroundColor: BACKGROUND,
+    },
+    loading: {
+        margin: 20,
+    },
+})

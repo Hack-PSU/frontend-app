@@ -22,46 +22,6 @@ import ModalAppBar from '../../components/ModalAppbar'
 
 const UserImage = require('../../../assets/images/user.png')
 
-const styles = StyleSheet.create({
-    root: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: BACKGROUND,
-    },
-
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingTop: 36,
-        paddingBottom: 16,
-        paddingLeft: 24,
-        paddingRight: 24,
-        elevation: 4,
-    },
-
-    title: {
-        fontFamily: 'Cornerstone',
-        fontSize: 48,
-        lineHeight: 52,
-        color: '#113654',
-    },
-
-    expander: {
-        flex: 1,
-    },
-
-    card: {
-        margin: 8,
-        paddingTop: 8,
-        paddingBottom: 8,
-    },
-
-    button: {
-        margin: 8,
-        padding: 4,
-    },
-})
-
 function prompt(
     title: string,
     description: string,
@@ -209,3 +169,43 @@ const ProfileModal: React.FC = () => {
 }
 
 export default ProfileModal
+
+const styles = StyleSheet.create({
+    root: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: BACKGROUND,
+    },
+
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingTop: 36,
+        paddingBottom: 16,
+        paddingLeft: 24,
+        paddingRight: 24,
+        elevation: 4,
+    },
+
+    title: {
+        fontFamily: 'Cornerstone',
+        fontSize: 48,
+        lineHeight: 52,
+        color: '#113654',
+    },
+
+    expander: {
+        flex: 1,
+    },
+
+    card: {
+        margin: 8,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+
+    button: {
+        margin: 8,
+        padding: 4,
+    },
+})
