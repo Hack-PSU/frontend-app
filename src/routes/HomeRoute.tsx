@@ -7,12 +7,15 @@ import * as WebBrowser from 'expo-web-browser'
 
 import HomeListItem from '../components/HomeListItem'
 import HomeListItemSecondary from '../components/HomeListItemSecondary'
+import HomeListItemEvent from '../components/HomeListItemEvent'
 import DateCountDown from '../components/DateCountDown'
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
+
+import useEvents from '../data/hooks/useEvents'
 
 import { TEXT_LIGHT } from '../theme'
 
@@ -23,6 +26,8 @@ const SLACK_URL =
 
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
+
+    const { data } = useEvents()
 
     const { scrollY, onScroll } = useScrollY()
 
@@ -47,6 +52,11 @@ const HomeRoute: React.FC = () => {
                 <DateCountDown />
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
+
+                <HomeListItemEvent
+                    description="Next Event"
+                    info={!data || !data.length ? '...' : data[0].event_title}
+                />
 
                 {!registrationStatus.error && (
                     <HomeListItem
