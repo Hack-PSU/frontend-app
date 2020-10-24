@@ -182,7 +182,12 @@ const ProfileModal: React.FC = () => {
                     <Surface style={styles.container}>
                         <Title style={styles.title}>ACCOUNT</Title>
                         <View style={styles.expander} />
-                        <Avatar.Image size={48} source={currentUser.photoURL || UserImage} />
+                        <Avatar.Image
+                            size={48}
+                            source={
+                                currentUser.photoURL ? { uri: currentUser.photoURL } : UserImage
+                            }
+                        />
                     </Surface>
                     <List.Section>
                         <Card style={styles.card}>

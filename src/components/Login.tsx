@@ -21,12 +21,19 @@ import {
     Provider as PaperProvider,
 } from 'react-native-paper'
 import { useDimensions } from 'react-native-hooks'
+import {
+    AppleAuthenticationButton,
+    AppleAuthenticationButtonType,
+    AppleAuthenticationButtonStyle,
+} from 'expo-apple-authentication'
+import { AntDesign } from '@expo/vector-icons'
 
 import { validate as validateEmail } from 'email-validator'
 
 import BigLogo from './BigLogo'
 
 import Mountain from '../../assets/images/mountain.svg'
+import AuthService from '../data/AuthService'
 
 export const SIGN_IN = 'Login'
 export const SIGN_UP = 'Sign Up'
@@ -50,6 +57,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
     const [password, setPassword] = useState('')
     // "Sign In" and "Sign Up" are valid values.
     const [operation, setOperation] = useState<Operation>(SIGN_IN)
+    const isSignIn = operation === SIGN_IN
 
     const isValidEmail = validateEmail(email)
 
@@ -72,7 +80,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
         return () => (disposed = true)
     }, [submitLoading, onSubmit, email, password, operation])
 
-    const operationColors = operation === SIGN_IN ? loginColors : registerColors
+    const operationColors = isSignIn ? loginColors : registerColors
 
     return (
         // Reset theme to follow something easier to work with for this screen
@@ -139,14 +147,12 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                     Forgot password?
                                 </Button>
                                 <Button
-                                    onPress={() =>
-                                        setOperation(operation === SIGN_IN ? SIGN_UP : SIGN_IN)
-                                    }
+                                    onPress={() => setOperation(isSignIn ? SIGN_UP : SIGN_IN)}
                                     compact={true}
                                     uppercase={false}
                                     color={loginTheme.colors.textButton}
                                 >
-                                    {operation === SIGN_IN ? 'Create account' : 'I have an account'}
+                                    {isSignIn ? 'Create account' : 'I have an account'}
                                 </Button>
                             </View>
                         )}
@@ -160,12 +166,62 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                 {operation}
                             </FAB>
                         </View>
+                        <View style={styles.socialContainer}>
+                            <Button
+                                icon={({ size, color }) => (
+                                    <AntDesign name="google" size={size} color={color} />
+                                )}
+                                mode="contained"
+                                color={GOOGLE}
+                                dark
+                                onPress={AuthService.signInWithGoogle}
+                                style={styles.socialButton}
+                                contentStyle={styles.socialButtonInner}
+                                labelStyle={styles.socialButtonLabel}
+                            >
+                                Sign In with Google
+                            </Button>
+                            <Button
+                                icon={({ size, color }) => (
+                                    <AntDesign name="github" size={size} color={color} />
+                                )}
+                                mode="contained"
+                                color={isSignIn ? GITHUB : GITHUB_LIGHT}
+                                onPress={AuthService.signInWithGithub}
+                                style={styles.socialButton}
+                                contentStyle={styles.socialButtonInner}
+                                labelStyle={styles.socialButtonLabel}
+                            >
+                                Sign In with GitHub
+                            </Button>
+                            {Platform.OS === 'ios' && (
+                                <AppleAuthenticationButton
+                                    buttonType={
+                                        isSignIn
+                                            ? AppleAuthenticationButtonType.SIGN_IN
+                                            : AppleAuthenticationButtonType.SIGN_UP
+                                    }
+                                    buttonStyle={
+                                        isSignIn
+                                            ? AppleAuthenticationButtonStyle.BLACK
+                                            : AppleAuthenticationButtonStyle.WHITE
+                                    }
+                                    cornerRadius={4}
+                                    style={styles.appleButton}
+                                    onPress={AuthService.signInWithApple}
+                                />
+                            )}
+                        </View>
                     </SafeAreaView>
                 </ScrollView>
             </View>
         </PaperProvider>
     )
 }
+
+const GOOGLE = '#4C8BF5'
+const GITHUB = 'rgb(26,29,32)'
+const GITHUB_LIGHT = 'rgb(30,125,255)'
 
 const loginTheme = {
     ...DefaultTheme,
@@ -211,14 +267,34 @@ const styles = StyleSheet.create({
         marginRight: 4,
     },
 
+    socialContainer: {
+        padding: 8,
+    },
+
+    socialButton: {
+        marginTop: 8,
+    },
+
+    socialButtonInner: {
+        height: 44,
+    },
+
+    socialButtonLabel: {
+        fontWeight: '600',
+        textTransform: 'none',
+        fontSize: 16,
+        letterSpacing: 0,
+    },
+
+    appleButton: {
+        marginTop: 8,
+        height: 44,
+    },
+
     bottomButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5,
-    },
-
-    bottomButtons: {
-        fontSize: 5,
     },
 
     mountain: {
