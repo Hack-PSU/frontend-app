@@ -11,6 +11,7 @@ import HomeListItemEvent from '../components/HomeListItemEvent'
 import DateCountDown from '../components/DateCountDown'
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
+import EventWorkshopListItem from '../components/EventWorkshopListItem'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
@@ -52,11 +53,6 @@ const HomeRoute: React.FC = () => {
                 <DateCountDown />
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
-
-                <HomeListItemEvent
-                    description="Next Event"
-                    info={!data || !data.length ? '...' : data[0].event_title}
-                />
 
                 {!registrationStatus.error && (
                     <HomeListItem
@@ -107,6 +103,17 @@ const HomeRoute: React.FC = () => {
                         </View>
                     </HomeListItemSecondary>
                 </View>
+
+                {data && data.length && (
+                    <View>
+                        <Text style={styles.nextEvent}>Next Event</Text>
+                        <EventWorkshopListItem
+                            model={data[0]}
+                            starEnabled={false}
+                            starItem={() => { }}
+                        />
+                    </View>
+                )}
             </Animated.ScrollView>
         </Scaffold>
     )
@@ -138,6 +145,14 @@ const styles = StyleSheet.create({
 
     horizontalCardText: {
         color: 'gray',
+    },
+
+    nextEvent: {
+        fontFamily: 'Cornerstone',
+        color: TEXT_LIGHT,
+        fontSize: 32,
+        paddingTop: 16,
+        paddingLeft: 16,
     },
 })
 

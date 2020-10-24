@@ -222,7 +222,12 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     //****************** LAYOUT BUILD ******************//
 
     const renderItem = ({ item }) => (
-        <EventWorkshopListItem key={item.uid} model={item} starItem={() => starItem(item)} />
+        <EventWorkshopListItem
+            key={item.uid}
+            model={item}
+            starItem={() => starItem(item)}
+            starEnabled={true}
+        />
     )
 
     const listHeader = (

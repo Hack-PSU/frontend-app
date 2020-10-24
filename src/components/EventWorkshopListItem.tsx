@@ -37,9 +37,10 @@ const EVENT_TYPE_ICONS = {
 interface Props {
     model: EventModel
     starItem: () => void
+    starEnabled: boolean
 }
 
-const EventWorkshopListItem: React.FC<Props> = ({ model, starItem }) => {
+const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled }) => {
     const startDate = model.event_start_time
     const endDate = model.event_end_time
 
@@ -73,7 +74,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem }) => {
                 subtitle={subtitle}
                 subtitleStyle={styles.subtitle}
                 left={() => avatar}
-                right={() => star}
+                right={() => (starEnabled ? star : null)}
             />
 
             <View style={styles.row}>
