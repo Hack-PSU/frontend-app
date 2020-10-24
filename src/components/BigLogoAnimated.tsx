@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import LogoSVG from '../../assets/images/logo.svg'
+import { HEADER_THRESHOLD } from './Scaffold'
 
 const { divide, min, max, sub, add } = Animated
 
@@ -13,8 +14,6 @@ const SIZE = 136
 export interface Props {
     scrollY: Animated.Value<number>
 }
-
-const HEADER_THRESHOLD = 150
 
 // Documentation:
 // https://software-mansion.github.io/react-native-reanimated/index.html

@@ -279,7 +279,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
                     renderScrollComponent={(viewProps) => <Animated.ScrollView {...viewProps} />}
                     keyExtractor={(item) => item.uid}
                     ListHeaderComponent={listHeader}
-                    stickyHeaderIndices={[0]}
+                    stickyHeaderIndices={[]}
                     renderSectionHeader={() => sectionHeader}
                     stickySectionHeadersEnabled={true}
                 />

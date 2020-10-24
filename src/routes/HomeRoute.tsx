@@ -59,7 +59,7 @@ const HomeRoute: React.FC = () => {
                     />
                 )}
 
-                {!registrationStatus.error && !registrationStatus.data && (
+                {false && !registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
                         <View style={styles.buttonContainer}>
                             {__DEV__ && (
@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Cornerstone',
         color: TEXT_LIGHT,
         fontSize: 48,
-        paddingTop: 44 + LOGO_SAFE_PADDING,
-        paddingBottom: 16,
+        lineHeight: 54,
+        paddingTop: 22 + LOGO_SAFE_PADDING,
+        paddingBottom: 8,
         paddingLeft: 16,
     },
 

@@ -35,6 +35,7 @@ import initServices from '../initServices'
 import { httpGetWithAuth } from '../httpGet'
 
 import AuthService from '../data/AuthService'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 // This is a fix for react-native-safe-view, which many libraries use
 // but has a warning with React 16.9 (since, in the future, it won't work with React 17).
@@ -151,18 +152,20 @@ const App: React.FC = () => {
                     },
                 }}
             >
-                <LoginGuard>
-                    {/* This is for iOS, for Android see app.json in root of project. */}
-                    <StatusBar barStyle="dark-content" />
-                    <NavigationContainer theme={THEME as any}>
-                        {/* Stack. */}
-                        <Stack.Navigator screenOptions={stackOptions}>
-                            <Stack.Screen name="Home" component={HomeModal} />
-                            <Stack.Screen name="Profile" component={ProfileModal} />
-                            <Stack.Screen name="Reauth" component={ReauthModal} />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-                </LoginGuard>
+                <SafeAreaProvider>
+                    <LoginGuard>
+                        {/* This is for iOS, for Android see app.json in root of project. */}
+                        <StatusBar barStyle="dark-content" />
+                        <NavigationContainer theme={THEME as any}>
+                            {/* Stack. */}
+                            <Stack.Navigator screenOptions={stackOptions}>
+                                <Stack.Screen name="Home" component={HomeModal} />
+                                <Stack.Screen name="Profile" component={ProfileModal} />
+                                <Stack.Screen name="Reauth" component={ReauthModal} />
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </LoginGuard>
+                </SafeAreaProvider>
             </SWRConfig>
         </PaperProvider>
     )

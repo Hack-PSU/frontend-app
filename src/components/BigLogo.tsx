@@ -1,16 +1,21 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { Surface } from 'react-native-paper'
 
 import LogoSVG from '../../assets/images/logo.svg'
 
 // Wanted size in pixels.
 const SIZE = 136
 
-const BigLogo: React.FC = () => {
+interface Props {
+    elevation?: number
+}
+
+const BigLogo: React.FC<Props> = ({ elevation = 0 }) => {
     return (
-        <View style={styles.container}>
+        <Surface style={[styles.container, { elevation }]}>
             <LogoSVG width={SIZE} height={SIZE} />
-        </View>
+        </Surface>
     )
 }
 
