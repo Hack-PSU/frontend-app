@@ -7,7 +7,6 @@ import * as WebBrowser from 'expo-web-browser'
 
 import HomeListItem from '../components/HomeListItem'
 import HomeListItemSecondary from '../components/HomeListItemSecondary'
-import HomeListItemEvent from '../components/HomeListItemEvent'
 import DateCountDown from '../components/DateCountDown'
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
