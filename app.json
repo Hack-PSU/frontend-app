@@ -19,6 +19,9 @@
       "barStyle": "dark-content",
       "backgroundColor": "#FFFFFF"
     },
+    "android": {
+      "useNextNotificationsApi": true
+    },
     "extra": {
       "firebase.staging": {
         "apiKey": "AIzaSyAWejnwBUrfUoULnMRumGFpOchYjjHlfTI",
