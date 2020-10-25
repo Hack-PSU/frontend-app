@@ -19,7 +19,7 @@ import { TEXT_LIGHT } from '../theme'
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
 const DISCORD_URL =
-    'https://discord.gg/ZXU7p6S'
+    'https://discord.gg/KwhzQaF'
 
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
