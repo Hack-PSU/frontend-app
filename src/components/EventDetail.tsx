@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { Card, Chip, IconButton, List, Paragraph } from 'react-native-paper'
-import EventWorkshopAvatar from './EventWorkshopAvatar'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
+import EventWorkshopAvatar from './EventWorkshopAvatar'
 
-import { PRIMARY, TEXT } from '../theme'
+import { TEXT, YELLOW } from '../theme'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { WebBrowser } from 'expo'
 
@@ -32,7 +33,7 @@ export default function EventDetail({ model, starItem }: Params) {
                 starItem()
                 setIsStarred(!isStarred)
             }}
-            color={isStarred ? '#FDD835' : '#000'}
+            color={isStarred ? YELLOW : '#000'}
         />
     )
 
@@ -67,6 +68,7 @@ export default function EventDetail({ model, starItem }: Params) {
                 {isZoom && (
                     <Chip
                         mode="outlined"
+                        icon={({ size }) => <MaterialIcons name="link" color={ZOOM} size={size} />}
                         style={styles.zoomChip}
                         textStyle={styles.zoomTextStyle}
                         onPress={() => WebBrowser.openBrowserAsync(location)}
@@ -97,7 +99,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Plex-Mono',
         lineHeight: 18,
         fontSize: 14,
-        color: PRIMARY,
         letterSpacing: 0.2,
     },
     card: {

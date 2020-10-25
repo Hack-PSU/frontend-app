@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         fontSize: 48,
         lineHeight: 54,
         paddingTop: 22 + LOGO_SAFE_PADDING,
-        paddingBottom: 8,
+        paddingBottom: 16,
         paddingLeft: 16,
     },
 

@@ -14,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const isAndroid = Platform.OS !== 'ios'
 
-export const LOGO_SAFE_PADDING = 116 + 48 - 56
+export const LOGO_SAFE_PADDING = 116 + 36 - 56
 export const HEADER_THRESHOLD = 150
 
 // Fix needed for Android display order.

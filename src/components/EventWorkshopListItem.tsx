@@ -2,10 +2,11 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Chip, IconButton } from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
 
-import { TEXT, PRIMARY } from '../theme'
+import { TEXT, YELLOW } from '../theme'
 import EventWorkshopAvatar from './EventWorkshopAvatar'
 
 interface Props {
@@ -28,7 +29,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, onPress }) =>
             size={24}
             animated
             onPress={() => starItem()}
-            color={model.starred ? '#FDD835' : '#000'}
+            color={model.starred ? YELLOW : '#000'}
         />
     )
 
@@ -52,6 +53,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, onPress }) =>
                 {isZoom && (
                     <Chip
                         mode="outlined"
+                        icon={({ size }) => <MaterialIcons name="link" color={ZOOM} size={size} />}
                         style={styles.zoomChip}
                         textStyle={styles.zoomTextStyle}
                         onPress={() => WebBrowser.openBrowserAsync(location)}
@@ -84,7 +86,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Plex-Mono',
         lineHeight: 18,
         fontSize: 14,
-        color: PRIMARY,
         letterSpacing: 0.2,
     },
     row: {

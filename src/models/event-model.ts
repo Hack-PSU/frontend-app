@@ -53,6 +53,10 @@ export class EventModel {
         const startDate = this.event_start_time
         const endDate = this.event_end_time
 
-        return format(startDate, `${WEEKDAY}, ${TIME}`) + ' — ' + format(endDate, TIME)
+        return format(startDate, TIME) + ' — ' + format(endDate, TIME)
+    }
+
+    getWeekday() {
+        return format(this.event_start_time, WEEKDAY)
     }
 }

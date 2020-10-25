@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { View, StyleSheet, SectionList, ActivityIndicator } from 'react-native'
+import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
 import { useBottomSheetModal, BottomSheetOverlay } from '@gorhom/bottom-sheet'
@@ -248,40 +249,67 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     const listHeader = (
         <View style={styles.title}>
             <Subtitle style={{ paddingBottom: 0 }}>{props.eventType}</Subtitle>
+            <View style={styles.filter}>
+                <SegmentedControl
+                    values={[ALL, STARRED]}
+                    value={filter}
+                    onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
+                />
+                {!onlineData.data && (
+                    <ActivityIndicator animating size="large" style={styles.loading} />
+                )}
+                {onlineData.error && <ErrorCard error={onlineData.error} />}
+            </View>
         </View>
     )
-    const sectionHeader = (
-        <View style={styles.section}>
-            <SegmentedControl
-                values={[ALL, STARRED]}
-                value={filter}
-                onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
-            />
-            {!onlineData.data && (
-                <ActivityIndicator animating size="large" style={styles.loading} />
-            )}
-            {onlineData.error && <ErrorCard error={onlineData.error} />}
-        </View>
-    )
+
+    const sections = useMemo(() => {
+        type Day = { data: EventModel[]; key: string }
+        const days: Day[] = []
+
+        correctEventList.forEach((event) => {
+            const weekday = event.getWeekday()
+
+            let foundDay: Day
+            for (const day of days) {
+                if (day.key === weekday) {
+                    foundDay = day
+                    break
+                }
+            }
+
+            if (foundDay) {
+                foundDay.data.push(event)
+            } else {
+                days.push({
+                    data: [event],
+                    key: weekday,
+                })
+            }
+        })
+
+        return days
+    }, [correctEventList])
+
+    const renderSectionHeader = useMemo(() => {
+        return ({ section }: any) => {
+            return <Title style={styles.section}>{section.key}</Title>
+        }
+    }, [])
 
     return (
         <>
             <Scaffold scrollY={scrollY}>
                 <AnimatedSectionList
-                    sections={[
-                        {
-                            data: correctEventList,
-                        },
-                    ]}
+                    sections={sections}
                     renderItem={renderItem}
                     scrollEventThrottle={1}
                     onScroll={onScroll}
                     renderScrollComponent={(viewProps) => <Animated.ScrollView {...viewProps} />}
                     keyExtractor={(item) => item.uid}
                     ListHeaderComponent={listHeader}
-                    stickyHeaderIndices={[]}
-                    renderSectionHeader={() => sectionHeader}
-                    stickySectionHeadersEnabled={true}
+                    renderSectionHeader={renderSectionHeader}
+                    stickySectionHeadersEnabled={false}
                 />
             </Scaffold>
         </>
@@ -294,10 +322,22 @@ const styles = StyleSheet.create({
     title: {
         paddingTop: LOGO_SAFE_PADDING,
     },
-    section: {
+    filter: {
         paddingTop: 16,
         paddingBottom: 16,
         backgroundColor: BACKGROUND,
+    },
+    section: {
+        paddingLeft: 16,
+        paddingTop: 8,
+        paddingBottom: 16,
+
+        backgroundColor: BACKGROUND,
+
+        color: 'white',
+        fontSize: 20,
+        lineHeight: 24,
+        fontFamily: 'Plex-Mono',
     },
     loading: {
         margin: 20,
