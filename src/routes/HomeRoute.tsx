@@ -18,8 +18,7 @@ import { TEXT_LIGHT } from '../theme'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
-const DISCORD_URL =
-    'https://discord.gg/KwhzQaF'
+const DISCORD_URL = 'https://discord.gg/KwhzQaF'
 
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
@@ -48,8 +47,6 @@ const HomeRoute: React.FC = () => {
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
-
-
                 {!registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
                         <View style={styles.buttonContainer}>
@@ -70,16 +67,15 @@ const HomeRoute: React.FC = () => {
                 )}
 
                 <View style={styles.horizontalCardView}>
-
                     {!registrationStatus.error && (
-                    <HomeListItem
-                        description="My PIN Number"
-                        info={
-                            !registrationStatus.data
-                                ? '...'
-                                : registrationStatus.data.pin.toString()
-                        }
-                    />
+                        <HomeListItem
+                            description="My PIN Number"
+                            info={
+                                !registrationStatus.data
+                                    ? '...'
+                                    : registrationStatus.data.pin.toString()
+                            }
+                        />
                     )}
 
                     <HomeListItemSecondary
