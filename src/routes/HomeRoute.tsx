@@ -48,8 +48,6 @@ const HomeRoute: React.FC = () => {
             <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
                 <Title style={styles.title}>HOME</Title>
 
-                <DateCountDown />
-
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
                 {data && data.length && (
@@ -58,10 +56,12 @@ const HomeRoute: React.FC = () => {
                         <EventWorkshopListItem
                             model={data[0]}
                             starEnabled={false}
-                            starItem={() => { }}
+                            starItem={() => {}}
                         />
                     </View>
                 )}
+
+                <DateCountDown />
 
                 {!registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
