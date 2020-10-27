@@ -1,7 +1,8 @@
 import useSWR from 'swr'
 
 import { compareFunc } from '@dji-dev/us-web-util'
-import { addWeeks, isPast } from 'date-fns'
+import addWeeks from 'date-fns/addWeeks'
+import isPast from 'date-fns/isPast'
 
 import { RegistrationApiResponse } from '../../models/registration'
 

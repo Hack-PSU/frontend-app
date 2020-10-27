@@ -1,6 +1,6 @@
 import React from 'react'
 import HomeListItem from './HomeListItem'
-import { formatDistanceStrict } from 'date-fns'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 interface State {
     today: Date

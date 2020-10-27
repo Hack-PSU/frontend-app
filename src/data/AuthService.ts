@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-import * as Firebase from 'firebase'
+import * as Firebase from 'firebase/app'
 import * as Google from 'expo-google-app-auth'
 import * as AppAuth from 'expo-app-auth'
 import * as AppleAuthentication from 'expo-apple-authentication'
