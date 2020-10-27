@@ -52,6 +52,17 @@ const HomeRoute: React.FC = () => {
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
+                {data && data.length && (
+                    <View style={styles.eventContainer}>
+                        <Text style={styles.nextEvent}>Next Event</Text>
+                        <EventWorkshopListItem
+                            model={data[0]}
+                            starEnabled={false}
+                            starItem={() => { }}
+                        />
+                    </View>
+                )}
+
                 {!registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
                         <View style={styles.buttonContainer}>
@@ -97,17 +108,6 @@ const HomeRoute: React.FC = () => {
                         </View>
                     </HomeListItemSecondary>
                 </View>
-
-                {data && data.length && (
-                    <View>
-                        <Text style={styles.nextEvent}>Next Event</Text>
-                        <EventWorkshopListItem
-                            model={data[0]}
-                            starEnabled={false}
-                            starItem={() => { }}
-                        />
-                    </View>
-                )}
             </Animated.ScrollView>
         </Scaffold>
     )
@@ -142,11 +142,17 @@ const styles = StyleSheet.create({
     },
 
     nextEvent: {
-        fontFamily: 'Cornerstone',
-        color: TEXT_LIGHT,
-        fontSize: 32,
-        paddingTop: 16,
-        paddingLeft: 16,
+        fontFamily: 'Plex-Mono',
+        color: '#889BC4',
+        fontSize: 18,
+        paddingBottom: 5,
+        paddingLeft: 13,
+    },
+
+    eventContainer: {
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingBottom: 2,
     },
 })
 
