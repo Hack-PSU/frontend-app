@@ -23,6 +23,8 @@ const REGISTER_URL = 'https://app.hackpsu.org/register'
 
 const DISCORD_URL = 'https://discord.gg/KwhzQaF'
 
+const DEVPOST_URL = 'https://hackpsu-fall-2020.devpost.com/'
+
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
 
@@ -50,6 +52,8 @@ const HomeRoute: React.FC = () => {
 
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
+                <DateCountDown />
+
                 {data && data.length && (
                     <View style={styles.eventContainer}>
                         <Text style={styles.nextEvent}>Next Event</Text>
@@ -60,8 +64,6 @@ const HomeRoute: React.FC = () => {
                         />
                     </View>
                 )}
-
-                <DateCountDown />
 
                 {!registrationStatus.error && !registrationStatus.data && (
                     <HomeListItem description="My PIN Number" onPress={openRegisterURL}>
@@ -108,6 +110,20 @@ const HomeRoute: React.FC = () => {
                         </View>
                     </HomeListItemSecondary>
                 </View>
+
+                <HomeListItemSecondary
+                    description="Devpost link"
+                    onPress={() => Linking.openURL(DEVPOST_URL)}
+                >
+                    <Text style={styles.horizontalCardText}>
+                        Make sure to post your submission here!
+                    </Text>
+                    <View style={styles.buttonContainer}>
+                        <Button mode="contained" dark>
+                            Open
+                        </Button>
+                    </View>
+                </HomeListItemSecondary>
             </Animated.ScrollView>
         </Scaffold>
     )
