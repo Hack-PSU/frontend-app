@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
     headline: {
         marginBottom: 10,
-        color: 'gray',
+        color: 'black',
     },
 })
 
