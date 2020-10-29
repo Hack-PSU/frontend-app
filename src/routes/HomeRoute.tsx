@@ -10,19 +10,25 @@ import HomeListItemSecondary from '../components/HomeListItemSecondary'
 import DateCountDown from '../components/DateCountDown'
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
+import EventWorkshopListItem from '../components/EventWorkshopListItem'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
+
+import useEvents from '../data/hooks/useEvents'
 
 import { TEXT_LIGHT } from '../theme'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
-const SLACK_URL =
-    'https://join.slack.com/t/hackpsu-group/shared_invite/enQtODE3Mzc5NDI1NjQ4LTJmMDkzYmQ0ODRmNGNjOTE0MzkyMGY0Y2ZiODJjYmQwNDM5MzFiODc2MTY5YzdjYWJiN2FlZmM4MTNhMzU0YmU'
+const DISCORD_URL = 'https://discord.gg/KwhzQaF'
+
+const DEVPOST_URL = 'https://hackpsu-fall-2020.devpost.com/'
 
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
+
+    const { data } = useEvents()
 
     const { scrollY, onScroll } = useScrollY()
 
@@ -44,19 +50,19 @@ const HomeRoute: React.FC = () => {
             <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
                 <Title style={styles.title}>HOME</Title>
 
-                <DateCountDown />
-
                 {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
-                {!registrationStatus.error && (
-                    <HomeListItem
-                        description="My PIN Number"
-                        info={
-                            !registrationStatus.data
-                                ? '...'
-                                : registrationStatus.data.pin.toString()
-                        }
-                    />
+                <DateCountDown />
+
+                {data && data.length && (
+                    <View style={styles.eventContainer}>
+                        <Text style={styles.nextEvent}>Next Event</Text>
+                        <EventWorkshopListItem
+                            model={data[0]}
+                            starEnabled={false}
+                            starItem={() => {}}
+                        />
+                    </View>
                 )}
 
                 {false && !registrationStatus.error && !registrationStatus.data && (
@@ -79,13 +85,20 @@ const HomeRoute: React.FC = () => {
                 )}
 
                 <View style={styles.horizontalCardView}>
-                    <HomeListItemSecondary description="Wi-Fi">
-                        <Text style={styles.horizontalCardText}>Username: hackpsu</Text>
-                        <Text style={styles.horizontalCardText}>Password: plz</Text>
-                    </HomeListItemSecondary>
+                    {!registrationStatus.error && (
+                        <HomeListItem
+                            description="My PIN Number"
+                            info={
+                                !registrationStatus.data
+                                    ? '...'
+                                    : registrationStatus.data.pin.toString()
+                            }
+                        />
+                    )}
+
                     <HomeListItemSecondary
-                        description="Slack"
-                        onPress={() => Linking.openURL(SLACK_URL)}
+                        description="Discord"
+                        onPress={() => Linking.openURL(DISCORD_URL)}
                     >
                         <Text style={styles.horizontalCardText}>
                             Request an invite by clicking here!
@@ -97,6 +110,20 @@ const HomeRoute: React.FC = () => {
                         </View>
                     </HomeListItemSecondary>
                 </View>
+
+                <HomeListItemSecondary
+                    description="Devpost link"
+                    onPress={() => Linking.openURL(DEVPOST_URL)}
+                >
+                    <Text style={styles.horizontalCardText}>
+                        Make sure to post your submission here!
+                    </Text>
+                    <View style={styles.buttonContainer}>
+                        <Button mode="contained" dark>
+                            Open
+                        </Button>
+                    </View>
+                </HomeListItemSecondary>
             </Animated.ScrollView>
         </Scaffold>
     )
@@ -128,7 +155,21 @@ const styles = StyleSheet.create({
     },
 
     horizontalCardText: {
-        color: 'gray',
+        color: 'black',
+    },
+
+    nextEvent: {
+        fontFamily: 'Plex-Mono',
+        color: '#889BC4',
+        fontSize: 18,
+        paddingBottom: 5,
+        paddingLeft: 13,
+    },
+
+    eventContainer: {
+        paddingLeft: 2,
+        paddingRight: 2,
+        paddingBottom: 2,
     },
 })
 

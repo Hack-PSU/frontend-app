@@ -7,8 +7,8 @@ interface State {
 }
 
 export default class DateCountDown extends React.Component<{}, State> {
-    readonly hackathonStart = new Date('April 4, 2020 14:00:00') // April 4, 2020, 2:00 pm
-    readonly hackathonEnd = new Date('April 5, 2020 14:00:00') // April 5, 2020, 2:00 pm
+    readonly hackathonStart = new Date('November 6, 2020 17:00:00') // November 6, 2020 5:00 pm
+    readonly hackathonEnd = new Date('November 8, 2020 17:00:00') // November 8, 2020 5:00 pm
     timerID: NodeJS.Timeout
 
     constructor(props) {

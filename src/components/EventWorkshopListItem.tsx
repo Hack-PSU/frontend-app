@@ -12,10 +12,11 @@ import EventWorkshopAvatar from './EventWorkshopAvatar'
 interface Props {
     model: EventModel
     starItem: () => unknown
+    starEnabled: boolean
     onPress: () => unknown
 }
 
-const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, onPress }) => {
+const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, onPress }) => {
     const subtitle = model.formatInfo()
     const location = model.location_name
 
@@ -41,7 +42,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, onPress }) =>
                 subtitle={subtitle}
                 subtitleStyle={styles.subtitle}
                 left={() => avatar}
-                right={() => star}
+                right={() => (starEnabled ? star : null)}
             />
 
             <View style={styles.row}>

@@ -243,6 +243,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             model={item}
             starItem={() => starItem(item)}
             onPress={() => setDetailItem(item)}
+            starEnabled={true}
         />
     )
 
