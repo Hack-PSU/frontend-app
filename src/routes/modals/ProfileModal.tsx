@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Alert, AlertType, ScrollView, Platform } from 'react-native'
+import { StyleSheet, View, Alert, AlertType, ScrollView } from 'react-native'
 import {
     Title,
     Avatar,
@@ -47,26 +47,22 @@ const ProfileModal: React.FC = () => {
         updateFunc: (arg0: string) => unknown,
         type: AlertType
     ) {
-        if (Platform.OS === 'ios') {
-            Alert.prompt(title, description, updateFunc, type)
-        } else if (Platform.OS === 'android') {
-            setAndroidPromptData({
-                title,
-                textLabel: androidTextInputLabel,
-                description,
-                // Make a custom updateFunc to ensure the input isn't blank and that the prompt is set to be invisible
-                // after the input.
-                updateFunc: (arg: string) => {
-                    if (arg) {
-                        updateFunc(arg)
-                    }
-                    // Once the user is done with their changes, hide the prompt.
-                    setAndroidPromptVisible(false)
-                },
-                type,
-            })
-            setAndroidPromptVisible(true)
-        }
+        setAndroidPromptData({
+            title,
+            textLabel: androidTextInputLabel,
+            description,
+            // Make a custom updateFunc to ensure the input isn't blank and that the prompt is set to be invisible
+            // after the input.
+            updateFunc: (arg: string) => {
+                if (arg) {
+                    updateFunc(arg)
+                }
+                // Once the user is done with their changes, hide the prompt.
+                setAndroidPromptVisible(false)
+            },
+            type,
+        })
+        setAndroidPromptVisible(true)
     }
 
     // We need to reauthenticate before preforming critical actions.
@@ -169,12 +165,7 @@ const ProfileModal: React.FC = () => {
     return (
         <PaperProvider theme={THEME}>
             {/* No reason in rendering the android prompt when iOS doesn't need it. */}
-            {Platform.OS === 'android' && (
-                <AndroidPrompt
-                    androidPromptData={androidPromptData}
-                    visible={isAndroidPromptVisible}
-                />
-            )}
+            <AndroidPrompt androidPromptData={androidPromptData} visible={isAndroidPromptVisible} />
 
             <View style={styles.root}>
                 <ModalAppBar />

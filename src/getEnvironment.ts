@@ -18,7 +18,6 @@ import Constants from 'expo-constants'
  * - name.prod
  */
 function getEnvironment<T = any>(name: string): T | null {
-    const env = Constants.manifest.releaseChannel
     const extra = Constants.manifest.extra
 
     if (extra[name]) {
@@ -35,9 +34,7 @@ function getEnvironment<T = any>(name: string): T | null {
 
         // If we couldn't find dev, then try for staging.
         return extra[`${name}.staging`]
-    } else if (env === 'staging') {
-        return extra[`${name}.staging`]
-    } else if (env === 'prod') {
+    } else {
         return extra[`${name}.prod`]
     }
 }

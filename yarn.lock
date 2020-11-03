@@ -1245,13 +1245,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dji-dev/react-native-hooks@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@dji-dev/react-native-hooks/-/react-native-hooks-1.0.0.tgz#fcd7da76cd3015812ec44c66259c605178104ab0"
-  integrity sha512-ZCI2UpzYaJxbI0rUEmR2lgoHo9OO1wNBICi6cbu7hBpiBbaiUuS15Z7SrC8cIvA7N2z6ExGABTpF/SxUHnINdA==
-  dependencies:
-    "@react-native-community/netinfo" "^5.9.6"
-
 "@dji-dev/us-web-config@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@dji-dev/us-web-config/-/us-web-config-1.0.0.tgz#0bc25f22727fff016ea9f3888ddf33b724a84eae"
@@ -2990,11 +2983,6 @@
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.10.tgz#5dda643e19e587793bc2034dd9bf7398ad43d401"
   integrity sha512-rk4sWFsmtOw8oyx8SD3KSvawwaK7gRBSEIy2TAwURyGt+3TizssXP1r8nx3zY+R7v2vYYHXZ+k2/GULAT/bcaQ==
-
-"@react-native-community/netinfo@^5.9.6":
-  version "5.9.7"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-5.9.7.tgz#769c6b306ea6bbaa1c4a3fffdd183d0cfc30ed7e"
-  integrity sha512-NAkkT68oF+M9o6El2xeUqZK7magPjG/tAcEbvCbqyhlh3yElKWnI1e1vpbVvFXzTefy67FwYFWOJqBN6U7Mnkg==
 
 "@react-native-community/segmented-control@2.1.1":
   version "2.1.1"

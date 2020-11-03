@@ -129,7 +129,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
             {/* Wrapped all this with a view so the background color will be visible behind the SVG. If
                 operationColors.bgColor were in the ScrollView, it would render over the Mountain and wouldn't be 
                 visible to the user */}
-            <Animated.View style={bgColorStyle}>
+            <Animated.View style={bgColorStyle as any}>
                 <View style={styles.mountain}>
                     <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
                 </View>
@@ -171,6 +171,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                     compact={true}
                                     uppercase={false}
                                     color={LOGIN_THEME.colors.textButton}
+                                    labelStyle={styles.labelStyle}
                                 >
                                     Forgot password?
                                 </Button>
@@ -179,6 +180,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                     compact={true}
                                     uppercase={false}
                                     color={LOGIN_THEME.colors.textButton}
+                                    labelStyle={styles.labelStyle}
                                 >
                                     {isSignIn ? 'Create account' : 'I have an account'}
                                 </Button>
@@ -296,6 +298,8 @@ const styles = StyleSheet.create({
 
     socialContainer: {
         padding: 8,
+        // TO RE-ADD AFTER EVENT.
+        display: 'none',
     },
 
     socialButton: {
@@ -329,6 +333,11 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
+    },
+
+    labelStyle: {
+        fontFamily: 'Plex-Mono',
+        letterSpacing: 0,
     },
 })
 
