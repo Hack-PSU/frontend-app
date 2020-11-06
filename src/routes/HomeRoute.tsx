@@ -20,9 +20,9 @@ import useEvents from '../data/hooks/useEvents'
 
 import { TEXT_LIGHT } from '../theme'
 
-const REGISTER_URL = 'https://app.hackpsu.org/register'
+const REGISTER_URL = 'https://hackpsu.org/register'
 
-const DISCORD_URL = 'https://discord.gg/KwhzQaF'
+const DISCORD_URL = 'https://discord.gg/eyPSrNm9Cd'
 const DISCORD_TEXT = `
 We highly suggest joining Discord for all event updates and meeting other hackers!
 `.trim()
