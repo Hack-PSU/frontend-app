@@ -4,10 +4,11 @@
   "expo": {
     "name": "HackPSU",
     "version": "0.9.2",
-    "icon": "./assets/app_icon.png",
+    "icon": "./assets/images/logo.png",
     "slug": "hackpsu",
     "privacy": "unlisted",
     "entryPoint": "index.js",
+    "primaryColor": "#6A85B9",
     "platforms": [
       "ios",
       "android",
@@ -24,6 +25,10 @@
       "package": "org.hackpsu.HackPSU",
       "versionCode": 9,
       "useNextNotificationsApi": true
+    },
+    "notification": {
+      "icon": "./assets/images/notification-icon.png",
+      "color": "#6A85B9"
     },
     "ios": {
       "bundleIdentifier": "org.hackpsu.HackPSU",
