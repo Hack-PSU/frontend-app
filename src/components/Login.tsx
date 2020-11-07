@@ -211,7 +211,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                             >
                                 Sign In with Google
                             </Button>
-                            <Button
+                            {/* <Button
                                 icon={({ size, color }) => (
                                     <AntDesign name="github" size={size} color={color} />
                                 )}
@@ -223,7 +223,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                 labelStyle={styles.socialButtonLabel}
                             >
                                 Sign In with GitHub
-                            </Button>
+                            </Button> */}
                             {Platform.OS === 'ios' && (
                                 <AppleAuthenticationButton
                                     buttonType={
@@ -298,8 +298,6 @@ const styles = StyleSheet.create({
 
     socialContainer: {
         padding: 8,
-        // TO RE-ADD AFTER EVENT.
-        display: 'none',
     },
 
     socialButton: {
