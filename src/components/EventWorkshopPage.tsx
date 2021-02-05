@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { View, StyleSheet, SectionList, ActivityIndicator } from 'react-native'
+import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
+import { useBottomSheetModal, BottomSheetOverlay } from '@gorhom/bottom-sheet'
 
 import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
 import Subtitle from '../components/Subtitle'
@@ -15,20 +17,7 @@ import useScrollY from '../hooks/useScrollY'
 import useEvents from '../data/hooks/useEvents'
 
 import { BACKGROUND } from '../theme'
-
-const styles = StyleSheet.create({
-    title: {
-        paddingTop: LOGO_SAFE_PADDING,
-    },
-    section: {
-        paddingTop: 16,
-        paddingBottom: 16,
-        backgroundColor: BACKGROUND,
-    },
-    loading: {
-        margin: 20,
-    },
-})
+import EventDetail from './EventDetail'
 
 const ALL = 'All'
 const STARRED = 'Starred'
@@ -38,6 +27,8 @@ export const WORKSHOPS = 'Workshops'
 const WORKSHOP_EVENT_TYPE = 'workshop'
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
+
+const SNAP_POINTS = ['50%', '90%']
 
 interface Props {
     eventType: 'Events' | 'Workshops'
@@ -69,20 +60,23 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     // Stores the events specified in the parameter.
     // We don't specificy the parameter type becaues we change the type of event_start/end_time from a Date to a number,
     // but we pass in EventModel[]
-    const storeList = async (events: any[]): Promise<void> => {
-        try {
-            // Change the dates format to match with what comes in with the server.
-            const valWithModifiedDate = events.map((event) => {
-                // Change from Date to number so it's "JSON-ifiable"
-                event.event_start_time = new Date(event.event_start_time).getTime()
-                event.event_end_time = new Date(event.event_end_time).getTime()
-                return event
-            })
-            await AsyncStorage.setItem(props.eventType, JSON.stringify(valWithModifiedDate))
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    const storeList = useCallback(
+        async (events: any[]): Promise<void> => {
+            try {
+                // Change the dates format to match with what comes in with the server.
+                const valWithModifiedDate = events.map((event) => {
+                    // Change from Date to number so it's "JSON-ifiable"
+                    event.event_start_time = new Date(event.event_start_time).getTime()
+                    event.event_end_time = new Date(event.event_end_time).getTime()
+                    return event
+                })
+                await AsyncStorage.setItem(props.eventType, JSON.stringify(valWithModifiedDate))
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        [props.eventType]
+    )
 
     // Sets offlineData from events in device storage.
     const readStoredList = async (): Promise<void> => {
@@ -106,53 +100,59 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     }
 
     // Called when an event gets starred or updated from online data on initialization
-    const setEventWorkshopNotification = (item: EventModel): void => {
-        // 600000 is 10 mins in milliseconds
-        const notifTime = new Date(Number(item.event_start_time) - 600000)
+    const setEventWorkshopNotification = useCallback(
+        (item: EventModel): void => {
+            // 600000 is 10 mins in milliseconds
+            const notifTime = new Date(Number(item.event_start_time) - 600000)
 
-        // To remove the "s" at the end of "events" and "workshops".
-        const eventTypeString = props.eventType.slice(0, -1)
+            // To remove the "s" at the end of "events" and "workshops".
+            const eventTypeString = props.eventType.slice(0, -1)
 
-        Utils.setNotification(
-            item.uid,
-            notifTime,
-            item.event_title,
-            eventTypeString,
-            `10 mins before the ${eventTypeString} begins!`
-        )
-    }
+            Utils.setNotification(
+                item.uid,
+                notifTime,
+                item.event_title,
+                eventTypeString,
+                `10 mins before the ${eventTypeString} begins!`
+            )
+        },
+        [props.eventType]
+    )
 
     // Called when the star button is clicked on an item.
-    const starItem = (item: EventModel): void => {
-        // Don't copy the pointer of the array, copy the values of the array.
-        let temp = [...data]
+    const starItem = useCallback(
+        (item: EventModel): void => {
+            // Don't copy the pointer of the array, copy the values of the array.
+            let temp = [...data]
 
-        // Find which index the event is in with the uid.
-        const index = temp.findIndex((event) => event.uid === item.uid)
-        temp[index].starred = !temp[index].starred
+            // Find which index the event is in with the uid.
+            const index = temp.findIndex((event) => event.uid === item.uid)
+            temp[index].starred = !temp[index].starred
 
-        // If it got starred, set it as a notification. If not, cancel it.
-        // Note that we need to program this in case an event gets updated/cancelled.
-        if (temp[index].starred) {
-            setEventWorkshopNotification(item)
-        } else {
-            Utils.cancelNotification(item.uid)
-        }
+            // If it got starred, set it as a notification. If not, cancel it.
+            // Note that we need to program this in case an event gets updated/cancelled.
+            if (temp[index].starred) {
+                setEventWorkshopNotification(item)
+            } else {
+                Utils.cancelNotification(item.uid)
+            }
 
-        setData(temp)
+            setData(temp)
 
-        // Make sure we are only storing events that are starred and are from the
-        // right category.
-        storeList(
-            temp.filter(
-                (event) =>
-                    event.starred &&
-                    (props.eventType === EVENTS
-                        ? event.event_type !== WORKSHOP_EVENT_TYPE
-                        : event.event_type === WORKSHOP_EVENT_TYPE)
+            // Make sure we are only storing events that are starred and are from the
+            // right category.
+            storeList(
+                temp.filter(
+                    (event) =>
+                        event.starred &&
+                        (props.eventType === EVENTS
+                            ? event.event_type !== WORKSHOP_EVENT_TYPE
+                            : event.event_type === WORKSHOP_EVENT_TYPE)
+                )
             )
-        )
-    }
+        },
+        [data, props.eventType, setEventWorkshopNotification, storeList]
+    )
 
     //****************** DATA PROCESSING AND FILTERING ******************//
 
@@ -221,11 +221,28 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
 
     //****************** LAYOUT BUILD ******************//
 
+    const { present } = useBottomSheetModal()
+
+    const setDetailItem = useCallback(
+        (item: EventModel) => {
+            present(<EventDetail model={item} starItem={() => starItem(item)} />, {
+                snapPoints: SNAP_POINTS,
+                initialSnapIndex: 0,
+                animationDuration: 350,
+                overlayComponent: BottomSheetOverlay,
+                overlayOpacity: 0.57,
+                dismissOnOverlayPress: true,
+            })
+        },
+        [present, starItem]
+    )
+
     const renderItem = ({ item }) => (
         <EventWorkshopListItem
             key={item.uid}
             model={item}
             starItem={() => starItem(item)}
+            onPress={() => setDetailItem(item)}
             starEnabled={true}
         />
     )
@@ -233,42 +250,97 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     const listHeader = (
         <View style={styles.title}>
             <Subtitle style={{ paddingBottom: 0 }}>{props.eventType}</Subtitle>
-        </View>
-    )
-    const sectionHeader = (
-        <View style={styles.section}>
-            <SegmentedControl
-                values={[ALL, STARRED]}
-                value={filter}
-                onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
-            />
-            {!onlineData.data && (
-                <ActivityIndicator animating size="large" style={styles.loading} />
-            )}
-            {onlineData.error && <ErrorCard error={onlineData.error} />}
+            <View style={styles.filter}>
+                <SegmentedControl
+                    values={[ALL, STARRED]}
+                    value={filter}
+                    onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
+                />
+                {!onlineData.data && (
+                    <ActivityIndicator animating size="large" style={styles.loading} />
+                )}
+                {onlineData.error && <ErrorCard error={onlineData.error} />}
+            </View>
         </View>
     )
 
+    const sections = useMemo(() => {
+        type Day = { data: EventModel[]; key: string }
+        const days: Day[] = []
+
+        correctEventList.forEach((event) => {
+            const weekday = event.getWeekday()
+
+            let foundDay: Day
+            for (const day of days) {
+                if (day.key === weekday) {
+                    foundDay = day
+                    break
+                }
+            }
+
+            if (foundDay) {
+                foundDay.data.push(event)
+            } else {
+                days.push({
+                    data: [event],
+                    key: weekday,
+                })
+            }
+        })
+
+        return days
+    }, [correctEventList])
+
+    const renderSectionHeader = useMemo(() => {
+        return ({ section }: any) => {
+            return <Title style={styles.section}>{section.key}</Title>
+        }
+    }, [])
+
     return (
-        <Scaffold scrollY={scrollY}>
-            <AnimatedSectionList
-                sections={[
-                    {
-                        data: correctEventList,
-                    },
-                ]}
-                renderItem={renderItem}
-                scrollEventThrottle={1}
-                onScroll={onScroll}
-                renderScrollComponent={(props) => <Animated.ScrollView {...props} />}
-                keyExtractor={(item) => item.uid}
-                ListHeaderComponent={listHeader}
-                stickyHeaderIndices={[0]}
-                renderSectionHeader={() => sectionHeader}
-                stickySectionHeadersEnabled={true}
-            />
-        </Scaffold>
+        <>
+            <Scaffold scrollY={scrollY}>
+                <AnimatedSectionList
+                    sections={sections}
+                    renderItem={renderItem}
+                    scrollEventThrottle={1}
+                    onScroll={onScroll}
+                    renderScrollComponent={(viewProps) => <Animated.ScrollView {...viewProps} />}
+                    keyExtractor={(item) => item.uid}
+                    ListHeaderComponent={listHeader}
+                    renderSectionHeader={renderSectionHeader}
+                    stickySectionHeadersEnabled={false}
+                />
+            </Scaffold>
+        </>
     )
 }
 
 export default EventWorkshopPage
+
+const styles = StyleSheet.create({
+    title: {
+        paddingTop: LOGO_SAFE_PADDING,
+    },
+    filter: {
+        paddingTop: 16,
+        paddingBottom: 16,
+        backgroundColor: BACKGROUND,
+    },
+    section: {
+        paddingLeft: 16,
+        paddingTop: 8,
+        paddingBottom: 16,
+
+        backgroundColor: BACKGROUND,
+
+        color: 'white',
+        fontSize: 20,
+        lineHeight: 24,
+        fontFamily: 'Plex-Mono',
+    },
+    loading: {
+        margin: 20,
+    },
+})

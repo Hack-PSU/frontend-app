@@ -1,7 +1,8 @@
-import { AppRegistry, Platform, InteractionManager } from 'react-native'
+import { Platform, InteractionManager } from 'react-native'
+import { registerRootComponent } from 'expo'
+import App from './src/components/App'
 
-import App from './App'
-import { name as appName } from './app.json'
+registerRootComponent(App)
 
 const _setTimeout = global.setTimeout
 const _clearTimeout = global.clearTimeout
@@ -47,5 +48,3 @@ if (Platform.OS === 'android') {
         _clearTimeout(id)
     }
 }
-
-AppRegistry.registerComponent(appName, () => App)

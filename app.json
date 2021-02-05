@@ -3,10 +3,12 @@
   "displayName": "HackPSU",
   "expo": {
     "name": "HackPSU",
-    "slug": "expo-template-bare",
+    "version": "0.9.3",
+    "icon": "./assets/app_icon.png",
+    "slug": "hackpsu",
     "privacy": "unlisted",
-    "version": "1.0.0",
-    "entryPoint": "node_modules/expo/AppEntry.js",
+    "entryPoint": "index.js",
+    "primaryColor": "#6A85B9",
     "platforms": [
       "ios",
       "android",
@@ -20,25 +22,20 @@
       "backgroundColor": "#FFFFFF"
     },
     "android": {
+      "package": "org.hackpsu.HackPSU",
+      "versionCode": 9,
       "useNextNotificationsApi": true
     },
+    "notification": {
+      "icon": "./assets/images/notification-icon.png",
+      "color": "#6A85B9"
+    },
+    "ios": {
+      "bundleIdentifier": "org.hackpsu.HackPSU",
+      "buildNumber": "0.9.3",
+      "usesAppleSignIn": true
+    },
     "extra": {
-      "firebase.staging": {
-        "apiKey": "AIzaSyAWejnwBUrfUoULnMRumGFpOchYjjHlfTI",
-        "authDomain": "hackpsu18-staging.firebaseapp.com",
-        "databaseURL": "https://hackpsu18-staging.firebaseio.com",
-        "projectId": "hackpsu18-staging",
-        "storageBucket": "hackpsu18-staging.appspot.com",
-        "messagingSenderId": "614592542726"
-      },
-      "firebase.prod": {
-        "apiKey": "AIzaSyCpvAPdiIcqKV_NTyt6DZgDUNyjmA6kwzU",
-        "authDomain": "hackpsu18.firebaseapp.com",
-        "databaseURL": "https://hackpsu18.firebaseio.com",
-        "projectId": "hackpsu18",
-        "storageBucket": "hackpsu18.appspot.com",
-        "messagingSenderId": "1002677206617"
-      },
       "apiBaseUrl.staging": "https://staging-dot-hackpsu18.appspot.com/v1/",
       "apiBaseUrl.prod": "https://api.hackpsu.org/v1/",
       "apiBaseUrlV2.staging": "http://staging.hackpsu18.appspot.com/v2/",

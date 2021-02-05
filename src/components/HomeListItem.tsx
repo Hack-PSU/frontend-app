@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 
     description: {
         marginBottom: 10,
-        color: 'black',
+        opacity: 0.87,
     },
 
     info: {

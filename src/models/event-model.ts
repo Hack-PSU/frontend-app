@@ -1,3 +1,5 @@
+import format from 'date-fns/format'
+
 export interface EventModelJSON {
     uid: string
     event_title: string
@@ -8,6 +10,14 @@ export interface EventModelJSON {
     location_name: string
     starred?: boolean // This will only be used when reading from the storage for starred (offline) events
 }
+
+// Date formats.
+// See options here: https://date-fns.org/v2.6.0/docs/format
+
+// Displays like 12:05p
+const TIME = 'h:mmaaaaa'
+// Displays 'Sunday', etc.
+const WEEKDAY = 'EEEE'
 
 export class EventModel {
     public uid: string
@@ -37,5 +47,16 @@ export class EventModel {
         return array.map((value) => {
             return EventModel.parseJSON(value)
         })
+    }
+
+    formatInfo(): string {
+        const startDate = this.event_start_time
+        const endDate = this.event_end_time
+
+        return format(startDate, TIME) + ' — ' + format(endDate, TIME)
+    }
+
+    getWeekday() {
+        return format(this.event_start_time, WEEKDAY)
     }
 }
