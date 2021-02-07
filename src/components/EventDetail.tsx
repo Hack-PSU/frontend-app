@@ -7,7 +7,7 @@ import { EventModel } from '../models/event-model'
 import EventWorkshopAvatar from './EventWorkshopAvatar'
 
 import { TEXT, YELLOW } from '../theme'
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { BottomSheetScrollView, TouchableHighlight } from '@gorhom/bottom-sheet'
 import { WebBrowser } from 'expo'
 
 interface Params {
@@ -25,16 +25,21 @@ export default function EventDetail({ model, starItem }: Params) {
 
     const avatar = <EventWorkshopAvatar model={model} />
     const star = (
-        <IconButton
-            icon={isStarred ? 'star' : 'star-border'}
-            size={24}
-            animated
+        <TouchableHighlight
+            activeOpacity={0.4}
+            underlayColor="#DDDDDD"
             onPress={() => {
                 starItem()
                 setIsStarred(!isStarred)
             }}
-            color={isStarred ? YELLOW : '#000'}
-        />
+        >
+            <IconButton
+                icon={isStarred ? 'star' : 'star-border'}
+                size={24}
+                animated
+                color={isStarred ? YELLOW : '#000'}
+            />
+        </TouchableHighlight>
     )
 
     const card = (
