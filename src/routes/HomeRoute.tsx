@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react'
-import { StyleSheet, View, Linking } from 'react-native'
+import { StyleSheet, View, Linking, ImageComponent } from 'react-native'
 import { Text, Title, Button } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import * as WebBrowser from 'expo-web-browser'
@@ -22,6 +22,8 @@ import { TEXT_LIGHT } from '../theme'
 import Mountain from '../../assets/images/HomeMountains.svg'
 
 import { useDimensions } from 'react-native-hooks'
+
+import { IconButton } from 'react-native-paper'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
@@ -58,17 +60,20 @@ const HomeRoute: React.FC = () => {
 
                 <View style={{ position: 'absolute' }}>
                     <Title style={styles.countdown}>2 hours left!</Title>
+
+                    {/* <IconButton icon="computer" color="#F3603D" style={styles.submitButton} /> */}
                     <Button mode="contained" dark style={styles.submitButton}>
-                        <Text style={{ color: '#F3603D' }}>Submit</Text>
+                        <Text style={{ color: '#F3603D', fontFamily: 'Cornerstone' }}>Submit</Text>
                     </Button>
 
+                    {/* <IconButton icon="mic" style={styles.discordButton} /> */}
                     <Button
                         onPress={() => Linking.openURL(DISCORD_URL)}
                         mode="contained"
                         dark
                         style={styles.discordButton}
                     >
-                        <Text style={{ color: 'white' }}>Discord</Text>
+                        <Text style={{ color: 'white', fontFamily: 'Cornerstone' }}>Discord</Text>
                     </Button>
                 </View>
 
@@ -189,6 +194,7 @@ const styles = StyleSheet.create({
     countdown: {
         color: '#FFFFFF',
         fontSize: 40,
+        fontFamily: 'SpaceGrotesk',
         zIndex: 5,
         top: 340,
         left: 40,
