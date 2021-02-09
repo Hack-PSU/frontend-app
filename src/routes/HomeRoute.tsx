@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     discordButton: {
         backgroundColor: '#6A85B9',
         width: 120,
-        top: 315,
+        top: 317,
         left: 190,
     },
 })
