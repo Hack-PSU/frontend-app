@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { View, StyleSheet, SectionList, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, SectionList, ActivityIndicator,ImageBackground } from 'react-native'
 import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
@@ -16,7 +16,7 @@ import * as Utils from '../utils'
 import useScrollY from '../hooks/useScrollY'
 import useEvents from '../data/hooks/useEvents'
 
-import { BACKGROUND } from '../theme'
+import { BACKGROUND, PRIMARY, TEXT_LIGHT } from '../theme'
 import EventDetail from './EventDetail'
 
 const ALL = 'All'
@@ -246,22 +246,27 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             starEnabled={true}
         />
     )
+    
+    //const image = { uri: "https://reactjs.org/logo-og.png" };
 
+    
     const listHeader = (
-        <View style={styles.title}>
-            <Subtitle style={{ paddingBottom: 0 }}>{props.eventType}</Subtitle>
-            <View style={styles.filter}>
-                <SegmentedControl
-                    values={[ALL, STARRED]}
-                    value={filter}
-                    onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
-                />
-                {!onlineData.data && (
-                    <ActivityIndicator animating size="large" style={styles.loading} />
-                )}
-                {onlineData.error && <ErrorCard error={onlineData.error} />}
-            </View>
+        <ImageBackground source={require('../../assets/images/logo.svg')} style={styles.image}>
+            <View style={styles.title}>
+                <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
+                <View style={styles.filter}>
+                    <SegmentedControl
+                        values={[ALL, STARRED]}
+                        value={filter}
+                        onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
+                    />
+                    {!onlineData.data && (
+                        <ActivityIndicator animating size="large" style={styles.loading} />
+                    )}
+                    {onlineData.error && <ErrorCard error={onlineData.error} />}
+                </View>
         </View>
+        </ImageBackground>
     )
 
     const sections = useMemo(() => {
@@ -335,12 +340,20 @@ const styles = StyleSheet.create({
 
         backgroundColor: BACKGROUND,
 
-        color: 'white',
+        color: PRIMARY,
         fontSize: 20,
         lineHeight: 24,
         fontFamily: 'Plex-Mono',
     },
     loading: {
         margin: 20,
+    },titleText: { 
+        paddingBottom: 0, 
+        color: TEXT_LIGHT,
+    },
+    image: {
+      flex: 1,
+      resizeMode: "cover",
+      justifyContent: "center"
     },
 })

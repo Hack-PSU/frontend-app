@@ -31,7 +31,7 @@ interface Props {
 export default function EventWorkshopAvatar({ model }: Props) {
     return (
         <Avatar.Icon
-            size={42}
+            size={45}
             icon={EVENT_TYPE_ICONS[model.event_type]}
             color={EVENT_TYPE_TEXT_COLORS[model.event_type]}
             theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
@@ -42,6 +42,6 @@ export default function EventWorkshopAvatar({ model }: Props) {
 
 const styles = StyleSheet.create({
     avatar: {
-        borderRadius: 16,
+        borderRadius: 50,
     },
 })

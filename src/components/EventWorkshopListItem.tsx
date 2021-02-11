@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
 
-import { TEXT, YELLOW } from '../theme'
+import { TEXT, RED } from '../theme'
 import EventWorkshopAvatar from './EventWorkshopAvatar'
 
 interface Props {
@@ -27,10 +27,10 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
     const star = (
         <IconButton
             icon={model.starred ? 'star' : 'star-border'}
-            size={24}
+            size={34}
             animated
             onPress={() => starItem()}
-            color={model.starred ? YELLOW : '#000'}
+            color={model.starred ? RED : '#000'}
         />
     )
 
@@ -39,13 +39,13 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
             <Card.Title
                 title={model.event_title}
                 titleStyle={styles.title}
-                subtitle={subtitle}
+                subtitle={subtitle + " • Zoom"}
                 subtitleStyle={styles.subtitle}
                 left={() => avatar}
                 right={() => (starEnabled ? star : null)}
             />
 
-            <View style={styles.row}>
+            {/* <View style={styles.row}>
                 {!isZoom && (
                     <Chip icon="location-on" mode="outlined" style={styles.chip}>
                         {location}
@@ -59,10 +59,10 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
                         textStyle={styles.zoomTextStyle}
                         onPress={() => WebBrowser.openBrowserAsync(location)}
                     >
-                        Click to join Zoom
+                        Zoom
                     </Chip>
                 )}
-            </View>
+            </View> */}
         </Card>
     )
 }
@@ -73,21 +73,33 @@ const ZOOM = 'rgb(41,129,255)'
 
 const styles = StyleSheet.create({
     card: {
-        marginLeft: 8,
-        marginRight: 8,
-        marginBottom: 8,
+        marginLeft: 15,
+        marginRight: 15,
+        marginBottom: 15,
+        borderRadius: 7,
+        elevation:4,
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: "black",
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingRight: 10,
     },
     title: {
         lineHeight: 32,
         fontSize: 24,
         color: TEXT,
         fontWeight: 'normal',
+        marginLeft: 10,
     },
     subtitle: {
-        fontFamily: 'Plex-Mono',
-        lineHeight: 18,
-        fontSize: 14,
+        //fontFamily: '',
+        lineHeight: 25,
+        fontSize: 18,
         letterSpacing: 0.2,
+        color: '#6A85B9',
+        marginLeft: 10,
     },
     row: {
         width: '100%',
