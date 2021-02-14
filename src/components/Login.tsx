@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
     StyleSheet,
     SafeAreaView,
@@ -8,13 +8,13 @@ import {
     ScrollView,
     Platform,
     Linking,
+    Text,
 } from 'react-native'
 import {
     TextInput,
     Button,
     Portal,
     Dialog,
-    Title,
     Caption,
     FAB,
     DefaultTheme,
@@ -22,11 +22,22 @@ import {
 } from 'react-native-paper'
 import { useDimensions } from 'react-native-hooks'
 
+import Animated from 'react-native-reanimated'
+import { useTimingTransition, interpolateColor } from 'react-native-redash'
+
+import {
+    AppleAuthenticationButton,
+    AppleAuthenticationButtonType,
+    AppleAuthenticationButtonStyle,
+} from 'expo-apple-authentication'
+import { AntDesign } from '@expo/vector-icons'
+
 import { validate as validateEmail } from 'email-validator'
 
 import BigLogo from './BigLogo'
 
 import Mountain from '../../assets/images/mountain.svg'
+import AuthService from '../data/AuthService'
 
 export const SIGN_IN = 'Login'
 export const SIGN_UP = 'Sign Up'
@@ -50,6 +61,9 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
     const [password, setPassword] = useState('')
     // "Sign In" and "Sign Up" are valid values.
     const [operation, setOperation] = useState<Operation>(SIGN_IN)
+    const isSignIn = operation === SIGN_IN
+
+    const isSignInAnimated = useTimingTransition(isSignIn, { duration: 100 })
 
     const isValidEmail = validateEmail(email)
 
@@ -72,15 +86,35 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
         return () => (disposed = true)
     }, [submitLoading, onSubmit, email, password, operation])
 
-    const operationColors = operation === SIGN_IN ? loginColors : registerColors
+    const [bgColorStyle, titleStyle] = useMemo(() => {
+        return [
+            {
+                // Makes heavy use of interpolateColor:
+                // https://github.com/wcandillon/react-native-redash/blob/af87fea6363c2bbaae1ab56c305dd0eea533f97d/src/Colors.ts#L205
+                backgroundColor: interpolateColor(isSignInAnimated, {
+                    inputRange: [0, 1],
+                    outputRange: [LOGIN_THEME.colors.primary, '#FFFFFF'],
+                }),
+            },
+            {
+                color: isSignIn ? LOGIN_THEME.colors.primary : 'white',
+            },
+        ]
+    }, [isSignIn, isSignInAnimated])
 
     return (
         // Reset theme to follow something easier to work with for this screen
-        <PaperProvider theme={loginTheme}>
+        <PaperProvider theme={LOGIN_THEME}>
             {/* Background color is Android only. */}
             <StatusBar
-                backgroundColor={loginTheme.colors.statusBar}
-                barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
+                backgroundColor={LOGIN_THEME.colors.statusBar}
+                barStyle={
+                    Platform.OS === 'ios'
+                        ? isSignIn
+                            ? 'dark-content'
+                            : 'light-content'
+                        : 'light-content'
+                }
             />
 
             {/* This dialog shows up after the user clicks the login/signup button */}
@@ -95,19 +129,20 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
             {/* Wrapped all this with a view so the background color will be visible behind the SVG. If
                 operationColors.bgColor were in the ScrollView, it would render over the Mountain and wouldn't be 
                 visible to the user */}
-            <View style={operationColors.bgColor}>
+            <Animated.View style={bgColorStyle as any}>
                 <View style={styles.mountain}>
                     <Mountain width={screen.width} height={screen.width * MOUNTAIN_ASPECT_RATIO} />
                 </View>
                 <ScrollView style={styles.root}>
                     <SafeAreaView>
-                        <BigLogo />
-                        <Title style={[styles.title, operationColors.title]}>{operation}</Title>
+                        <BigLogo elevation={isSignIn ? 0 : 8} />
+                        <Text style={[styles.title, titleStyle]}>{operation}</Text>
                         {caption && <Caption style={styles.caption}>{caption}</Caption>}
 
                         <TextInput
                             label="Email"
                             mode="flat"
+                            dense
                             style={styles.textInput}
                             autoCompleteType="email"
                             textContentType="emailAddress"
@@ -118,6 +153,7 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                         <TextInput
                             label="Password"
                             mode="flat"
+                            dense
                             style={styles.textInput}
                             autoCompleteType="password"
                             textContentType="password"
@@ -134,19 +170,19 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                     }}
                                     compact={true}
                                     uppercase={false}
-                                    color={loginTheme.colors.textButton}
+                                    color={LOGIN_THEME.colors.textButton}
+                                    labelStyle={styles.labelStyle}
                                 >
                                     Forgot password?
                                 </Button>
                                 <Button
-                                    onPress={() =>
-                                        setOperation(operation === SIGN_IN ? SIGN_UP : SIGN_IN)
-                                    }
+                                    onPress={() => setOperation(isSignIn ? SIGN_UP : SIGN_IN)}
                                     compact={true}
                                     uppercase={false}
-                                    color={loginTheme.colors.textButton}
+                                    color={LOGIN_THEME.colors.textButton}
+                                    labelStyle={styles.labelStyle}
                                 >
-                                    {operation === SIGN_IN ? 'Create account' : 'I have an account'}
+                                    {isSignIn ? 'Create account' : 'I have an account'}
                                 </Button>
                             </View>
                         )}
@@ -160,16 +196,65 @@ const Login: React.FC<Props> = ({ signInOnly, caption, onSubmit }: Props) => {
                                 {operation}
                             </FAB>
                         </View>
+                        <View style={styles.socialContainer}>
+                            <Button
+                                icon={({ size, color }) => (
+                                    <AntDesign name="google" size={size} color={color} />
+                                )}
+                                mode="contained"
+                                color={GOOGLE}
+                                dark
+                                onPress={AuthService.signInWithGoogle}
+                                style={styles.socialButton}
+                                contentStyle={styles.socialButtonInner}
+                                labelStyle={styles.socialButtonLabel}
+                            >
+                                Sign In with Google
+                            </Button>
+                            {/* <Button
+                                icon={({ size, color }) => (
+                                    <AntDesign name="github" size={size} color={color} />
+                                )}
+                                mode="contained"
+                                color={isSignIn ? GITHUB : GITHUB_LIGHT}
+                                onPress={AuthService.signInWithGithub}
+                                style={styles.socialButton}
+                                contentStyle={styles.socialButtonInner}
+                                labelStyle={styles.socialButtonLabel}
+                            >
+                                Sign In with GitHub
+                            </Button> */}
+                            {Platform.OS === 'ios' && (
+                                <AppleAuthenticationButton
+                                    buttonType={
+                                        isSignIn
+                                            ? AppleAuthenticationButtonType.SIGN_IN
+                                            : AppleAuthenticationButtonType.SIGN_UP
+                                    }
+                                    buttonStyle={
+                                        isSignIn
+                                            ? AppleAuthenticationButtonStyle.BLACK
+                                            : AppleAuthenticationButtonStyle.WHITE
+                                    }
+                                    cornerRadius={4}
+                                    style={styles.appleButton}
+                                    onPress={AuthService.signInWithApple}
+                                />
+                            )}
+                        </View>
                     </SafeAreaView>
                 </ScrollView>
-            </View>
+            </Animated.View>
         </PaperProvider>
     )
 }
 
-const loginTheme = {
-    ...DefaultTheme,
+const GOOGLE = '#4C8BF5'
+const GITHUB = 'rgb(26,29,32)'
+const GITHUB_LIGHT = 'rgb(30,125,255)'
 
+const LOGIN_THEME = {
+    ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
         primary: '#113654',
@@ -190,7 +275,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'Cornerstone',
         fontSize: 48,
-        color: loginTheme.colors.primary,
+        color: LOGIN_THEME.colors.primary,
         paddingTop: 26,
     },
 
@@ -211,14 +296,34 @@ const styles = StyleSheet.create({
         marginRight: 4,
     },
 
+    socialContainer: {
+        padding: 8,
+    },
+
+    socialButton: {
+        marginTop: 8,
+    },
+
+    socialButtonInner: {
+        height: 40,
+    },
+
+    socialButtonLabel: {
+        fontWeight: '600',
+        textTransform: 'none',
+        fontSize: 15,
+        letterSpacing: 0,
+    },
+
+    appleButton: {
+        marginTop: 8,
+        height: 40,
+    },
+
     bottomButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5,
-    },
-
-    bottomButtons: {
-        fontSize: 5,
     },
 
     mountain: {
@@ -227,28 +332,10 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
     },
-})
 
-// We have this because the styles alternate between login and register so only one is used at a time at runtime
-const loginColors = StyleSheet.create({
-    // eslint-disable-next-line react-native/no-unused-styles
-    bgColor: {
-        backgroundColor: '#FFFFFF',
-    },
-    // eslint-disable-next-line react-native/no-unused-styles
-    title: {
-        color: loginTheme.colors.primary,
-    },
-})
-
-const registerColors = StyleSheet.create({
-    // eslint-disable-next-line react-native/no-unused-styles
-    bgColor: {
-        backgroundColor: loginTheme.colors.primary,
-    },
-    // eslint-disable-next-line react-native/no-unused-styles
-    title: {
-        color: loginColors.bgColor.backgroundColor,
+    labelStyle: {
+        fontFamily: 'Plex-Mono',
+        letterSpacing: 0,
     },
 })
 

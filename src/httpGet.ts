@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage'
 
-import * as Firebase from 'firebase'
+import type * as Firebase from 'firebase'
 
 import getEnvironment from './getEnvironment'
 

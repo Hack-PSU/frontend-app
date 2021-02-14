@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Alert, AlertType, ScrollView, Platform } from 'react-native'
+import { StyleSheet, View, Alert, AlertType, ScrollView } from 'react-native'
 import {
     Title,
     Avatar,
@@ -22,46 +22,6 @@ import ModalAppBar from '../../components/ModalAppbar'
 import AndroidPrompt, { AndroidPromptData } from '../../components/AndroidPrompt'
 
 const UserImage = require('../../../assets/images/user.png')
-
-const styles = StyleSheet.create({
-    root: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: BACKGROUND,
-    },
-
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingTop: 36,
-        paddingBottom: 16,
-        paddingLeft: 24,
-        paddingRight: 24,
-        elevation: 4,
-    },
-
-    title: {
-        fontFamily: 'Cornerstone',
-        fontSize: 48,
-        lineHeight: 52,
-        color: '#113654',
-    },
-
-    expander: {
-        flex: 1,
-    },
-
-    card: {
-        margin: 8,
-        paddingTop: 8,
-        paddingBottom: 8,
-    },
-
-    button: {
-        margin: 8,
-        padding: 4,
-    },
-})
 
 const ProfileModal: React.FC = () => {
     const forceUpdate = useForceUpdate()
@@ -87,26 +47,22 @@ const ProfileModal: React.FC = () => {
         updateFunc: (arg0: string) => unknown,
         type: AlertType
     ) {
-        if (Platform.OS === 'ios') {
-            Alert.prompt(title, description, updateFunc, type)
-        } else if (Platform.OS === 'android') {
-            setAndroidPromptData({
-                title,
-                textLabel: androidTextInputLabel,
-                description,
-                // Make a custom updateFunc to ensure the input isn't blank and that the prompt is set to be invisible
-                // after the input.
-                updateFunc: (arg: string) => {
-                    if (arg) {
-                        updateFunc(arg)
-                    }
-                    // Once the user is done with their changes, hide the prompt.
-                    setAndroidPromptVisible(false)
-                },
-                type,
-            })
-            setAndroidPromptVisible(true)
-        }
+        setAndroidPromptData({
+            title,
+            textLabel: androidTextInputLabel,
+            description,
+            // Make a custom updateFunc to ensure the input isn't blank and that the prompt is set to be invisible
+            // after the input.
+            updateFunc: (arg: string) => {
+                if (arg) {
+                    updateFunc(arg)
+                }
+                // Once the user is done with their changes, hide the prompt.
+                setAndroidPromptVisible(false)
+            },
+            type,
+        })
+        setAndroidPromptVisible(true)
     }
 
     // We need to reauthenticate before preforming critical actions.
@@ -209,12 +165,7 @@ const ProfileModal: React.FC = () => {
     return (
         <PaperProvider theme={THEME}>
             {/* No reason in rendering the android prompt when iOS doesn't need it. */}
-            {Platform.OS === 'android' && (
-                <AndroidPrompt
-                    androidPromptData={androidPromptData}
-                    visible={isAndroidPromptVisible}
-                />
-            )}
+            <AndroidPrompt androidPromptData={androidPromptData} visible={isAndroidPromptVisible} />
 
             <View style={styles.root}>
                 <ModalAppBar />
@@ -222,7 +173,12 @@ const ProfileModal: React.FC = () => {
                     <Surface style={styles.container}>
                         <Title style={styles.title}>ACCOUNT</Title>
                         <View style={styles.expander} />
-                        <Avatar.Image size={48} source={currentUser.photoURL || UserImage} />
+                        <Avatar.Image
+                            size={48}
+                            source={
+                                currentUser.photoURL ? { uri: currentUser.photoURL } : UserImage
+                            }
+                        />
                     </Surface>
                     <List.Section>
                         <Card style={styles.card}>
@@ -262,3 +218,43 @@ const ProfileModal: React.FC = () => {
 }
 
 export default ProfileModal
+
+const styles = StyleSheet.create({
+    root: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: BACKGROUND,
+    },
+
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingTop: 36,
+        paddingBottom: 16,
+        paddingLeft: 24,
+        paddingRight: 24,
+        elevation: 4,
+    },
+
+    title: {
+        fontFamily: 'Cornerstone',
+        fontSize: 48,
+        lineHeight: 52,
+        color: '#113654',
+    },
+
+    expander: {
+        flex: 1,
+    },
+
+    card: {
+        margin: 8,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+
+    button: {
+        margin: 8,
+        padding: 4,
+    },
+})

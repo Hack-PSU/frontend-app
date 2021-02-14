@@ -1,0 +1,21 @@
+name: Expo Publish
+on:
+  push:
+    branches:
+      - master
+jobs:
+  publish:
+    name: Install and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install deps and build (with cache)
+        uses: bahmutov/npm-install@v1
+      - run: expo publish

@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 import { Provider as PaperProvider } from 'react-native-paper'
 import { useValueNotifier } from 'change-notifier'
@@ -34,6 +35,7 @@ import initServices from '../initServices'
 import { httpGetWithAuth } from '../httpGet'
 
 import AuthService from '../data/AuthService'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 // This is a fix for react-native-safe-view, which many libraries use
 // but has a warning with React 16.9 (since, in the future, it won't work with React 17).
@@ -73,38 +75,40 @@ const stackOptions: any =
 const HomeModal: React.FC<any> = ({ navigator }) => {
     return (
         <StackContext.Provider value={navigator}>
-            <BottomTabs.Navigator
-                initialRouteName="Home"
-                activeColor="white"
-                inactiveColor="rgba(255,255,255,0.6)"
-                shifting={false}
-                style={{ backgroundColor: PRIMARY }}
-                // @ts-ignore
-                renderLabel={({ route, focused, color }) => (
-                    <Text style={[styles.label, { color }]}>{route.name}</Text>
-                )}
-            >
-                <BottomTabs.Screen
-                    name="Home"
-                    component={HomeRoute}
-                    options={{ tabBarIcon: 'code-array' }}
-                />
-                <BottomTabs.Screen
-                    name="Events"
-                    component={EventsRoute}
-                    options={{ tabBarIcon: 'calendar-star' }}
-                />
-                <BottomTabs.Screen
-                    name="Workshops"
-                    component={WorkshopsRoute}
-                    options={{ tabBarIcon: 'brush' }}
-                />
-                {/* <BottomTabs.Screen
+            <BottomSheetModalProvider>
+                <BottomTabs.Navigator
+                    initialRouteName="Home"
+                    activeColor="white"
+                    inactiveColor="rgba(255,255,255,0.6)"
+                    shifting={false}
+                    style={{ backgroundColor: PRIMARY }}
+                    // @ts-ignore
+                    renderLabel={({ route, focused, color }) => (
+                        <Text style={[styles.label, { color }]}>{route.name}</Text>
+                    )}
+                >
+                    <BottomTabs.Screen
+                        name="Home"
+                        component={HomeRoute}
+                        options={{ tabBarIcon: 'code-array' }}
+                    />
+                    <BottomTabs.Screen
+                        name="Events"
+                        component={EventsRoute}
+                        options={{ tabBarIcon: 'calendar-star' }}
+                    />
+                    <BottomTabs.Screen
+                        name="Workshops"
+                        component={WorkshopsRoute}
+                        options={{ tabBarIcon: 'brush' }}
+                    />
+                    {/* <BottomTabs.Screen
                     name="Map"
                     component={MapRoute}
                     options={{ tabBarIcon: 'map' }}
                 /> */}
-            </BottomTabs.Navigator>
+                </BottomTabs.Navigator>
+            </BottomSheetModalProvider>
         </StackContext.Provider>
     )
 }
@@ -149,18 +153,20 @@ const App: React.FC = () => {
                     },
                 }}
             >
-                <LoginGuard>
-                    {/* This is for iOS, for Android see app.json in root of project. */}
-                    <StatusBar barStyle="dark-content" />
-                    <NavigationContainer theme={THEME as any}>
-                        {/* Stack. */}
-                        <Stack.Navigator screenOptions={stackOptions}>
-                            <Stack.Screen name="Home" component={HomeModal} />
-                            <Stack.Screen name="Profile" component={ProfileModal} />
-                            <Stack.Screen name="Reauth" component={ReauthModal} />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-                </LoginGuard>
+                <SafeAreaProvider>
+                    <LoginGuard>
+                        {/* This is for iOS, for Android see app.json in root of project. */}
+                        <StatusBar barStyle="dark-content" />
+                        <NavigationContainer theme={THEME as any}>
+                            {/* Stack. */}
+                            <Stack.Navigator screenOptions={stackOptions}>
+                                <Stack.Screen name="Home" component={HomeModal} />
+                                <Stack.Screen name="Profile" component={ProfileModal} />
+                                <Stack.Screen name="Reauth" component={ReauthModal} />
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </LoginGuard>
+                </SafeAreaProvider>
             </SWRConfig>
         </PaperProvider>
     )

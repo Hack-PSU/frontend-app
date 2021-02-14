@@ -1,60 +1,28 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Card, Avatar, Chip, IconButton } from 'react-native-paper'
-
-import { format } from 'date-fns'
+import { Card, Chip, IconButton } from 'react-native-paper'
+import * as WebBrowser from 'expo-web-browser'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
 
-import { TEXT, PRIMARY, RED, YELLOW, PURPLE } from '../theme'
-
-// Date formats.
-// See options here: https://date-fns.org/v2.6.0/docs/format
-
-// Displays like 12:05p
-const TIME = 'h:mmaaaaa'
-// Displays 'Sunday', etc.
-const WEEKDAY = 'EEEE'
-
-const EVENT_TYPE_COLORS = {
-    activity: YELLOW,
-    food: RED,
-    workshop: PURPLE,
-}
-
-const EVENT_TYPE_TEXT_COLORS = {
-    activity: 'rgba(255,255,255,0.89)',
-    food: 'rgba(255,255,255,0.89)',
-    workshop: 'rgba(255,255,255,0.89)',
-}
-
-const EVENT_TYPE_ICONS = {
-    activity: 'star',
-    food: 'restaurant-menu',
-    workshop: 'code',
-}
+import { TEXT, YELLOW } from '../theme'
+import EventWorkshopAvatar from './EventWorkshopAvatar'
 
 interface Props {
     model: EventModel
-    starItem: () => void
+    starItem: () => unknown
     starEnabled: boolean
+    onPress: () => unknown
 }
 
-const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled }) => {
-    const startDate = model.event_start_time
-    const endDate = model.event_end_time
+const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, onPress }) => {
+    const subtitle = model.formatInfo()
+    const location = model.location_name
 
-    const subtitle = format(startDate, `${WEEKDAY}, ${TIME}`) + ' — ' + format(endDate, TIME)
+    const isZoom = location && location.includes('https://psu.zoom.us')
 
-    const avatar = (
-        <Avatar.Icon
-            size={42}
-            icon={EVENT_TYPE_ICONS[model.event_type]}
-            color={EVENT_TYPE_TEXT_COLORS[model.event_type]}
-            theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
-            style={styles.avatar}
-        />
-    )
+    const avatar = <EventWorkshopAvatar model={model} />
 
     const star = (
         <IconButton
@@ -62,12 +30,12 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled }
             size={24}
             animated
             onPress={() => starItem()}
-            color={model.starred ? '#FDD835' : '#000'}
+            color={model.starred ? YELLOW : '#000'}
         />
     )
 
     return (
-        <Card style={styles.card}>
+        <Card style={styles.card} onPress={onPress}>
             <Card.Title
                 title={model.event_title}
                 titleStyle={styles.title}
@@ -78,9 +46,22 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled }
             />
 
             <View style={styles.row}>
-                <Chip icon="location-on" mode="outlined" style={styles.chip}>
-                    {model.location_name}
-                </Chip>
+                {!isZoom && (
+                    <Chip icon="location-on" mode="outlined" style={styles.chip}>
+                        {location}
+                    </Chip>
+                )}
+                {isZoom && (
+                    <Chip
+                        mode="outlined"
+                        icon={({ size }) => <MaterialIcons name="link" color={ZOOM} size={size} />}
+                        style={styles.zoomChip}
+                        textStyle={styles.zoomTextStyle}
+                        onPress={() => WebBrowser.openBrowserAsync(location)}
+                    >
+                        Click to join Zoom
+                    </Chip>
+                )}
             </View>
         </Card>
     )
@@ -88,10 +69,9 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled }
 
 export default EventWorkshopListItem
 
+const ZOOM = 'rgb(41,129,255)'
+
 const styles = StyleSheet.create({
-    avatar: {
-        borderRadius: 16,
-    },
     card: {
         marginLeft: 8,
         marginRight: 8,
@@ -107,7 +87,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Plex-Mono',
         lineHeight: 18,
         fontSize: 14,
-        color: PRIMARY,
         letterSpacing: 0.2,
     },
     row: {
@@ -122,5 +101,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 2,
         borderColor: 'rgba(0,0,0,0.12)',
+    },
+    zoomChip: {
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: ZOOM,
+    },
+    zoomTextStyle: {
+        color: ZOOM,
     },
 })

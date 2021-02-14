@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import { Card, Title } from 'react-native-paper'
 
 interface Props {
-    description: string
+    description: React.ReactNode
     onPress?: any
     children: React.ReactNode
 }
@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
     card: {
         flex: 1,
         marginBottom: 10,
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 5,
+        marginRight: 5,
     },
 
     headline: {
         marginBottom: 10,
-        color: 'black',
+        opacity: 0.87,
     },
 })
 
