@@ -32,13 +32,14 @@ const styles = StyleSheet.create({
     description: {
         marginBottom: 10,
         opacity: 0.87,
-        fontSize: 22,
+        fontSize: 23,
         fontFamily: 'SpaceGrotesk',
         color: TEXT_LIGHT,
     },
 
     info: {
-        fontSize: 32,
+        fontSize: 35,
+        padding: 4,
         fontFamily: 'SpaceGrotesk',
         color: TEXT_LIGHT,
     },
