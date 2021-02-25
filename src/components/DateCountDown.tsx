@@ -56,6 +56,6 @@ export default class DateCountDown extends React.Component<{}, State> {
         }
 
         const parsedTimeLeft = formatDistanceStrict(new Date(), dateToCalculate)
-        return <TimeCard description={descriptionText} info={parsedTimeLeft} />
+        return <TimeCard title={descriptionText} time={parsedTimeLeft} />
     }
 }

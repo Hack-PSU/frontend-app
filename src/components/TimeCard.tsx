@@ -4,18 +4,16 @@ import { Card, Title, Headline } from 'react-native-paper'
 import { TEXT_LIGHT } from '../theme'
 
 interface Props {
-    description?: string
-    info?: string
+    title?: string
+    time?: string
 }
 
 const TimeCard: React.FC<Props> = (props) => {
     return (
         <Card style={styles.card}>
             <Card.Content>
-                {props.description && (
-                    <Title style={styles.description}>{props.description}:</Title>
-                )}
-                {props.info && <Headline style={styles.info}>{props.info}</Headline>}
+                {props.title && <Title style={styles.title}>{props.title}:</Title>}
+                {props.time && <Headline style={styles.time}>{props.time}</Headline>}
             </Card.Content>
         </Card>
     )
@@ -24,12 +22,12 @@ const TimeCard: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
     card: {
         marginBottom: 10,
-        marginLeft: 10,
+        marginLeft: 8,
         marginRight: 10,
         backgroundColor: 'transparent',
     },
 
-    description: {
+    title: {
         marginBottom: 10,
         opacity: 0.87,
         fontSize: 23,
@@ -37,8 +35,9 @@ const styles = StyleSheet.create({
         color: TEXT_LIGHT,
     },
 
-    info: {
+    time: {
         fontSize: 35,
+        marginLeft: -3.5,
         padding: 4,
         fontFamily: 'SpaceGrotesk',
         color: TEXT_LIGHT,
