@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginRight: 10,
         backgroundColor: 'transparent',
+        elevation: 0,
     },
 
     title: {
