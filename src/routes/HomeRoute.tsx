@@ -66,7 +66,7 @@ const HomeRoute: React.FC = () => {
         <Scaffold scrollY={scrollY}>
             <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
                 <View style={styles.mountain}>
-                    <Mountain width={screen.width} height={screen.width + 50} />
+                    <Mountain width={screen.width} height={screen.width + 40} />
                 </View>
 
                 <View style={{ position: 'absolute' }}>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
         fontFamily: 'SpaceGrotesk',
         zIndex: 5,
         top: 275,
-        left: 10,
+        left: 17,
         lineHeight: 40,
     },
     submitButton: {

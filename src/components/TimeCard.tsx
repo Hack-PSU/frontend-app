@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Card, Title, Headline } from 'react-native-paper'
-
 import { TEXT_LIGHT } from '../theme'
 
 interface Props {
@@ -33,12 +32,14 @@ const styles = StyleSheet.create({
     description: {
         marginBottom: 10,
         opacity: 0.87,
-        fontSize: 20,
+        fontSize: 22,
+        fontFamily: 'SpaceGrotesk',
         color: TEXT_LIGHT,
     },
 
     info: {
-        fontSize: 30,
+        fontSize: 32,
+        fontFamily: 'SpaceGrotesk',
         color: TEXT_LIGHT,
     },
 })
