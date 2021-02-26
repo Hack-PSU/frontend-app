@@ -125,7 +125,6 @@ const HomeRoute: React.FC = () => {
 
                         {isRegistered && hasEvents && (
                             <View style={styles.eventContainer}>
-                                <Text style={styles.section}>Next Event</Text>
                                 <EventWorkshopListItem
                                     model={events[0]}
                                     starEnabled={false}
