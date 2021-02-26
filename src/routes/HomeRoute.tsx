@@ -66,11 +66,13 @@ const HomeRoute: React.FC = () => {
         <Scaffold scrollY={scrollY}>
             <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
                 <View style={styles.mountain}>
-                    <Mountain width={screen.width} height={screen.width + 50} />
+                    <Mountain width={screen.width} height={screen.width + 40} />
                 </View>
 
                 <View style={{ position: 'absolute' }}>
-                    <Title style={styles.countdown}>2 hours left!</Title>
+                    <View style={styles.countdown}>
+                        <DateCountDown />
+                    </View>
 
                     <Button
                         onPress={() => Linking.openURL(DEVPOST_URL)}
@@ -120,16 +122,14 @@ const HomeRoute: React.FC = () => {
 
                     {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
-                    <DateCountDown />
-
                     {isRegistered && hasEvents && (
                         <View style={styles.eventContainer}>
                             <Text style={styles.section}>Next Event</Text>
                             <EventWorkshopListItem
                                 model={events[0]}
                                 starEnabled={false}
-                                starItem={() => { }}
-                                onPress={() => { }}
+                                starItem={() => {}}
+                                onPress={() => {}}
                             />
                         </View>
                     )}
@@ -268,17 +268,17 @@ const styles = StyleSheet.create({
 
     countdown: {
         color: '#FFFFFF',
-        fontSize: 40,
+        fontSize: 33,
         fontFamily: 'SpaceGrotesk',
         zIndex: 5,
-        top: 340,
-        left: 40,
+        top: 275,
+        left: 17,
         lineHeight: 40,
     },
     submitButton: {
         backgroundColor: '#FFFFFF',
         width: 120,
-        top: 350,
+        top: 270,
         left: 42,
         color: '#F3603D',
         fontFamily: 'Cornerstone',
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     discordButton: {
         backgroundColor: '#6A85B9',
         width: 120,
-        top: 317,
+        top: 235,
         left: 190,
         fontFamily: 'Cornerstone',
     },
