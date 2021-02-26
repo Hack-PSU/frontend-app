@@ -25,14 +25,16 @@ const HomeListItem: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
     card: {
-        marginBottom: 10,
-        marginLeft: 10,
-        marginRight: 10,
+        marginBottom: 16,
+        marginLeft: 16,
+        marginRight: 16,
     },
 
     description: {
-        marginBottom: 10,
+        marginLeft: 8,
+        marginBottom: 16,
         opacity: 0.87,
+        fontFamily: 'SpaceGrotesk',
     },
 
     info: {

@@ -24,7 +24,7 @@ export const PURPLE = '#6200EE'
 export const THEME: Theme = {
     ...DefaultTheme,
     dark: false,
-    roundness: 16,
+    roundness: 8,
     colors: {
         ...DefaultTheme.colors,
         primary: PRIMARY,

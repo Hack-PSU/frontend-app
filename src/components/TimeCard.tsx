@@ -21,8 +21,6 @@ const TimeCard: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
     card: {
-        marginBottom: 10,
-        marginLeft: 8,
         marginRight: 10,
         backgroundColor: 'transparent',
         elevation: 0,
@@ -40,6 +38,7 @@ const styles = StyleSheet.create({
         fontSize: 35,
         marginLeft: -3.5,
         padding: 4,
+        paddingBottom: 0,
         fontFamily: 'SpaceGrotesk',
         color: TEXT_LIGHT,
     },

@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
     },
     subtitle: {
-        fontFamily: 'Plex-Mono',
+        fontFamily: 'SpaceGrotesk',
         lineHeight: 18,
         fontSize: 14,
         letterSpacing: 0.2,

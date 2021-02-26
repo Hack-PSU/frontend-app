@@ -1,14 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import React, { useMemo } from 'react'
-import { StyleSheet, View, Linking } from 'react-native'
-import { Text, Title, Button } from 'react-native-paper'
+import { StyleSheet, View, Linking, Image } from 'react-native'
+import { Text, Button } from 'react-native-paper'
+import { useDimensions } from 'react-native-hooks'
 import Animated from 'react-native-reanimated'
 import * as WebBrowser from 'expo-web-browser'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import HomeListItem from '../components/HomeListItem'
-import HomeListItemSecondary from '../components/HomeListItemSecondary'
 import DateCountDown from '../components/DateCountDown'
 import Scaffold from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
@@ -17,26 +17,19 @@ import SponsorCarousel from '../components/SponsorCarousel'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
-
 import useEvents from '../data/hooks/useEvents'
 
-import { TEXT, TEXT_LIGHT } from '../theme'
+import { TEXT_LIGHT } from '../theme'
 
 import Mountain from '../../assets/images/HomeMountains.svg'
-
-import { useDimensions } from 'react-native-hooks'
+import MLHLogo from '../../assets/images/mlh.svg'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
 const DISCORD_URL = 'https://discord.gg/eyPSrNm9Cd'
-const DISCORD_TEXT = `
-We highly suggest joining Discord for all event updates and meeting other hackers!
-`.trim()
-
 const DEVPOST_URL = 'https://hackpsu-fall-2020.devpost.com/'
-const DEVPOST_TEXT = `
-We are using Devpost for all submission and scoring. Projects are due 5pm on Sunday.
-`.trim()
+
+const BackgroundImage = require('../../assets/images/background.jpg')
 
 const HomeRoute: React.FC = () => {
     const registrationStatus = useRegistrationStatus()
@@ -66,146 +59,104 @@ const HomeRoute: React.FC = () => {
     return (
         <Scaffold scrollY={scrollY}>
             <Animated.ScrollView scrollEventThrottle={1} onScroll={onScroll}>
+                <Image
+                    style={[styles.backgroundImage, { width: screen.width }]}
+                    source={BackgroundImage}
+                />
+
                 <View style={styles.mountain}>
                     <Mountain width={screen.width} height={screen.width + 40} />
                 </View>
 
-                <View style={{ position: 'absolute' }}>
+                <View style={styles.heroContainer}>
                     <View style={styles.countdown}>
                         <DateCountDown />
                     </View>
 
-                    <Button
-                        onPress={() => Linking.openURL(DEVPOST_URL)}
-                        mode="contained"
-                        dark
-                        style={styles.submitButton}
-                        icon={({ size, color }) => (
-                            <MaterialCommunityIcons
-                                name="hexagon"
-                                size={size}
-                                color={(color = styles.submitButton.color)}
-                            />
-                        )}
-                    >
-                        <Text
-                            style={{
-                                color: styles.submitButton.color,
-                                fontFamily: styles.submitButton.fontFamily,
-                            }}
+                    <View style={styles.heroButtons}>
+                        <Button
+                            onPress={
+                                isRegistered ? () => Linking.openURL(DEVPOST_URL) : openRegisterURL
+                            }
+                            mode="contained"
+                            dark
+                            style={styles.submitButton}
+                            icon={({ size, color }) => (
+                                <MaterialCommunityIcons
+                                    name="hexagon"
+                                    size={size}
+                                    color={(color = styles.submitButton.color)}
+                                />
+                            )}
                         >
-                            Submit
-                        </Text>
-                    </Button>
+                            <Text
+                                style={{
+                                    color: styles.submitButton.color,
+                                    fontWeight: styles.discordButton.fontWeight,
+                                }}
+                            >
+                                {isRegistered ? 'Submit' : 'Register'}
+                            </Text>
+                        </Button>
 
-                    <Button
-                        onPress={() => Linking.openURL(DISCORD_URL)}
-                        mode="contained"
-                        dark
-                        style={styles.discordButton}
-                        icon={({ size, color }) => (
-                            <MaterialCommunityIcons name="discord" size={size} color={color} />
-                        )}
-                    >
-                        <Text
-                            style={{
-                                color: TEXT_LIGHT,
-                                fontFamily: styles.discordButton.fontFamily,
-                            }}
+                        <Button
+                            onPress={() => Linking.openURL(DISCORD_URL)}
+                            mode="contained"
+                            dark
+                            style={styles.discordButton}
+                            icon={({ size, color }) => (
+                                <MaterialCommunityIcons name="discord" size={size} color={color} />
+                            )}
                         >
-                            Discord
-                        </Text>
-                    </Button>
+                            <Text
+                                style={{
+                                    color: TEXT_LIGHT,
+                                    fontWeight: styles.discordButton.fontWeight,
+                                }}
+                            >
+                                Discord
+                            </Text>
+                        </Button>
+                    </View>
                 </View>
 
-                <View style={{ backgroundColor: 'white' }}>
-                    <Title style={styles.title}>HOME</Title>
+                <View style={styles.background}>
+                    <View style={styles.backgroundMask}>
+                        {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
 
-                    {registrationStatus.error && <ErrorCard error={registrationStatus.error} />}
+                        {isRegistered && hasEvents && (
+                            <View style={styles.eventContainer}>
+                                <Text style={styles.section}>Next Event</Text>
+                                <EventWorkshopListItem
+                                    model={events[0]}
+                                    starEnabled={false}
+                                    starItem={() => {}}
+                                    onPress={() => {}}
+                                />
+                            </View>
+                        )}
 
-                    {isRegistered && hasEvents && (
-                        <View style={styles.eventContainer}>
-                            <Text style={styles.section}>Next Event</Text>
-                            <EventWorkshopListItem
-                                model={events[0]}
-                                starEnabled={false}
-                                starItem={() => {}}
-                                onPress={() => {}}
-                            />
-                        </View>
-                    )}
+                        {isRegistered && (
+                            <HomeListItem description="My PIN">
+                                <Text>{registrationStatus.data.pin.toString()}</Text>
+                            </HomeListItem>
+                        )}
 
-                    {isRegistered && (
-                        <HomeListItem description="My PIN">
-                            <Text>{registrationStatus.data.pin.toString()}</Text>
+                        <HomeListItem description="Information">
+                            <View style={styles.mlhLogo}>
+                                <MLHLogo height={140} />
+                            </View>
+                            <Text style={styles.cardParagraph}>
+                                This March 19th-21st, join us and over 900 students from across the
+                                nation for 48 hours of creation, innovation, & fun. From seasoned
+                                coding veterans to first-time hackers from any major or field, all
+                                are welcome to join. Discover your ability to create change by
+                                developing technology to solve real-world problems, working with
+                                industry leaders, and collaborating with your peers.
+                                {'\n\n'}Of course, we also offer swag, prizes, and much more for
+                                your enjoyment!
+                            </Text>
                         </HomeListItem>
-                    )}
-
-                    <Text style={styles.section}>Information</Text>
-
-                    {!isRegistered && (
-                        <HomeListItem description="My PIN" onPress={openRegisterURL}>
-                            <View style={styles.buttonContainer}>
-                                {/* {__DEV__ && (
-                    <Text style={styles.stagingWarning}>
-                        This **only** shows in development mode. So if you're on
-                        staging (probably), you can't register since there is no
-                        staging deployment of HackPSU website lmao. Please setup
-                        frontend and register for staging hackathon there. I wish
-                        this could be fixed.
-                    </Text>
-                )} */}
-                                <Button mode="contained" dark>
-                                    Register
-                                </Button>
-                            </View>
-                        </HomeListItem>
-                    )}
-
-                    <View style={styles.horizontalCardView}>
-                        <HomeListItemSecondary
-                            description="Discord"
-                            onPress={() => WebBrowser.openBrowserAsync(DISCORD_URL)}
-                        >
-                            <Text style={styles.horizontalCardText}>{DISCORD_TEXT}</Text>
-                            <View style={styles.buttonContainer}>
-                                <Button
-                                    mode="outlined"
-                                    dark
-                                    icon={({ size, color }) => (
-                                        <MaterialCommunityIcons
-                                            name="discord"
-                                            size={size}
-                                            color={color}
-                                        />
-                                    )}
-                                >
-                                    Open
-                                </Button>
-                            </View>
-                        </HomeListItemSecondary>
-
-                        <HomeListItemSecondary
-                            description="Devpost"
-                            onPress={() => WebBrowser.openBrowserAsync(DEVPOST_URL)}
-                        >
-                            <Text style={styles.horizontalCardText}>{DEVPOST_TEXT}</Text>
-                            <View style={styles.buttonContainer}>
-                                <Button
-                                    mode="outlined"
-                                    dark
-                                    icon={({ size, color }) => (
-                                        <MaterialCommunityIcons
-                                            name="hexagon"
-                                            size={size}
-                                            color={color}
-                                        />
-                                    )}
-                                >
-                                    Open
-                                </Button>
-                            </View>
-                        </HomeListItemSecondary>
                     </View>
                     <HomeListItem>
                         <Text style={styles.sponsorText}>Our Sponsors</Text>
@@ -218,35 +169,13 @@ const HomeRoute: React.FC = () => {
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontFamily: 'Cornerstone',
-        color: 'black',
-        fontSize: 48,
-        lineHeight: 54,
-        paddingTop: 16,
-        paddingBottom: 16,
-        paddingLeft: 16,
-    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
 
-    buttonContainer: {
-        paddingTop: 10,
         width: '100%',
-        alignSelf: 'flex-end',
-        alignItems: 'flex-start',
-    },
-
-    // stagingWarning: {
-    //     paddingBottom: 8,
-    // },
-
-    horizontalCardView: {
-        flexDirection: 'row',
-        marginLeft: 5,
-        marginRight: 5,
-    },
-
-    horizontalCardText: {
-        color: 'black',
+        height: 800,
+        resizeMode: 'cover',
     },
 
     section: {
@@ -257,7 +186,7 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 20,
         lineHeight: 24,
-        fontFamily: 'Plex-Mono',
+        fontFamily: 'SpaceGrotesk',
     },
 
     eventContainer: {
@@ -271,30 +200,62 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
 
+    heroContainer: {
+        position: 'absolute',
+        top: 264,
+        paddingLeft: 16,
+    },
+
     countdown: {
         color: '#FFFFFF',
-        fontSize: 33,
+        fontSize: 32,
         fontFamily: 'SpaceGrotesk',
         zIndex: 5,
-        top: 275,
-        left: 17,
         lineHeight: 40,
     },
+
+    heroButtons: {
+        display: 'flex',
+        flexDirection: 'row',
+        paddingLeft: 8,
+    },
+
     submitButton: {
         backgroundColor: '#FFFFFF',
-        width: 120,
-        top: 270,
-        left: 42,
+        width: 144,
         color: '#F3603D',
-        fontFamily: 'Cornerstone',
+        fontWeight: 'bold',
     },
 
     discordButton: {
         backgroundColor: '#6A85B9',
-        width: 120,
-        top: 235,
-        left: 190,
-        fontFamily: 'Cornerstone',
+        width: 144,
+        marginLeft: 16,
+        fontWeight: 'bold',
+    },
+
+    background: {
+        backgroundColor: '#F5F5F5',
+        height: '100%',
+    },
+
+    backgroundMask: {
+        marginTop: -24,
+    },
+
+    mlhLogo: {
+        marginBottom: 32,
+    },
+
+    cardParagraph: {
+        fontSize: 16,
+        lineHeight: 20,
+
+        paddingLeft: 8,
+        paddingRight: 8,
+        paddingBottom: 16,
+
+        color: 'rgba(0,0,0,0.65)',
     },
     sponsorText: {
         fontSize: 30,

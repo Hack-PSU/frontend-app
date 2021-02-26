@@ -64,13 +64,13 @@ const Stack = Platform.OS === 'ios' ? createNativeStackNavigator() : createStack
 const stackOptions: any =
     Platform.OS === 'ios'
         ? {
-            headerShown: false,
-            stackPresentation: 'modal',
-        }
+              headerShown: false,
+              stackPresentation: 'modal',
+          }
         : {
-            headerShown: false,
-            cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
-        }
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
+          }
 
 const HomeModal: React.FC<any> = ({ navigator }) => {
     return (
@@ -78,10 +78,10 @@ const HomeModal: React.FC<any> = ({ navigator }) => {
             <BottomSheetModalProvider>
                 <BottomTabs.Navigator
                     initialRouteName="Home"
-                    activeColor="white"
-                    inactiveColor="rgba(255,255,255,0.6)"
+                    activeColor={PRIMARY}
+                    inactiveColor="rgba(0,0,0,0.85)"
                     shifting={false}
-                    style={{ backgroundColor: PRIMARY }}
+                    barStyle={{ backgroundColor: 'white' }}
                     // @ts-ignore
                     renderLabel={({ route, focused, color }) => (
                         <Text style={[styles.label, { color }]}>{route.name}</Text>
@@ -90,12 +90,12 @@ const HomeModal: React.FC<any> = ({ navigator }) => {
                     <BottomTabs.Screen
                         name="Home"
                         component={HomeRoute}
-                        options={{ tabBarIcon: 'code-array' }}
+                        options={{ tabBarIcon: 'home' }}
                     />
                     <BottomTabs.Screen
                         name="Events"
                         component={EventsRoute}
-                        options={{ tabBarIcon: 'calendar-star' }}
+                        options={{ tabBarIcon: 'calendar' }}
                     />
                     <BottomTabs.Screen
                         name="Workshops"
@@ -123,7 +123,6 @@ const HomeModal: React.FC<any> = ({ navigator }) => {
  */
 const App: React.FC = () => {
     const [fontsLoaded] = useFonts({
-        'Plex-Mono': require('../../assets/fonts/IBMPlexMono-Medium.otf'),
         Cornerstone: require('../../assets/fonts/Cornerstone.ttf'),
         SpaceGrotesk: require('../../assets/fonts/SpaceGrotesk-SemiBold.ttf'),
     })
@@ -179,6 +178,5 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'center',
         backgroundColor: 'transparent',
-        fontFamily: 'Plex-Mono',
     },
 })
