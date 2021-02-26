@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         lineHeight: 24,
-        fontFamily: 'Plex-Mono',
+        fontFamily: 'SpaceGrotesk',
     },
     loading: {
         margin: 20,

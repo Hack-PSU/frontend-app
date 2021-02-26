@@ -93,6 +93,7 @@ const Scaffold: React.FC<Props> = ({ children, scrollY, smallLogo }: Props) => {
                             icon="account-circle"
                             color={ACCENT}
                             onPress={navigateProfile}
+                            style={styles.avatarIcon}
                         />
                     )}
                 </Animated.View>
@@ -142,6 +143,9 @@ const styles = StyleSheet.create({
     },
     avatar: {
         marginRight: 16,
+    },
+    avatarIcon: {
+        marginRight: 8,
     },
     scaffold: {
         flex: 1,
