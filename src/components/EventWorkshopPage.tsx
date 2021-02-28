@@ -251,7 +251,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
 
     
     const listHeader = (
-        <ImageBackground source={require('../../assets/images/logo.svg')} style={styles.image}>
+        <ImageBackground source={require('../../assets/images/mountain.png')} style={styles.image}>
             <View style={styles.title}>
                 <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
                 <View style={styles.filter}>
@@ -353,7 +353,9 @@ const styles = StyleSheet.create({
     },
     image: {
       flex: 1,
-      resizeMode: "cover",
-      justifyContent: "center"
+      resizeMode: "center",
+      justifyContent: "center",
+
+      height:232,
     },
 })
