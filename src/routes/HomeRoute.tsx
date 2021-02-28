@@ -25,7 +25,7 @@ import Mountain from '../../assets/images/HomeMountains.svg'
 
 import { useDimensions } from 'react-native-hooks'
 
-const REGISTER_URL = 'https://hackpsu.org/register'
+const REGISTER_URL = 'https://app.hackpsu.org/register'
 
 const DISCORD_URL = 'https://discord.gg/eyPSrNm9Cd'
 const DISCORD_TEXT = `
@@ -128,8 +128,8 @@ const HomeRoute: React.FC = () => {
                             <EventWorkshopListItem
                                 model={events[0]}
                                 starEnabled={false}
-                                starItem={() => {}}
-                                onPress={() => {}}
+                                starItem={() => { }}
+                                onPress={() => { }}
                             />
                         </View>
                     )}
