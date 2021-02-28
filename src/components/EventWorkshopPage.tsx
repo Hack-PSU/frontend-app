@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
 import { useBottomSheetModal, BottomSheetOverlay } from '@gorhom/bottom-sheet'
 
-import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
+import Scaffold from '../components/Scaffold'
 import Subtitle from '../components/Subtitle'
 import SegmentedControl from '../components/SegmentedControl'
 import ErrorCard from '../components/ErrorCard'
@@ -321,7 +321,7 @@ export default EventWorkshopPage
 
 const styles = StyleSheet.create({
     title: {
-        paddingTop: LOGO_SAFE_PADDING,
+        paddingTop: Utils.LOGO_SAFE_PADDING,
     },
     filter: {
         paddingTop: 16,

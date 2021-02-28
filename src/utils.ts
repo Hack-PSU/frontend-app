@@ -2,6 +2,9 @@ import * as Notifications from 'expo-notifications'
 
 import { PRIMARY } from './theme'
 
+export const LOGO_SAFE_PADDING = 116 + 36 - 56
+export const HEADER_THRESHOLD = 150
+
 // Note that all notification stuff on here are about scheduled notifications
 // https://docs.expo.io/versions/latest/sdk/notifications/#scheduling-notifications
 

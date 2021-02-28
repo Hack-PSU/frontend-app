@@ -11,11 +11,9 @@ import { useValueNotifier } from 'change-notifier'
 import AuthService from '../data/AuthService'
 import { ACCENT } from '../theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { HEADER_THRESHOLD } from '../utils'
 
 const isAndroid = Platform.OS !== 'ios'
-
-export const LOGO_SAFE_PADDING = 116 + 36 - 56
-export const HEADER_THRESHOLD = 150
 
 // Fix needed for Android display order.
 const LOGO_ELEVATION = isAndroid ? 6 : undefined
