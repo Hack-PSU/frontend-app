@@ -10,7 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import HomeListItem from '../components/HomeListItem'
 import HomeListItemSecondary from '../components/HomeListItemSecondary'
 import DateCountDown from '../components/DateCountDown'
-import Scaffold, { LOGO_SAFE_PADDING } from '../components/Scaffold'
+import Scaffold from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
 import EventWorkshopListItem from '../components/EventWorkshopListItem'
 
