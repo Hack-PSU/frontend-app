@@ -1,5 +1,5 @@
 import React from 'react'
-import HomeListItem from './HomeListItem'
+import TimeCard from './TimeCard'
 import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 interface State {
@@ -7,8 +7,8 @@ interface State {
 }
 
 export default class DateCountDown extends React.Component<{}, State> {
-    readonly hackathonStart = new Date('November 6, 2020 17:00:00') // November 6, 2020 5:00 pm
-    readonly hackathonEnd = new Date('November 8, 2020 17:00:00') // November 8, 2020 5:00 pm
+    readonly hackathonStart = new Date('March 19, 2021 17:00:00') // March 19, 2021 5:00 pm
+    readonly hackathonEnd = new Date('March 21, 2021 17:00:00') // March 21, 2021 5:00 pm
     timerID: NodeJS.Timeout
 
     constructor(props) {
@@ -51,11 +51,11 @@ export default class DateCountDown extends React.Component<{}, State> {
             dateToCalculate = this.hackathonStart
         } else {
             // If the hackathon started, calculate the time left before it ends
-            descriptionText = 'Time left'
+            descriptionText = 'Time left to Submit'
             dateToCalculate = this.hackathonEnd
         }
 
         const parsedTimeLeft = formatDistanceStrict(new Date(), dateToCalculate)
-        return <HomeListItem description={descriptionText} info={parsedTimeLeft} />
+        return <TimeCard title={descriptionText} time={parsedTimeLeft} />
     }
 }
