@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { Card, Chip, IconButton } from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -35,35 +35,28 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
     )
 
     return (
+        <View style ={styles.row}>
+        {/* TODO : FIX TIME IMPLEMENTATION */}
+        {/* Currently, it gives us "3:00p-4:00p" */}
+        {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
+        <Text style ={styles.time}>{subtitle}</Text>
+        {/* <Text style ={styles.time}>{"3:00"+ '\n' +"PM"}</Text> */}
         <Card style={styles.card} onPress={onPress}>
+           
             <Card.Title
                 title={model.event_title}
                 titleStyle={styles.title}
-                subtitle={subtitle + " • Zoom"}
+                // NEED TO FIX THIS - Right now, "subtitle" returns a
+                // time. We need the speaker/presenter under the subtitle
+                // Which is why zoom is currently hardcoded
+                subtitle={"Zoom"}
                 subtitleStyle={styles.subtitle}
-                left={() => avatar}
                 right={() => (starEnabled ? star : null)}
             />
-
-            {/* <View style={styles.row}>
-                {!isZoom && (
-                    <Chip icon="location-on" mode="outlined" style={styles.chip}>
-                        {location}
-                    </Chip>
-                )}
-                {isZoom && (
-                    <Chip
-                        mode="outlined"
-                        icon={({ size }) => <MaterialIcons name="link" color={ZOOM} size={size} />}
-                        style={styles.zoomChip}
-                        textStyle={styles.zoomTextStyle}
-                        onPress={() => WebBrowser.openBrowserAsync(location)}
-                    >
-                        Zoom
-                    </Chip>
-                )}
-            </View> */}
+            <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
         </Card>
+        
+        </View>
     )
 }
 
@@ -73,8 +66,7 @@ const ZOOM = 'rgb(41,129,255)'
 
 const styles = StyleSheet.create({
     card: {
-        marginLeft: 15,
-        marginRight: 15,
+        width: '70%',
         marginBottom: 15,
         borderRadius: 7,
         elevation:4,
@@ -122,4 +114,20 @@ const styles = StyleSheet.create({
     zoomTextStyle: {
         color: ZOOM,
     },
+    time: {
+        width: '20%',
+        color: '#6A85B9',
+        fontSize: 25,
+        textAlign: 'center',
+        fontWeight: '600'
+    },
+    seeMoreDots: {
+        color: "grey",
+    },
+    centerElements: {
+        flex: 1,
+        height: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 })
