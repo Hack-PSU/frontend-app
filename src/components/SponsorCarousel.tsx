@@ -25,6 +25,7 @@ const SponsorCarousel: React.FC = () => {
                 autoplay
                 autoplayTimeout={2}
                 horizontal
+                loop
             >
                 <View style={styles.logoContainer}>
                     <TouchableOpacity onPress={() => Linking.openURL(MICROSOFT_URL)}>
