@@ -9,7 +9,12 @@ import MICROSOFT_SVG from '../../assets/images/sponsors/Microsoft_original.svg'
 const SponsorCarousel: React.FC = () => {
     return (
         <View>
-            <Slick autoplay={true} height={110}>
+            <Slick
+                autoplay={true}
+                height={110}
+                dotColor={'transparent'}
+                activeDotColor={'transparent'}
+            >
                 <View>
                     <MICROSOFT_SVG style={styles.logo} />
                 </View>
@@ -25,6 +30,7 @@ const SponsorCarousel: React.FC = () => {
 }
 
 const styles = StyleSheet.create({
+    wrapper: {},
     logo: {
         flex: 1,
         height: 280,
