@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Slick from 'react-native-slick'
 
 import EECS_SVG from '../../assets/images/sponsors/EECS-day.svg'
