@@ -5,9 +5,9 @@ import Slick from 'react-native-slick'
 import MICROSOFT_SVG from '../../assets/images/sponsors/Microsoft_original.svg'
 import EECS_SVG from '../../assets/images/sponsors/EECS-day.svg'
 import ICS_SVG from '../../assets/images/sponsors/ICS-day.svg'
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const MICROSOFT_URL = 'https://www.microsoft.com/en-us/?ql=6&spl=3'
+const MICROSOFT_URL = 'https://www.microsoft.com/'
 const EECS_URL = 'https://www.eecs.psu.edu/'
 const ICS_URL = 'https://www.icds.psu.edu/'
 const LION_LAUNCHPAD_URL = 'https://lionlaunchpad.psu.edu/'
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
     },
     logoContainer: {
-        padding: 20,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
