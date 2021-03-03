@@ -1,12 +1,15 @@
 import React from 'react'
-import { StyleSheet, View, Linking, Text, Image } from 'react-native'
+import { StyleSheet, View, Linking, Image } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import Slick from 'react-native-slick'
 
 import MICROSOFT_SVG from '../../assets/images/sponsors/Microsoft_original.svg'
 import EECS_SVG from '../../assets/images/sponsors/EECS-day.svg'
-import ICS_SVG from '../../assets/images/sponsors/ICS-day.svg'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import ICS_SVG from '../../assets/images/sponsors/ICS-day-cropped.svg'
+import LION_LAUNCHPAD_SVG from '../../assets/images/sponsors/Lion-Launchpad.svg'
+import HVC_SVG from '../../assets/images/sponsors/HVC.svg'
 
+//assets/images/sponsors/Lion-Launchpad-LOGO.svg
 const MICROSOFT_URL = 'https://www.microsoft.com/'
 const EECS_URL = 'https://www.eecs.psu.edu/'
 const ICS_URL = 'https://www.icds.psu.edu/'
@@ -22,10 +25,10 @@ const SponsorCarousel: React.FC = () => {
                 dot={<View style={styles.dot} />}
                 activeDot={<View style={styles.activeDot} />}
                 paginationStyle={styles.pagination}
-                autoplay
-                autoplayTimeout={2}
+                //autoplay
+                //autoplayTimeout={2}
                 horizontal
-                loop
+                //loop
             >
                 <View style={styles.logoContainer}>
                     <TouchableOpacity onPress={() => Linking.openURL(MICROSOFT_URL)}>
@@ -44,18 +47,12 @@ const SponsorCarousel: React.FC = () => {
                 </View>
                 <View style={styles.logoContainer}>
                     <TouchableOpacity onPress={() => Linking.openURL(LION_LAUNCHPAD_URL)}>
-                        <Image
-                            style={styles.smallLogo}
-                            source={require('../../assets/images/sponsors/Lion-Launchpad-LOGO.png')}
-                        />
+                        <LION_LAUNCHPAD_SVG style={styles.logo} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.logoContainer}>
                     <TouchableOpacity onPress={() => Linking.openURL(HVC_URL)}>
-                        <Image
-                            style={styles.smallerLogo}
-                            source={require('../../assets/images/sponsors/HVC-LOGO.png')}
-                        />
+                        <HVC_SVG style={styles.logo} />
                     </TouchableOpacity>
                 </View>
             </Slick>
@@ -65,6 +62,14 @@ const SponsorCarousel: React.FC = () => {
 
 const styles = StyleSheet.create({
     wrapper: { height: 130 },
+    test: {
+        height: 10,
+        width: 300,
+    },
+    test2: {
+        height: 10,
+        width: 10,
+    },
     dot: {
         backgroundColor: 'rgba(0,0,0,.2)',
         width: 6,
@@ -107,12 +112,10 @@ const styles = StyleSheet.create({
     logo: {
         flex: 1,
         top: 10,
-        height: 280,
+        height: 320,
         width: 300,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginTop: 'auto',
-        marginBottom: 'auto',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     bigLogo: {
         flex: 1,
