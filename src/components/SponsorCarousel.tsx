@@ -99,24 +99,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-<<<<<<< HEAD
-=======
     icsLogo: {
         top: 0,
     },
     hvcLogo: {
         margin: 10,
     },
-    bigLogo: {
-        flex: 1,
-        height: 110,
-        width: 300,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginTop: 'auto',
-        marginBottom: 'auto',
-    },
->>>>>>> b7f67604c511253ea114cab8feed260a6fdc6474
 })
 
 export default SponsorCarousel
