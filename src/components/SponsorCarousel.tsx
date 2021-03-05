@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Linking, Image } from 'react-native'
+import { StyleSheet, View, Linking } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Slick from 'react-native-slick'
 
@@ -41,7 +41,7 @@ const SponsorCarousel: React.FC = () => {
                 </View>
                 <View style={styles.logoContainer}>
                     <TouchableOpacity onPress={() => Linking.openURL(ICS_URL)}>
-                        <ICS_SVG style={styles.logo} />
+                        <ICS_SVG style={{ ...styles.logo, ...styles.icsLogo }} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.logoContainer}>
@@ -51,7 +51,7 @@ const SponsorCarousel: React.FC = () => {
                 </View>
                 <View style={styles.logoContainer}>
                     <TouchableOpacity onPress={() => Linking.openURL(HVC_URL)}>
-                        <HVC_SVG style={styles.logo} />
+                        <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
                     </TouchableOpacity>
                 </View>
             </Slick>
@@ -99,6 +99,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+<<<<<<< HEAD
+=======
+    icsLogo: {
+        top: 0,
+    },
+    hvcLogo: {
+        margin: 10,
+    },
+    bigLogo: {
+        flex: 1,
+        height: 110,
+        width: 300,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: 'auto',
+        marginBottom: 'auto',
+    },
+>>>>>>> b7f67604c511253ea114cab8feed260a6fdc6474
 })
 
 export default SponsorCarousel
