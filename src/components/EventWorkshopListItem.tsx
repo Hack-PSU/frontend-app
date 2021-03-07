@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import { Card, Chip, IconButton } from 'react-native-paper'
+import { Card, Chip, IconButton, Title, Paragraph, Avatar} from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser'
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -35,27 +35,48 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
     )
 
     return (
-        <View style ={styles.row}>
+        // <View style ={styles.row}>
+        <View>
         {/* TODO : FIX TIME IMPLEMENTATION */}
         {/* Currently, it gives us "3:00p-4:00p" */}
         {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
         <Text style ={styles.time}>{subtitle}</Text>
         {/* <Text style ={styles.time}>{"3:00"+ '\n' +"PM"}</Text> */}
         <Card style={styles.card} onPress={onPress}>
-           
-            <Card.Title
+
+        <View style ={styles.row}>
+            {/* Image on the left side */}
+            <View>
+                {avatar}
+            </View>
+            {/* Content in the middle */}
+            <View style={{marginLeft: 10}}>
+                <Text style={styles.subtitleTop}>Zoom</Text>
+                <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{model.event_title}</Text>
+                <Text style={styles.subtitle}>{"Ali Malik"}</Text>
+                <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
+            </View>
+            {/* Heart */}
+            <View style={{position: 'absolute', right: 15}}>
+            {(starEnabled ? star : null)}
+            </View>
+        </View>
+
+
+            {/* <Card.Title
                 title={model.event_title}
                 titleStyle={styles.title}
                 // NEED TO FIX THIS - Right now, "subtitle" returns a
                 // time. We need the speaker/presenter under the subtitle
                 // Which is why zoom is currently hardcoded
-                subtitle={"Zoom"}
+                // subtitle={" •Zoom"}
+                subtitle={ "Ali Malik"}
                 subtitleStyle={styles.subtitle}
+                left={() => avatar}
                 right={() => (starEnabled ? star : null)}
-            />
-            <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
+            /> */}
         </Card>
-        
+
         </View>
     )
 }
@@ -66,16 +87,16 @@ const ZOOM = 'rgb(41,129,255)'
 
 const styles = StyleSheet.create({
     card: {
-        width: '70%',
         marginBottom: 15,
+        margin: 10,
         borderRadius: 7,
         elevation:4,
         shadowOffset: { width: 1, height: 1 },
         shadowColor: "black",
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        paddingTop: 10,
-        paddingBottom: 10,
+        paddingTop: 5,
+        paddingBottom: 5,
         paddingRight: 10,
     },
     title: {
@@ -84,6 +105,7 @@ const styles = StyleSheet.create({
         color: TEXT,
         fontWeight: 'normal',
         marginLeft: 10,
+        width: '85%'
     },
     subtitle: {
         //fontFamily: '',
@@ -100,6 +122,8 @@ const styles = StyleSheet.create({
         marginRight: 16,
         marginTop: 4,
         marginBottom: 12,
+        // justifyContent: 'space-between',
+        alignItems:'center'
     },
     chip: {
         borderRadius: 8,
@@ -115,14 +139,18 @@ const styles = StyleSheet.create({
         color: ZOOM,
     },
     time: {
-        width: '20%',
         color: '#6A85B9',
+        marginLeft: 13,
         fontSize: 25,
-        textAlign: 'center',
+        fontFamily: 'SpaceGrotesk',
         fontWeight: '600'
     },
     seeMoreDots: {
         color: "grey",
+    },
+    subtitleTop: {
+        color: "grey",
+        marginLeft: 10,
     },
     centerElements: {
         flex: 1,
