@@ -37,15 +37,13 @@ export default class DateCountDown extends React.Component<{}, State> {
     }
 
     render() {
-        // Don't have this component show up after the event
-        if (this.hackathonEnd.getTime() - this.state.today.getTime() < 0) {
-            return null
-        }
-
         let descriptionText: string
         let dateToCalculate: Date
 
-        if (this.hackathonStart.getTime() - this.state.today.getTime() > 0) {
+        // Don't have this component show up after the event
+        if (this.hackathonEnd.getTime() - this.state.today.getTime() < 0) {
+            return <TimeCard title={'Hackathon Ended'} time={'Join us next time!'} />
+        } else if (this.hackathonStart.getTime() - this.state.today.getTime() > 0) {
             // If it's before the hackathon, calculate the time left before it starts
             descriptionText = 'Time until Hackathon'
             dateToCalculate = this.hackathonStart
@@ -56,6 +54,6 @@ export default class DateCountDown extends React.Component<{}, State> {
         }
 
         const parsedTimeLeft = formatDistanceStrict(new Date(), dateToCalculate)
-        return <TimeCard title={descriptionText} time={parsedTimeLeft} />
+        return <TimeCard title={descriptionText + ':'} time={parsedTimeLeft} />
     }
 }
