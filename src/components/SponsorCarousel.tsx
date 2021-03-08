@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Linking } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { StyleSheet, View } from 'react-native'
 import Slick from 'react-native-slick'
+import SponsorLogo from '../components/SponsorLogo'
 
 import MICROSOFT_SVG from '../../assets/images/sponsors/Microsoft_original.svg'
 import EECS_SVG from '../../assets/images/sponsors/EECS-day.svg'
@@ -14,7 +14,6 @@ const EECS_URL = 'https://www.eecs.psu.edu/'
 const ICS_URL = 'https://www.icds.psu.edu/'
 const LION_LAUNCHPAD_URL = 'https://lionlaunchpad.psu.edu/'
 const HVC_URL = 'https://www.linkedin.com/company/happy-valley-communications/'
-// const HVC_URL = 'https://happyvalleycommunications.psu.edu/'
 
 const SponsorCarousel: React.FC = () => {
     return (
@@ -29,31 +28,21 @@ const SponsorCarousel: React.FC = () => {
                 horizontal
                 loop
             >
-                <View style={styles.logoContainer}>
-                    <TouchableOpacity onPress={() => Linking.openURL(MICROSOFT_URL)}>
-                        <MICROSOFT_SVG style={styles.logo} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.logoContainer}>
-                    <TouchableOpacity onPress={() => Linking.openURL(EECS_URL)}>
-                        <EECS_SVG style={styles.logo} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.logoContainer}>
-                    <TouchableOpacity onPress={() => Linking.openURL(ICS_URL)}>
-                        <ICS_SVG style={{ ...styles.logo, ...styles.icsLogo }} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.logoContainer}>
-                    <TouchableOpacity onPress={() => Linking.openURL(LION_LAUNCHPAD_URL)}>
-                        <LION_LAUNCHPAD_SVG style={styles.logo} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.logoContainer}>
-                    <TouchableOpacity onPress={() => Linking.openURL(HVC_URL)}>
-                        <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
-                    </TouchableOpacity>
-                </View>
+                <SponsorLogo sponsorURL={MICROSOFT_URL}>
+                    <MICROSOFT_SVG style={styles.logo} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={EECS_URL}>
+                    <EECS_SVG style={styles.logo} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={ICS_URL}>
+                    <ICS_SVG style={{ ...styles.logo, ...styles.icsLogo }} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={LION_LAUNCHPAD_URL}>
+                    <LION_LAUNCHPAD_SVG style={styles.logo} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={HVC_URL}>
+                    <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
+                </SponsorLogo>
             </Slick>
         </View>
     )
@@ -85,11 +74,6 @@ const styles = StyleSheet.create({
         bottom: -15,
         marginRight: 'auto',
         marginLeft: 'auto',
-    },
-    logoContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     logo: {
         flex: 1,
