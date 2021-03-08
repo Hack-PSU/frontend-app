@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Avatar } from 'react-native-paper'
-import { color } from 'react-native-reanimated'
 
 import { EventModel } from '../models/event-model'
 
@@ -30,7 +29,15 @@ interface Props {
 }
 
 export default function EventWorkshopAvatar({ model }: Props) {
-    return (
+    return model.event_icon == null ? (
+        <Avatar.Icon
+            size={42}
+            icon={EVENT_TYPE_ICONS[model.event_type]}
+            color={EVENT_TYPE_TEXT_COLORS[model.event_type]}
+            theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
+            style={styles.avatar}
+        />
+    ) : (
         <Avatar.Image
             size={42}
             source={{ uri: model.event_icon }}
