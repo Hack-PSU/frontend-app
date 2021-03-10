@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Card, Chip, IconButton, Title, Paragraph, Avatar} from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons,MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
 
@@ -25,23 +25,33 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
     const avatar = <EventWorkshopAvatar model={model} />
 
     const star = (
-        <IconButton
-            icon={model.starred ? 'star' : 'star-border'}
-            size={34}
+        // <IconButton
+        //     icon={model.starred ? 'star' : 'star-border'}
+        //     size={34}
+        //     animated
+        //     onPress={() => starItem()}
+        //     color={model.starred ? RED : '#000'}
+        // />
+        <MaterialCommunityIcons 
+            name={model.starred ? 'heart' : 'heart-outline'} 
+            size={34} 
             animated
             onPress={() => starItem()}
-            color={model.starred ? RED : '#000'}
-        />
+            color={model.starred ? RED : '#000'} />
+    )
+
+    const time = (
+        // Time comes in "3:00p-4:00p"
+        // Format to produce 3:00pm 
+        subtitle.split(" ", 1) + "m"
     )
 
     return (
         // <View style ={styles.row}>
         <View>
-        {/* TODO : FIX TIME IMPLEMENTATION */}
         {/* Currently, it gives us "3:00p-4:00p" */}
         {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
-        <Text style ={styles.time}>{subtitle.split(" ", 1)}m</Text>
-        {/* <Text style ={styles.time}>{"3:00"+ '\n' +"PM"}</Text> */}
+        <Text style ={styles.time}>{time}</Text>
         <Card style={styles.card} onPress={onPress}>
 
         <View style ={styles.row}>
@@ -49,6 +59,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
             <View>
                 {avatar}
             </View>
+            
             {/* Content in the middle */}
             <View style={{marginLeft: 10, width:'70%'}}>
                 <Text style={styles.subtitleTop}>Zoom</Text>
@@ -57,7 +68,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
                 <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
             </View>
             {/* Heart */}
-            <View style={{position: 'absolute', right: 15}}>
+            <View style={{position: 'absolute', right: 25}}>
             {(starEnabled ? star : null)}
             </View>
         </View>

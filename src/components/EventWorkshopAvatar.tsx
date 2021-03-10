@@ -31,7 +31,7 @@ interface Props {
 export default function EventWorkshopAvatar({ model }: Props) {
     return (
         <Avatar.Icon
-            size={45}
+            size={55}
             icon={EVENT_TYPE_ICONS[model.event_type]}
             color={EVENT_TYPE_TEXT_COLORS[model.event_type]}
             theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
