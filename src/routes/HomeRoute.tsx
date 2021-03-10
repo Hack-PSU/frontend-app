@@ -13,6 +13,7 @@ import DateCountDown from '../components/DateCountDown'
 import Scaffold from '../components/Scaffold'
 import ErrorCard from '../components/ErrorCard'
 import EventWorkshopListItem from '../components/EventWorkshopListItem'
+import SponsorCarousel from '../components/SponsorCarousel'
 
 import useScrollY from '../hooks/useScrollY'
 import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
@@ -128,8 +129,8 @@ const HomeRoute: React.FC = () => {
                             <EventWorkshopListItem
                                 model={events[0]}
                                 starEnabled={false}
-                                starItem={() => { }}
-                                onPress={() => { }}
+                                starItem={() => {}}
+                                onPress={() => {}}
                             />
                         </View>
                     )}
@@ -206,6 +207,10 @@ const HomeRoute: React.FC = () => {
                             </View>
                         </HomeListItemSecondary>
                     </View>
+                    <HomeListItem>
+                        <Text style={styles.sponsorText}>Our Sponsors</Text>
+                        <SponsorCarousel />
+                    </HomeListItem>
                 </View>
             </Animated.ScrollView>
         </Scaffold>
@@ -290,6 +295,11 @@ const styles = StyleSheet.create({
         top: 235,
         left: 190,
         fontFamily: 'Cornerstone',
+    },
+    sponsorText: {
+        fontSize: 30,
+        fontFamily: 'SpaceGrotesk',
+        textAlign: 'center',
     },
 })
 
