@@ -40,7 +40,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
         {/* TODO : FIX TIME IMPLEMENTATION */}
         {/* Currently, it gives us "3:00p-4:00p" */}
         {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
-        <Text style ={styles.time}>{subtitle}</Text>
+        <Text style ={styles.time}>{subtitle.split(" ", 1)}m</Text>
         {/* <Text style ={styles.time}>{"3:00"+ '\n' +"PM"}</Text> */}
         <Card style={styles.card} onPress={onPress}>
 
@@ -50,7 +50,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
                 {avatar}
             </View>
             {/* Content in the middle */}
-            <View style={{marginLeft: 10}}>
+            <View style={{marginLeft: 10, width:'70%'}}>
                 <Text style={styles.subtitleTop}>Zoom</Text>
                 <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{model.event_title}</Text>
                 <Text style={styles.subtitle}>{"Ali Malik"}</Text>
@@ -94,18 +94,19 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 1, height: 1 },
         shadowColor: "black",
         shadowOpacity: 0.3,
-        shadowRadius: 2,
+        shadowRadius: 1,
         paddingTop: 5,
         paddingBottom: 5,
         paddingRight: 10,
     },
     title: {
         lineHeight: 32,
-        fontSize: 24,
+        fontSize: 22,
         color: TEXT,
         fontWeight: 'normal',
         marginLeft: 10,
-        width: '85%'
+        paddingTop: 3,
+        paddingBottom: 3,
     },
     subtitle: {
         //fontFamily: '',
@@ -151,6 +152,7 @@ const styles = StyleSheet.create({
     subtitleTop: {
         color: "grey",
         marginLeft: 10,
+        fontWeight: '600',
     },
     centerElements: {
         flex: 1,
