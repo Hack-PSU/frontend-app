@@ -5,7 +5,7 @@ import SponsorLogo from '../components/SponsorLogo'
 
 import MICROSOFT_SVG from '../../assets/images/sponsors/Microsoft_original.svg'
 import EECS_SVG from '../../assets/images/sponsors/EECS-day.svg'
-import ICS_SVG from '../../assets/images/sponsors/ICS-day-cropped.svg'
+import ICS_SVG from '../../assets/images/sponsors/ICDS-new.svg'
 import LION_LAUNCHPAD_SVG from '../../assets/images/sponsors/Lion-Launchpad.svg'
 import HVC_SVG from '../../assets/images/sponsors/HVC.svg'
 
