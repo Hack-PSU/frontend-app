@@ -39,7 +39,7 @@ export default function EventWorkshopAvatar({ model }: Props) {
         />
     ) : (
         <Avatar.Image
-            size={42}
+            size={55}
             source={{ uri: model.event_icon }}
             theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
             style={styles.avatar}

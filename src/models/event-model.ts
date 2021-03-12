@@ -10,6 +10,7 @@ export interface EventModelJSON {
     location_name: string
     starred?: boolean // This will only be used when reading from the storage for starred (offline) events
     event_icon: string
+    ws_presenter_names: string
 }
 
 // Date formats.
@@ -30,6 +31,7 @@ export class EventModel {
     public location_name: string
     public starred: boolean
     public event_icon: string
+    public ws_presenter_names: string
 
     static parseJSON(value: EventModelJSON): EventModel {
         const event = new EventModel()

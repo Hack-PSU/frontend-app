@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text,SafeAreaView, SectionList } from 'react-native'
 import { Card, Chip, IconButton, Title, Paragraph, Avatar} from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser'
 import { MaterialIcons,MaterialCommunityIcons } from '@expo/vector-icons'
@@ -19,6 +19,8 @@ interface Props {
 const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, onPress }) => {
     const subtitle = model.formatInfo()
     const location = model.location_name
+    const name = model.ws_presenter_names
+    const eventTitle = model.event_title
 
     const isZoom = location && location.includes('https://psu.zoom.us')
 
@@ -46,6 +48,18 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
         subtitle.split(" ", 1) + "m"
     )
 
+    var locationLabel = location;
+    // Parses location for labeling purposes 
+    if (location.includes("zoom")) {
+        locationLabel = "Zoom";
+    } else if(location.includes("youtube") || location.includes("youtu.be")){
+    locationLabel = "YouTube";
+    }
+    else {
+    locationLabel = "Discord";
+    }
+
+
     return (
         // <View style ={styles.row}>
         <View>
@@ -53,7 +67,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
         {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
         <Text style ={styles.time}>{time}</Text>
         <Card style={styles.card} onPress={onPress}>
-
+        
         <View style ={styles.row}>
             {/* Image on the left side */}
             <View>
@@ -62,9 +76,9 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
             
             {/* Content in the middle */}
             <View style={{marginLeft: 10, width:'70%'}}>
-                <Text style={styles.subtitleTop}>Zoom</Text>
-                <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{model.event_title}</Text>
-                <Text style={styles.subtitle}>{"Ali Malik"}</Text>
+                <Text style={styles.subtitleTop}>{locationLabel}</Text>
+                <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{eventTitle}</Text>
+                <Text style={styles.subtitle}>{name}</Text>
                 <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
             </View>
             {/* Heart */}
@@ -114,13 +128,13 @@ const styles = StyleSheet.create({
         lineHeight: 32,
         fontSize: 22,
         color: TEXT,
-        fontWeight: 'normal',
+        fontFamily: 'SpaceGrotesk',
         marginLeft: 10,
         paddingTop: 3,
         paddingBottom: 3,
     },
     subtitle: {
-        //fontFamily: '',
+        fontFamily: 'SpaceGrotesk',
         lineHeight: 25,
         fontSize: 18,
         letterSpacing: 0.2,
