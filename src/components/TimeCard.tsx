@@ -12,7 +12,7 @@ const TimeCard: React.FC<Props> = (props) => {
     return (
         <Card style={styles.card}>
             <Card.Content>
-                {props.title && <Title style={styles.title}>{props.title}:</Title>}
+                {props.title && <Title style={styles.title}>{props.title}</Title>}
                 {props.time && <Headline style={styles.time}>{props.time}</Headline>}
             </Card.Content>
         </Card>

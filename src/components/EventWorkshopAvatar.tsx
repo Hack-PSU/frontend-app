@@ -29,11 +29,18 @@ interface Props {
 }
 
 export default function EventWorkshopAvatar({ model }: Props) {
-    return (
+    return model.event_icon == null ? (
         <Avatar.Icon
             size={55}
             icon={EVENT_TYPE_ICONS[model.event_type]}
             color={EVENT_TYPE_TEXT_COLORS[model.event_type]}
+            theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
+            style={styles.avatar}
+        />
+    ) : (
+        <Avatar.Image
+            size={42}
+            source={{ uri: model.event_icon }}
             theme={{ colors: { primary: EVENT_TYPE_COLORS[model.event_type] } }}
             style={styles.avatar}
         />
@@ -42,6 +49,6 @@ export default function EventWorkshopAvatar({ model }: Props) {
 
 const styles = StyleSheet.create({
     avatar: {
-        borderRadius: 50,
+        borderRadius: 50, 
     },
 })
