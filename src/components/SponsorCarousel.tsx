@@ -4,16 +4,22 @@ import Slick from 'react-native-slick'
 import SponsorLogo from '../components/SponsorLogo'
 
 import MICROSOFT_SVG from '../../assets/images/sponsors/Microsoft_original.svg'
+import NITTANY_AI_SVG from '../../assets/images/sponsors/nittanyai-day.svg'
+import STARTUP_WEEK_SVG from '../../assets/images/sponsors/StartUpWeek-day.svg'
+import ICS_SVG from '../../assets/images/sponsors/ICDS-day.svg'
 import EECS_SVG from '../../assets/images/sponsors/EECS-day.svg'
-import ICS_SVG from '../../assets/images/sponsors/ICDS-new.svg'
 import LION_LAUNCHPAD_SVG from '../../assets/images/sponsors/Lion-Launchpad.svg'
 import HVC_SVG from '../../assets/images/sponsors/HVC.svg'
+import ECHO_AR_SVG from '../../assets/images/sponsors/EchoAR-day.svg'
 
 const MICROSOFT_URL = 'https://www.microsoft.com/'
-const EECS_URL = 'https://www.eecs.psu.edu/'
+const NITTANY_AI_URL = 'https://nittanyai.psu.edu/'
+const STARTUP_WEEK_URL = 'https://startupweek.psu.edu/'
 const ICS_URL = 'https://www.icds.psu.edu/'
+const EECS_URL = 'https://www.eecs.psu.edu/'
 const LION_LAUNCHPAD_URL = 'https://lionlaunchpad.psu.edu/'
 const HVC_URL = 'https://www.linkedin.com/company/happy-valley-communications/'
+const ECHO_AR_URL = 'https://www.echoar.xyz/'
 
 const SponsorCarousel: React.FC = () => {
     return (
@@ -31,17 +37,26 @@ const SponsorCarousel: React.FC = () => {
                 <SponsorLogo sponsorURL={MICROSOFT_URL}>
                     <MICROSOFT_SVG style={styles.logo} />
                 </SponsorLogo>
-                <SponsorLogo sponsorURL={EECS_URL}>
-                    <EECS_SVG style={styles.logo} />
+                <SponsorLogo sponsorURL={NITTANY_AI_URL}>
+                    <NITTANY_AI_SVG style={styles.logo} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={STARTUP_WEEK_URL}>
+                    <STARTUP_WEEK_SVG style={styles.logo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={ICS_URL}>
                     <ICS_SVG style={{ ...styles.logo, ...styles.icsLogo }} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={EECS_URL}>
+                    <EECS_SVG style={styles.logo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={LION_LAUNCHPAD_URL}>
                     <LION_LAUNCHPAD_SVG style={styles.logo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={HVC_URL}>
                     <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
+                </SponsorLogo>
+                <SponsorLogo sponsorURL={ECHO_AR_URL}>
+                    <ECHO_AR_SVG style={styles.logo} />
                 </SponsorLogo>
             </Slick>
         </View>
