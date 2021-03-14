@@ -41,10 +41,12 @@ const SponsorCarousel: React.FC = () => {
                     <NITTANY_AI_SVG style={styles.smallLogo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={STARTUP_WEEK_URL}>
-                    <STARTUP_WEEK_SVG style={styles.smallLogo} />
+                    <STARTUP_WEEK_SVG
+                        style={{ ...styles.smallLogo, ...styles.preventCutoffLogo }}
+                    />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={ICS_URL}>
-                    <ICS_SVG style={{ ...styles.logo, ...styles.icsLogo }} />
+                    <ICS_SVG style={{ ...styles.logo, ...styles.preventCutoffLogo }} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={EECS_URL}>
                     <EECS_SVG style={styles.logo} />
@@ -56,7 +58,7 @@ const SponsorCarousel: React.FC = () => {
                     <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={ECHO_AR_URL}>
-                    <ECHO_AR_SVG style={styles.smallLogo} />
+                    <ECHO_AR_SVG style={{ ...styles.smallLogo, ...styles.preventCutoffLogo }} />
                 </SponsorLogo>
             </Slick>
         </View>
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    icsLogo: {
+    preventCutoffLogo: {
         top: 0,
     },
     hvcLogo: {
