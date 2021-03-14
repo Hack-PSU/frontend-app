@@ -37,14 +37,12 @@ const SponsorCarousel: React.FC = () => {
                 <SponsorLogo sponsorURL={MICROSOFT_URL}>
                     <MICROSOFT_SVG style={styles.logo} />
                 </SponsorLogo>
-                {/*
                 <SponsorLogo sponsorURL={NITTANY_AI_URL}>
                     <NITTANY_AI_SVG style={styles.smallLogo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={STARTUP_WEEK_URL}>
                     <STARTUP_WEEK_SVG style={styles.smallLogo} />
                 </SponsorLogo>
-                */}
                 <SponsorLogo sponsorURL={ICS_URL}>
                     <ICS_SVG style={{ ...styles.logo, ...styles.icsLogo }} />
                 </SponsorLogo>
@@ -57,11 +55,9 @@ const SponsorCarousel: React.FC = () => {
                 <SponsorLogo sponsorURL={HVC_URL}>
                     <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
                 </SponsorLogo>
-                {/*
                 <SponsorLogo sponsorURL={ECHO_AR_URL}>
                     <ECHO_AR_SVG style={styles.smallLogo} />
                 </SponsorLogo>
-                */}
             </Slick>
         </View>
     )
