@@ -26,8 +26,6 @@ import useEvents from '../data/hooks/useEvents'
 import { BACKGROUND, PRIMARY, TEXT_LIGHT } from '../theme'
 import EventDetail from './EventDetail'
 
-const ALL = 'All'
-// const STARRED = 'Starred'
 const FRIDAY = 'Friday'
 const SATURDAY = 'Saturday'
 const SUNDAY = 'Sunday'
@@ -47,7 +45,7 @@ interface Props {
 const EventWorkshopPage: React.FC<Props> = (props) => {
     //****************** STATE DECLARATIONS ******************//
 
-    const [filter, setFilter] = useState<'Friday' | 'Saturday' | 'Sunday' | 'All'>(FRIDAY)
+    const [filter, setFilter] = useState<'Friday' | 'Saturday' | 'Sunday'>(FRIDAY)
 
     // This is needed to ensure that offline data and online data isn't combined
     // on every rerender.
@@ -229,9 +227,9 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
 
     // If the user is in the starred section, then only show the starred items.
-    if (filter === ALL && isEnabled) {
-        correctEventList = correctEventList.filter((event) => event.starred)
-    }
+    // if (filter === ALL && isEnabled) {
+    //     correctEventList = correctEventList.filter((event) => event.starred)
+    // }
 
     if (filter === FRIDAY) {
         if (isEnabled) {
@@ -309,7 +307,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
                 </View>
                 <View style={styles.filter}>
                     <SegmentedControl
-                        values={[FRIDAY, SATURDAY, SUNDAY, ALL]}
+                        values={[FRIDAY, SATURDAY, SUNDAY]}
                         value={filter}
                         onChange={(newValue) => setFilter(newValue as any)}
                     />
