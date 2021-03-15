@@ -38,12 +38,10 @@ const SponsorCarousel: React.FC = () => {
                     <MICROSOFT_SVG style={styles.logo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={NITTANY_AI_URL}>
-                    <NITTANY_AI_SVG style={styles.smallLogo} />
+                    <NITTANY_AI_SVG style={styles.logo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={STARTUP_WEEK_URL}>
-                    <STARTUP_WEEK_SVG
-                        style={{ ...styles.smallLogo, ...styles.preventCutoffLogo }}
-                    />
+                    <STARTUP_WEEK_SVG style={{ ...styles.logo, ...styles.preventCutoffLogo }} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={ICS_URL}>
                     <ICS_SVG style={{ ...styles.logo, ...styles.preventCutoffLogo }} />
@@ -55,10 +53,10 @@ const SponsorCarousel: React.FC = () => {
                     <LION_LAUNCHPAD_SVG style={styles.logo} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={HVC_URL}>
-                    <HVC_SVG style={{ ...styles.hvcLogo, ...styles.logo }} />
+                    <HVC_SVG style={{ ...styles.logo, ...styles.hvcLogo }} />
                 </SponsorLogo>
                 <SponsorLogo sponsorURL={ECHO_AR_URL}>
-                    <ECHO_AR_SVG style={{ ...styles.smallLogo, ...styles.preventCutoffLogo }} />
+                    <ECHO_AR_SVG style={{ ...styles.logo, ...styles.preventCutoffLogo }} />
                 </SponsorLogo>
             </Slick>
         </View>
@@ -105,14 +103,6 @@ const styles = StyleSheet.create({
     },
     hvcLogo: {
         margin: 10,
-    },
-    smallLogo: {
-        flex: 1,
-        top: 10,
-        height: 10,
-        width: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 })
 
