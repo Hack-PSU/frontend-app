@@ -53,10 +53,10 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
     if (location.includes("zoom")) {
         locationLabel = "Zoom";
     } else if(location.includes("youtube") || location.includes("youtu.be")){
-    locationLabel = "YouTube";
+        locationLabel = "YouTube";
     }
     else {
-    locationLabel = "Discord";
+        locationLabel = "Discord";
     }
 
 
@@ -65,7 +65,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
         <View>
         {/* Currently, it gives us "3:00p-4:00p" */}
         {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
-        <Text style ={styles.time}>{time}</Text>
+        {/* <Text style ={styles.time}>{time}</Text>   TEMP TIME */}
         <Card style={styles.card} onPress={onPress}>
         
         <View style ={styles.row}>
@@ -78,6 +78,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
             <View style={{marginLeft: 10, width:'70%'}}>
                 <Text style={styles.subtitleTop}>{locationLabel}</Text>
                 <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{eventTitle}</Text>
+                <Text style={styles.subtitleBottom}>{subtitle}  {/* // TEMP TIME */}</Text>
                 <Text style={styles.subtitle}>{name}</Text>
                 <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
             </View>
@@ -112,14 +113,14 @@ const ZOOM = 'rgb(41,129,255)'
 
 const styles = StyleSheet.create({
     card: {
-        marginBottom: 15,
-        margin: 10,
-        borderRadius: 7,
-        elevation:4,
-        shadowOffset: { width: 1, height: 1 },
-        shadowColor: "black",
-        shadowOpacity: 0.3,
-        shadowRadius: 1,
+        // marginBottom: 15, REMOVE FOR BUBBLE CARD
+        // margin: 10, REMOVE FOR BUBBLE CARD
+        borderRadius: 0,  //CHANGE TO '7' FOR BUBBLE CARD
+        // elevation:4,  REMOVE FOR BUBBLE CARD
+        // shadowOffset: { width: 1, height: 1 }, REMOVE FOR BUBBLE CARD
+        // shadowColor: "black", REMOVE FOR BUBBLE CARD
+        // shadowOpacity: 0.3, REMOVE FOR BUBBLE CARD
+        // shadowRadius: 1, REMOVE FOR BUBBLE CARD
         paddingTop: 5,
         paddingBottom: 5,
         paddingRight: 10,
@@ -178,6 +179,11 @@ const styles = StyleSheet.create({
         color: "grey",
         marginLeft: 10,
         fontWeight: '600',
+    },
+    subtitleBottom:{
+        color: "grey", // TEMP TIME
+        marginLeft: 10,// TEMP TIME
+        fontWeight: '600',// TEMP TIME
     },
     centerElements: {
         flex: 1,
