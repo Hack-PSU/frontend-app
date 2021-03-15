@@ -1,8 +1,8 @@
 import React from 'react'
-import { StyleSheet, View, Text,SafeAreaView, SectionList } from 'react-native'
-import { Card, Chip, IconButton, Title, Paragraph, Avatar} from 'react-native-paper'
+import { StyleSheet, View, Text, SafeAreaView, SectionList } from 'react-native'
+import { Card, Chip, IconButton, Title, Paragraph, Avatar } from 'react-native-paper'
 import * as WebBrowser from 'expo-web-browser'
-import { MaterialIcons,MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
 
@@ -34,61 +34,59 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
         //     onPress={() => starItem()}
         //     color={model.starred ? RED : '#000'}
         // />
-        <MaterialCommunityIcons 
-            name={model.starred ? 'heart' : 'heart-outline'} 
-            size={34} 
+        <MaterialCommunityIcons
+            name={model.starred ? 'heart' : 'heart-outline'}
+            size={34}
             animated
             onPress={() => starItem()}
-            color={model.starred ? RED : '#000'} />
+            color={model.starred ? RED : '#000'}
+        />
     )
 
-    const time = (
+    const time =
         // Time comes in "3:00p-4:00p"
-        // Format to produce 3:00pm 
-        subtitle.split(" ", 1) + "m"
-    )
+        // Format to produce 3:00pm
+        subtitle.split(' ', 1) + 'm'
 
-    var locationLabel = location;
-    // Parses location for labeling purposes 
-    if (location.includes("zoom")) {
-        locationLabel = "Zoom";
-    } else if(location.includes("youtube") || location.includes("youtu.be")){
-        locationLabel = "YouTube";
+    let locationLabel = location
+    // Parses location for labeling purposes
+    if (location.includes('zoom')) {
+        locationLabel = 'Zoom'
+    } else if (location.includes('youtube') || location.includes('youtu.be')) {
+        locationLabel = 'YouTube'
+    } else {
+        locationLabel = 'Discord'
     }
-    else {
-        locationLabel = "Discord";
-    }
-
 
     return (
         // <View style ={styles.row}>
         <View>
-        {/* Currently, it gives us "3:00p-4:00p" */}
-        {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
-        {/* <Text style ={styles.time}>{time}</Text>   TEMP TIME */}
-        <Card style={styles.card} onPress={onPress}>
-        
-        <View style ={styles.row}>
-            {/* Image on the left side */}
-            <View>
-                {avatar}
-            </View>
-            
-            {/* Content in the middle */}
-            <View style={{marginLeft: 10, width:'65%'}}>
-                <Text style={styles.subtitleTop}>{locationLabel}</Text>
-                <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{eventTitle}</Text>
-                <Text style={styles.subtitle}>{name}</Text>
-                <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
-            </View>
-            {/* Heart */}
-            <View style={{position: 'absolute', right: 25}}>
-            {(starEnabled ? star : null)}
-            </View>
-        </View>
+            {/* Currently, it gives us "3:00p-4:00p" */}
+            {/* We want: "3:00pm - 4:00pm " or "3:00pm" */}
+            {/* <Text style ={styles.time}>{time}</Text>   TEMP TIME */}
+            <Card style={styles.card} onPress={onPress}>
+                <View style={styles.row}>
+                    {/* Image on the left side */}
+                    <View>{avatar}</View>
 
+                    {/* Content in the middle */}
+                    <View style={{ marginLeft: 10, width: '65%' }}>
+                        <Text style={styles.subtitleTop}>{locationLabel}</Text>
+                        <Text style={styles.title} numberOfLines={1} ellipsizeMode={'tail'}>
+                            {eventTitle}
+                        </Text>
+                        <Text style={styles.subtitle}>{name}</Text>
+                        <View style={styles.centerElements}>
+                            <Text style={styles.seeMoreDots}>• • •</Text>
+                        </View>
+                    </View>
+                    {/* Heart */}
+                    <View style={{ position: 'absolute', right: 25 }}>
+                        {starEnabled ? star : null}
+                    </View>
+                </View>
 
-            {/* <Card.Title
+                {/* <Card.Title
                 title={model.event_title}
                 titleStyle={styles.title}
                 // NEED TO FIX THIS - Right now, "subtitle" returns a
@@ -100,8 +98,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
                 left={() => avatar}
                 right={() => (starEnabled ? star : null)}
             /> */}
-        </Card>
-
+            </Card>
         </View>
     )
 }
@@ -115,7 +112,7 @@ const styles = StyleSheet.create({
         // marginBottom: 15, REMOVE FOR BUBBLE CARD
         marginLeft: 10, //REMOVE FOR BUBBLE CARD
         marginRight: 10, //REMOVE FOR BUBBLE CARD
-        borderRadius: 0,  //CHANGE TO '7' FOR BUBBLE CARD
+        borderRadius: 0, //CHANGE TO '7' FOR BUBBLE CARD
         // elevation:4,  REMOVE FOR BUBBLE CARD
         // shadowOffset: { width: 1, height: 1 }, REMOVE FOR BUBBLE CARD
         // shadowColor: "black", REMOVE FOR BUBBLE CARD
@@ -150,7 +147,7 @@ const styles = StyleSheet.create({
         marginTop: 4,
         marginBottom: 12,
         // justifyContent: 'space-between',
-        alignItems:'center'
+        alignItems: 'center',
     },
     chip: {
         borderRadius: 8,
@@ -170,25 +167,25 @@ const styles = StyleSheet.create({
         marginLeft: 13,
         fontSize: 25,
         fontFamily: 'SpaceGrotesk',
-        fontWeight: '600'
+        fontWeight: '600',
     },
     seeMoreDots: {
-        color: "grey",
+        color: 'grey',
     },
     subtitleTop: {
-        color: "grey",
+        color: 'grey',
         marginLeft: 10,
         fontWeight: '600',
     },
-    subtitleBottom:{
-        color: "grey", // TEMP TIME
-        marginLeft: 10,// TEMP TIME
-        fontWeight: '600',// TEMP TIME
+    subtitleBottom: {
+        color: 'grey', // TEMP TIME
+        marginLeft: 10, // TEMP TIME
+        fontWeight: '600', // TEMP TIME
     },
     centerElements: {
         flex: 1,
         height: 16,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
 })

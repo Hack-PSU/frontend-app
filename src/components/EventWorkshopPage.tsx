@@ -1,5 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { View, StyleSheet, SectionList, ActivityIndicator,ImageBackground,Switch } from 'react-native'
+import {
+    View,
+    StyleSheet,
+    SectionList,
+    ActivityIndicator,
+    ImageBackground,
+    Switch,
+} from 'react-native'
 import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
@@ -40,7 +47,7 @@ interface Props {
 const EventWorkshopPage: React.FC<Props> = (props) => {
     //****************** STATE DECLARATIONS ******************//
 
-    const [filter, setFilter] = useState<'Friday' | 'Saturday'| 'Sunday' | 'All'>(FRIDAY)
+    const [filter, setFilter] = useState<'Friday' | 'Saturday' | 'Sunday' | 'All'>(FRIDAY)
 
     // This is needed to ensure that offline data and online data isn't combined
     // on every rerender.
@@ -218,34 +225,40 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             : event.event_type === WORKSHOP_EVENT_TYPE
     )
 
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    
+    const [isEnabled, setIsEnabled] = useState(false)
+    const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
+
     // If the user is in the starred section, then only show the starred items.
     if (filter === ALL && isEnabled) {
         correctEventList = correctEventList.filter((event) => event.starred)
     }
 
     if (filter === FRIDAY) {
-        if(isEnabled){
-            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Friday" && event.starred)
-        }else{
-            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Friday")
+        if (isEnabled) {
+            correctEventList = correctEventList.filter(
+                (event) => event.getWeekday() === 'Friday' && event.starred
+            )
+        } else {
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === 'Friday')
         }
     }
 
     if (filter === SATURDAY) {
-        if(isEnabled){
-            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Saturday" && event.starred)
-        }else{
-            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Saturday")
+        if (isEnabled) {
+            correctEventList = correctEventList.filter(
+                (event) => event.getWeekday() === 'Saturday' && event.starred
+            )
+        } else {
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === 'Saturday')
         }
     }
     if (filter === SUNDAY) {
-        if(isEnabled){
-            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Sunday" && event.starred)
-        }else{
-            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Sunday")
+        if (isEnabled) {
+            correctEventList = correctEventList.filter(
+                (event) => event.getWeekday() === 'Sunday' && event.starred
+            )
+        } else {
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === 'Sunday')
         }
     }
 
@@ -276,23 +289,22 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             starEnabled={true}
         />
     )
-    
+
     //const image = { uri: "https://reactjs.org/logo-og.png" };
 
     const listHeader = (
-        
         <ImageBackground source={require('../../assets/images/mountain.png')} style={styles.image}>
             <View style={styles.title}>
-                <View style ={styles.row}>
+                <View style={styles.row}>
                     <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
 
                     <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={toggleSwitch}
                         value={isEnabled}
-                        style={{position: 'absolute', right: 20,alignSelf: 'flex-end'}}
+                        style={{ position: 'absolute', right: 20, alignSelf: 'flex-end' }}
                     />
                 </View>
                 <View style={styles.filter}>
@@ -306,7 +318,7 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
                     )}
                     {onlineData.error && <ErrorCard error={onlineData.error} />}
                 </View>
-        </View>
+            </View>
         </ImageBackground>
     )
 
@@ -315,14 +327,14 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         const days: Day[] = []
 
         correctEventList.forEach((event) => {
-            const time = (event.formatInfo().split(" ", 1)+ "m")
+            const time = event.formatInfo().split(' ', 1) + 'm'
             // console.log(weekday+ " - " +time)
             let foundDay: Day
             for (const day of days) {
                 if (day.key === time) {
                     foundDay = day
                     break
-                }   
+                }
             }
 
             if (foundDay) {
@@ -368,7 +380,7 @@ export default EventWorkshopPage
 
 const styles = StyleSheet.create({
     title: {
-        paddingTop: Utils.LOGO_SAFE_PADDING+10,
+        paddingTop: Utils.LOGO_SAFE_PADDING + 10,
     },
     filter: {
         paddingTop: 16,
@@ -390,16 +402,17 @@ const styles = StyleSheet.create({
     },
     loading: {
         margin: 20,
-    },titleText: { 
-        paddingBottom: 0, 
+    },
+    titleText: {
+        paddingBottom: 0,
         color: TEXT_LIGHT,
     },
     image: {
-      flex: 1,
-      resizeMode: "center",
-      justifyContent: "center",
+        flex: 1,
+        resizeMode: 'center',
+        justifyContent: 'center',
 
-      height:232,
+        height: 232,
     },
     row: {
         width: '100%',
@@ -409,6 +422,6 @@ const styles = StyleSheet.create({
         marginTop: 4,
         marginBottom: 12,
         // justifyContent: 'space-between',
-        alignItems:'center'
+        alignItems: 'center',
     },
 })

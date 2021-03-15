@@ -49,6 +49,6 @@ export default function EventWorkshopAvatar({ model }: Props) {
 
 const styles = StyleSheet.create({
     avatar: {
-        borderRadius: 50, 
+        borderRadius: 50,
     },
 })
