@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'center',
         justifyContent: 'center',
-
+        backgroundColor: '#113654',
         height: 232,
     },
     row: {
