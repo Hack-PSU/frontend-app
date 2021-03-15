@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { View, StyleSheet, SectionList, ActivityIndicator,ImageBackground } from 'react-native'
+import { View, StyleSheet, SectionList, ActivityIndicator,ImageBackground,Switch } from 'react-native'
 import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
@@ -20,7 +20,10 @@ import { BACKGROUND, PRIMARY, TEXT_LIGHT } from '../theme'
 import EventDetail from './EventDetail'
 
 const ALL = 'All'
-const STARRED = 'Starred'
+// const STARRED = 'Starred'
+const FRIDAY = 'Friday'
+const SATURDAY = 'Saturday'
+const SUNDAY = 'Sunday'
 
 export const EVENTS = 'Events'
 export const WORKSHOPS = 'Workshops'
@@ -37,7 +40,7 @@ interface Props {
 const EventWorkshopPage: React.FC<Props> = (props) => {
     //****************** STATE DECLARATIONS ******************//
 
-    const [filter, setFilter] = useState<'All' | 'Starred'>(ALL)
+    const [filter, setFilter] = useState<'Friday' | 'Saturday'| 'Sunday' | 'All'>(FRIDAY)
 
     // This is needed to ensure that offline data and online data isn't combined
     // on every rerender.
@@ -214,9 +217,36 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             ? event.event_type !== WORKSHOP_EVENT_TYPE
             : event.event_type === WORKSHOP_EVENT_TYPE
     )
+
+    const [isEnabled, setIsEnabled] = useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    
     // If the user is in the starred section, then only show the starred items.
-    if (filter === STARRED) {
+    if (filter === ALL && isEnabled) {
         correctEventList = correctEventList.filter((event) => event.starred)
+    }
+
+    if (filter === FRIDAY) {
+        if(isEnabled){
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Friday" && event.starred)
+        }else{
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Friday")
+        }
+    }
+
+    if (filter === SATURDAY) {
+        if(isEnabled){
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Saturday" && event.starred)
+        }else{
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Saturday")
+        }
+    }
+    if (filter === SUNDAY) {
+        if(isEnabled){
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Sunday" && event.starred)
+        }else{
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === "Sunday")
+        }
     }
 
     //****************** LAYOUT BUILD ******************//
@@ -249,16 +279,27 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
     
     //const image = { uri: "https://reactjs.org/logo-og.png" };
 
-    
     const listHeader = (
+        
         <ImageBackground source={require('../../assets/images/mountain.png')} style={styles.image}>
             <View style={styles.title}>
-                <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
+                <View style ={styles.row}>
+                    <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
+
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                        style={{position: 'absolute', right: 20,alignSelf: 'flex-end'}}
+                    />
+                </View>
                 <View style={styles.filter}>
                     <SegmentedControl
-                        values={[ALL, STARRED]}
+                        values={[FRIDAY, SATURDAY, SUNDAY, ALL]}
                         value={filter}
-                        onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
+                        onChange={(newValue) => setFilter(newValue as any)}
                     />
                     {!onlineData.data && (
                         <ActivityIndicator animating size="large" style={styles.loading} />
@@ -274,22 +315,23 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         const days: Day[] = []
 
         correctEventList.forEach((event) => {
-            const weekday = event.getWeekday()
-
+            const time = (event.formatInfo().split(" ", 1)+ "m")
+            // console.log(weekday+ " - " +time)
             let foundDay: Day
             for (const day of days) {
-                if (day.key === weekday) {
+                if (day.key === time) {
                     foundDay = day
                     break
-                }
+                }   
             }
 
             if (foundDay) {
                 foundDay.data.push(event)
             } else {
+                // console.log("TIME: "+ time)
                 days.push({
                     data: [event],
-                    key: weekday,
+                    key: time,
                 })
             }
         })
@@ -326,7 +368,7 @@ export default EventWorkshopPage
 
 const styles = StyleSheet.create({
     title: {
-        paddingTop: Utils.LOGO_SAFE_PADDING,
+        paddingTop: Utils.LOGO_SAFE_PADDING+10,
     },
     filter: {
         paddingTop: 16,
@@ -341,9 +383,10 @@ const styles = StyleSheet.create({
         backgroundColor: BACKGROUND,
 
         color: PRIMARY,
-        fontSize: 20,
+        marginTop: 20,
+        fontSize: 30,
         lineHeight: 24,
-        fontFamily: 'Plex-Mono',
+        fontFamily: 'SpaceGrotesk',
     },
     loading: {
         margin: 20,
@@ -357,5 +400,15 @@ const styles = StyleSheet.create({
       justifyContent: "center",
 
       height:232,
+    },
+    row: {
+        width: '100%',
+        flexDirection: 'row',
+        marginLeft: 16,
+        marginRight: 16,
+        marginTop: 4,
+        marginBottom: 12,
+        // justifyContent: 'space-between',
+        alignItems:'center'
     },
 })

@@ -75,10 +75,9 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
             </View>
             
             {/* Content in the middle */}
-            <View style={{marginLeft: 10, width:'70%'}}>
+            <View style={{marginLeft: 10, width:'65%'}}>
                 <Text style={styles.subtitleTop}>{locationLabel}</Text>
                 <Text style={styles.title}  numberOfLines = {1} ellipsizeMode={'tail'}>{eventTitle}</Text>
-                <Text style={styles.subtitleBottom}>{subtitle}  {/* // TEMP TIME */}</Text>
                 <Text style={styles.subtitle}>{name}</Text>
                 <View style={styles.centerElements}><Text style={styles.seeMoreDots}>• • •</Text></View>
             </View>
@@ -114,7 +113,8 @@ const ZOOM = 'rgb(41,129,255)'
 const styles = StyleSheet.create({
     card: {
         // marginBottom: 15, REMOVE FOR BUBBLE CARD
-        // margin: 10, REMOVE FOR BUBBLE CARD
+        marginLeft: 10, //REMOVE FOR BUBBLE CARD
+        marginRight: 10, //REMOVE FOR BUBBLE CARD
         borderRadius: 0,  //CHANGE TO '7' FOR BUBBLE CARD
         // elevation:4,  REMOVE FOR BUBBLE CARD
         // shadowOffset: { width: 1, height: 1 }, REMOVE FOR BUBBLE CARD
