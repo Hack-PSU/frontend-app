@@ -1,8 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Text, SafeAreaView, SectionList } from 'react-native'
-import { Card, Chip, IconButton, Title, Paragraph, Avatar } from 'react-native-paper'
-import * as WebBrowser from 'expo-web-browser'
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { StyleSheet, View, Text } from 'react-native'
+import { Card } from 'react-native-paper'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { EventModel } from '../models/event-model'
 
@@ -17,12 +16,9 @@ interface Props {
 }
 
 const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, onPress }) => {
-    const subtitle = model.formatInfo()
     const location = model.location_name
     const name = model.ws_presenter_names
     const eventTitle = model.event_title
-
-    const isZoom = location && location.includes('https://psu.zoom.us')
 
     const avatar = <EventWorkshopAvatar model={model} />
 
@@ -42,11 +38,6 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
             color={model.starred ? RED : '#000'}
         />
     )
-
-    const time =
-        // Time comes in "3:00p-4:00p"
-        // Format to produce 3:00pm
-        subtitle.split(' ', 1) + 'm'
 
     let locationLabel = location
     // Parses location for labeling purposes
@@ -105,8 +96,6 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
 
 export default EventWorkshopListItem
 
-const ZOOM = 'rgb(41,129,255)'
-
 const styles = StyleSheet.create({
     card: {
         // marginBottom: 15, REMOVE FOR BUBBLE CARD
@@ -149,26 +138,6 @@ const styles = StyleSheet.create({
         // justifyContent: 'space-between',
         alignItems: 'center',
     },
-    chip: {
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: 'rgba(0,0,0,0.12)',
-    },
-    zoomChip: {
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: ZOOM,
-    },
-    zoomTextStyle: {
-        color: ZOOM,
-    },
-    time: {
-        color: '#6A85B9',
-        marginLeft: 13,
-        fontSize: 25,
-        fontFamily: 'SpaceGrotesk',
-        fontWeight: '600',
-    },
     seeMoreDots: {
         color: 'grey',
     },
@@ -176,11 +145,6 @@ const styles = StyleSheet.create({
         color: 'grey',
         marginLeft: 10,
         fontWeight: '600',
-    },
-    subtitleBottom: {
-        color: 'grey', // TEMP TIME
-        marginLeft: 10, // TEMP TIME
-        fontWeight: '600', // TEMP TIME
     },
     centerElements: {
         flex: 1,

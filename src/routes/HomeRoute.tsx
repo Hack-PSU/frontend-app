@@ -20,7 +20,7 @@ import useRegistrationStatus from '../data/hooks/useRegistrationStatus'
 
 import useEvents from '../data/hooks/useEvents'
 
-import { TEXT, TEXT_LIGHT } from '../theme'
+import { TEXT_LIGHT } from '../theme'
 
 import Mountain from '../../assets/images/HomeMountains.svg'
 
