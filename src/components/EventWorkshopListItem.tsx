@@ -61,7 +61,7 @@ const EventWorkshopListItem: React.FC<Props> = ({ model, starItem, starEnabled, 
                     <View>{avatar}</View>
 
                     {/* Content in the middle */}
-                    <View style={{ marginLeft: 10, width: '65%' }}>
+                    <View style={{ marginLeft: 10, width: '60%' }}>
                         <Text style={styles.subtitleTop}>{locationLabel}</Text>
                         <Text style={styles.title} numberOfLines={1} ellipsizeMode={'tail'}>
                             {eventTitle}

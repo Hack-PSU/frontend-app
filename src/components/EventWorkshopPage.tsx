@@ -6,6 +6,7 @@ import {
     ActivityIndicator,
     ImageBackground,
     Switch,
+    Text
 } from 'react-native'
 import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -25,6 +26,8 @@ import useEvents from '../data/hooks/useEvents'
 
 import { BACKGROUND, PRIMARY, TEXT_LIGHT } from '../theme'
 import EventDetail from './EventDetail'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { RED } from '../theme'
 
 const FRIDAY = 'Friday'
 const SATURDAY = 'Saturday'
@@ -295,15 +298,26 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             <View style={styles.title}>
                 <View style={styles.row}>
                     <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
-
-                    <Switch
-                        trackColor={{ false: '#767577', true: '#81b0ff' }}
-                        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleSwitch}
-                        value={isEnabled}
-                        style={{ position: 'absolute', right: 20, alignSelf: 'flex-end' }}
-                    />
+                    <View style={{ position: 'absolute', right: 20, alignSelf: 'flex-end' }}>
+                        <View style={styles.row}>
+                            {/* <Text style={{color: ' white '}}>❤️</Text> */}
+                            
+                            <MaterialCommunityIcons
+                                name={'heart'}
+                                size={34}
+                                color={RED}
+                                style= {{marginLeft:7}}
+                            />
+                            {/* <Text style={{color: 'white', fontSize: 20, fontFamily: 'SpaceGrotesk', }}> : </Text> */}
+                            <Switch
+                                trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </View>
+                    </View>
                 </View>
                 <View style={styles.filter}>
                     <SegmentedControl
@@ -413,13 +427,13 @@ const styles = StyleSheet.create({
         height: 232,
     },
     row: {
-        width: '100%',
-        flexDirection: 'row',
-        marginLeft: 16,
-        marginRight: 16,
-        marginTop: 4,
-        marginBottom: 12,
-        // justifyContent: 'space-between',
-        alignItems: 'center',
+        // width: '100%',
+        // flexDirection: 'row',
+        // marginLeft: 16,
+        // marginRight: 16,
+        // marginTop: 4,
+        // marginBottom: 12,
+        // // justifyContent: 'space-between',
+        // alignItems: 'center',
     },
 })
