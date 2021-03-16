@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     },
 
     labelStyle: {
-        fontFamily: 'Plex-Mono',
+        fontFamily: 'SpaceGrotesk',
         letterSpacing: 0,
     },
 })
