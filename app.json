@@ -24,7 +24,8 @@
     "android": {
       "package": "org.hackpsu.HackPSU",
       "versionCode": 9,
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "permissions": []
     },
     "notification": {
       "icon": "./assets/images/notification-icon.png",
