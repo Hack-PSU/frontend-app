@@ -3,7 +3,7 @@
   "displayName": "HackPSU",
   "expo": {
     "name": "HackPSU",
-    "version": "0.9.3",
+    "version": "0.10.0",
     "icon": "./assets/app_icon.png",
     "slug": "hackpsu",
     "privacy": "unlisted",
@@ -23,7 +23,7 @@
     },
     "android": {
       "package": "org.hackpsu.HackPSU",
-      "versionCode": 9,
+      "versionCode": 11,
       "useNextNotificationsApi": true,
       "permissions": []
     },
@@ -33,7 +33,7 @@
     },
     "ios": {
       "bundleIdentifier": "org.hackpsu.HackPSU",
-      "buildNumber": "0.9.3",
+      "buildNumber": "0.10.0",
       "usesAppleSignIn": true
     },
     "extra": {

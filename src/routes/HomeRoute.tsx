@@ -26,8 +26,8 @@ import MLHLogo from '../../assets/images/mlh.svg'
 
 const REGISTER_URL = 'https://app.hackpsu.org/register'
 
-const DISCORD_URL = 'https://discord.gg/eyPSrNm9Cd'
-const DEVPOST_URL = 'https://hackpsu-fall-2020.devpost.com/'
+const DISCORD_URL = 'https://discord.gg/k6TBaS7T8N'
+const DEVPOST_URL = 'https://hackpsu-spring-2021.devpost.com/'
 
 const BackgroundImage = require('../../assets/images/background.jpg')
 
