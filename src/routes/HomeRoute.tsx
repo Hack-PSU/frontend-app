@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     mountain: {
         position: 'relative',
         bottom: 0,
+        backgroundColor: '#113654',
     },
 
     heroContainer: {

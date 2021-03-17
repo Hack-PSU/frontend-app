@@ -1,5 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { View, StyleSheet, SectionList, ActivityIndicator } from 'react-native'
+import {
+    View,
+    StyleSheet,
+    SectionList,
+    ActivityIndicator,
+    ImageBackground,
+    Switch,
+    Text
+} from 'react-native'
 import { Title } from 'react-native-paper'
 import AsyncStorage from '@react-native-community/async-storage'
 import Animated from 'react-native-reanimated'
@@ -16,11 +24,14 @@ import * as Utils from '../utils'
 import useScrollY from '../hooks/useScrollY'
 import useEvents from '../data/hooks/useEvents'
 
-import { BACKGROUND } from '../theme'
+import { BACKGROUND, PRIMARY, TEXT_LIGHT } from '../theme'
 import EventDetail from './EventDetail'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { RED } from '../theme'
 
-const ALL = 'All'
-const STARRED = 'Starred'
+const FRIDAY = 'Friday'
+const SATURDAY = 'Saturday'
+const SUNDAY = 'Sunday'
 
 export const EVENTS = 'Events'
 export const WORKSHOPS = 'Workshops'
@@ -37,7 +48,7 @@ interface Props {
 const EventWorkshopPage: React.FC<Props> = (props) => {
     //****************** STATE DECLARATIONS ******************//
 
-    const [filter, setFilter] = useState<'All' | 'Starred'>(ALL)
+    const [filter, setFilter] = useState<'Friday' | 'Saturday' | 'Sunday'>(FRIDAY)
 
     // This is needed to ensure that offline data and online data isn't combined
     // on every rerender.
@@ -214,9 +225,42 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             ? event.event_type !== WORKSHOP_EVENT_TYPE
             : event.event_type === WORKSHOP_EVENT_TYPE
     )
+
+    const [isEnabled, setIsEnabled] = useState(false)
+    const toggleSwitch = () => setIsEnabled((previousState) => !previousState)
+
     // If the user is in the starred section, then only show the starred items.
-    if (filter === STARRED) {
-        correctEventList = correctEventList.filter((event) => event.starred)
+    // if (filter === ALL && isEnabled) {
+    //     correctEventList = correctEventList.filter((event) => event.starred)
+    // }
+
+    if (filter === FRIDAY) {
+        if (isEnabled) {
+            correctEventList = correctEventList.filter(
+                (event) => event.getWeekday() === 'Friday' && event.starred
+            )
+        } else {
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === 'Friday')
+        }
+    }
+
+    if (filter === SATURDAY) {
+        if (isEnabled) {
+            correctEventList = correctEventList.filter(
+                (event) => event.getWeekday() === 'Saturday' && event.starred
+            )
+        } else {
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === 'Saturday')
+        }
+    }
+    if (filter === SUNDAY) {
+        if (isEnabled) {
+            correctEventList = correctEventList.filter(
+                (event) => event.getWeekday() === 'Sunday' && event.starred
+            )
+        } else {
+            correctEventList = correctEventList.filter((event) => event.getWeekday() === 'Sunday')
+        }
     }
 
     //****************** LAYOUT BUILD ******************//
@@ -247,21 +291,47 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         />
     )
 
+    //const image = { uri: "https://reactjs.org/logo-og.png" };
+
     const listHeader = (
-        <View style={styles.title}>
-            <Subtitle style={{ paddingBottom: 0 }}>{props.eventType}</Subtitle>
-            <View style={styles.filter}>
-                <SegmentedControl
-                    values={[ALL, STARRED]}
-                    value={filter}
-                    onChange={(newValue) => setFilter(newValue as 'All' | 'Starred')}
-                />
-                {!onlineData.data && (
-                    <ActivityIndicator animating size="large" style={styles.loading} />
-                )}
-                {onlineData.error && <ErrorCard error={onlineData.error} />}
+        <ImageBackground source={require('../../assets/images/mountain.png')} style={styles.image}>
+            <View style={styles.title}>
+                <View style={styles.row}>
+                    <Subtitle style={styles.titleText}>{props.eventType}</Subtitle>
+                    <View style={{ position: 'absolute', right: 20, alignSelf: 'flex-end' }}>
+                        <View style={styles.row}>
+                            {/* <Text style={{color: ' white '}}>❤️</Text> */}
+                            
+                            <MaterialCommunityIcons
+                                name={'heart'}
+                                size={34}
+                                color={RED}
+                                style= {{marginLeft:7}}
+                            />
+                            {/* <Text style={{color: 'white', fontSize: 20, fontFamily: 'SpaceGrotesk', }}> : </Text> */}
+                            <Switch
+                                trackColor={{ false: '#767577', true: '#81b0ff' }}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.filter}>
+                    <SegmentedControl
+                        values={[FRIDAY, SATURDAY, SUNDAY]}
+                        value={filter}
+                        onChange={(newValue) => setFilter(newValue as any)}
+                    />
+                    {!onlineData.data && (
+                        <ActivityIndicator animating size="large" style={styles.loading} />
+                    )}
+                    {onlineData.error && <ErrorCard error={onlineData.error} />}
+                </View>
             </View>
-        </View>
+        </ImageBackground>
     )
 
     const sections = useMemo(() => {
@@ -269,11 +339,11 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
         const days: Day[] = []
 
         correctEventList.forEach((event) => {
-            const weekday = event.getWeekday()
-
+            const time = event.formatInfo().split(' ', 1) + 'm'
+            // console.log(weekday+ " - " +time)
             let foundDay: Day
             for (const day of days) {
-                if (day.key === weekday) {
+                if (day.key === time) {
                     foundDay = day
                     break
                 }
@@ -282,9 +352,10 @@ const EventWorkshopPage: React.FC<Props> = (props) => {
             if (foundDay) {
                 foundDay.data.push(event)
             } else {
+                // console.log("TIME: "+ time)
                 days.push({
                     data: [event],
-                    key: weekday,
+                    key: time,
                 })
             }
         })
@@ -321,7 +392,7 @@ export default EventWorkshopPage
 
 const styles = StyleSheet.create({
     title: {
-        paddingTop: Utils.LOGO_SAFE_PADDING,
+        paddingTop: Utils.LOGO_SAFE_PADDING + 10,
     },
     filter: {
         paddingTop: 16,
@@ -335,12 +406,34 @@ const styles = StyleSheet.create({
 
         backgroundColor: BACKGROUND,
 
-        color: 'white',
-        fontSize: 20,
+        color: PRIMARY,
+        marginTop: 20,
+        fontSize: 30,
         lineHeight: 24,
         fontFamily: 'SpaceGrotesk',
     },
     loading: {
         margin: 20,
+    },
+    titleText: {
+        paddingBottom: 0,
+        color: TEXT_LIGHT,
+    },
+    image: {
+        flex: 1,
+        resizeMode: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#113654',
+        height: 232,
+    },
+    row: {
+        // width: '100%',
+        // flexDirection: 'row',
+        // marginLeft: 16,
+        // marginRight: 16,
+        // marginTop: 4,
+        // marginBottom: 12,
+        // // justifyContent: 'space-between',
+        // alignItems: 'center',
     },
 })

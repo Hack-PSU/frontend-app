@@ -14,7 +14,7 @@ export const ACCENT = '#F3613D'
 export const ACCENT_LIGHT = '#F99432'
 export const TEXT = '#0a0a0a'
 export const TEXT_LIGHT = '#FFFFFF'
-export const BACKGROUND = '#113654'
+export const BACKGROUND = '#F5F5F5'
 
 export const RED = '#F24418'
 export const YELLOW = '#B6C767'

@@ -17,9 +17,14 @@ const SegmentedControl: React.FC<Props> = ({ values, value, onChange }) => {
                 selectedIndex={values.indexOf(value)}
                 onChange={(event) => onChange(values[event.nativeEvent.selectedSegmentIndex])}
                 values={values}
-                backgroundColor={Platform.OS === 'ios' ? undefined : 'rgba(255,255,255,0.1)'}
-                fontStyle={{ color: TEXT_LIGHT }}
-                activeFontStyle={{ color: TEXT }}
+                backgroundColor={Platform.OS === 'ios' ? 'white' : '#F5F5F5'}
+
+                tintColor = 'rgba(106, 133, 185,0.3)'
+                // fontStyle={{ color: TEXT_LIGHT }}
+                // The color of the non-selected items
+                fontStyle = {{color:"grey"}}
+                //The color of the selected item
+                activeFontStyle={{ color: "#6A85B9" }}
             />
         </View>
     )
